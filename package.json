@@ -4,13 +4,18 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "next dev",
-    "build": "next build",
+    "dev:service": "next dev",
+    "build:service": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build"
   },
   "dependencies": {
+    "@iconify/react": "^5.2.0",
+    "@mantine/core": "^7.16.1",
+    "@mantine/hooks": "^7.16.1",
     "@tanstack/react-query": "^5.64.2",
     "@tanstack/react-query-devtools": "^5.64.2",
     "class-variance-authority": "^0.7.1",
@@ -27,7 +32,17 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.4",
     "@eslint/eslintrc": "^3",
+    "@storybook/addon-essentials": "^8.5.1",
+    "@storybook/addon-interactions": "^8.5.1",
+    "@storybook/addon-onboarding": "^8.5.1",
+    "@storybook/addon-styling-webpack": "^1.0.1",
+    "@storybook/addon-themes": "^8.5.1",
+    "@storybook/blocks": "^8.5.1",
+    "@storybook/nextjs": "^8.5.1",
+    "@storybook/react": "^8.5.1",
+    "@storybook/test": "^8.5.1",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -42,13 +57,18 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-compiler": "19.0.0-beta-decd7b8-20250118",
     "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-storybook": "^0.11.2",
     "eslint-plugin-tailwindcss": "^3.18.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "msw": "^2.7.0",
+    "msw-storybook-addon": "^2.0.4",
     "postcss": "^8.5.1",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "storybook": "^8.5.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "typescript-eslint": "^8.21.0"
@@ -56,6 +76,11 @@
   "msw": {
     "workerDirectory": [
       "public"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
     ]
   }
 }

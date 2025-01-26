@@ -1,10 +1,11 @@
-import { cookies } from 'next/headers'
 import type { Metadata } from 'next'
 import { MockProvider } from '@/mocks/mock-provider'
 import { QueryProvider } from '@/shared/api'
-import { THEME_KEY, ThemeProvider } from '@/shared/lib'
+import { DesignSystemProvider } from '@/shared/lib'
 import { Pretendard } from './font'
 
+import './reset.css'
+import '@mantine/core/styles.css'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -22,21 +23,16 @@ if (
   server.listen()
 }
 
-const RootLayout: React.FC<React.PropsWithChildren> = async ({ children }) => {
-  const cookieStore = await cookies()
-  const theme = cookieStore.get(THEME_KEY)
-
-  return (
-    <html lang="ko" className={Pretendard.variable}>
-      <ThemeProvider
-        className="relative flex min-h-screen flex-col items-stretch justify-start bg-white text-gray-800 antialiased dark:bg-gray-900 dark:text-gray-50"
-        defaultValue={theme?.value}
-      >
+const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <html lang="ko" className={Pretendard.variable} suppressHydrationWarning>
+    <body className="relative flex min-h-screen min-w-[17.5rem] flex-col items-stretch justify-start bg-white text-gray-800 dark:bg-dark-900 dark:text-dark-50">
+      <DesignSystemProvider>
         <MockProvider>
           <QueryProvider>{children}</QueryProvider>
         </MockProvider>
-      </ThemeProvider>
-    </html>
-  )
-}
+      </DesignSystemProvider>
+    </body>
+  </html>
+)
+
 export default RootLayout
