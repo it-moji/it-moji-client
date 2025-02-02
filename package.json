@@ -10,7 +10,8 @@
     "lint": "next lint",
     "prepare": "husky",
     "dev:storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "build:storybook": "storybook build",
+    "commitlint": "commitlint --edit"
   },
   "dependencies": {
     "@iconify/react": "^5.2.0",
@@ -33,6 +34,8 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@eslint/eslintrc": "^3",
     "@storybook/addon-essentials": "^8.5.1",
     "@storybook/addon-interactions": "^8.5.1",
