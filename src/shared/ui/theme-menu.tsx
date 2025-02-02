@@ -6,7 +6,6 @@ import {
   Menu,
   useComputedColorScheme,
   useMantineColorScheme,
-  VisuallyHidden,
 } from '@mantine/core'
 import { useIsomorphicEffect } from '@mantine/hooks'
 import { useState } from 'react'
@@ -23,16 +22,10 @@ export const ThemeMenu: React.FC = () => {
   return (
     <Menu radius="md" shadow="md" width={200}>
       <Menu.Target>
-        <ActionIcon
-          variant="default"
-          size="lg"
-          radius="md"
-          title="테마 변경"
-          aria-label="테마 변경"
-        >
+        <ActionIcon variant="default" size="lg" radius="md" title="테마 변경">
           {!isHydrated && <Loader size="xs" />}
           <Icon
-            icon="fluent-emoji:sun-behind-small-cloud"
+            query="fluent-emoji:sun-behind-small-cloud"
             className={cn(
               'absolute inset-0 m-auto inline-flex size-5 items-center justify-center opacity-0 transition-opacity',
               isHydrated && computedColorScheme === 'light' && 'animate-pop-spin opacity-100',
@@ -40,19 +33,18 @@ export const ThemeMenu: React.FC = () => {
             suppressHydrationWarning
           />
           <Icon
-            icon="fluent-emoji:crescent-moon"
+            query="fluent-emoji:crescent-moon"
             className={cn(
               'absolute inset-0 m-auto inline-flex size-5 items-center justify-center opacity-0 transition-opacity',
               isHydrated && computedColorScheme === 'dark' && 'animate-pop-spin opacity-100',
             )}
             suppressHydrationWarning
           />
-          <VisuallyHidden>테마 변경</VisuallyHidden>
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
-          leftSection={<Icon icon="fluent-emoji:gear" />}
+          leftSection={<Icon query="fluent-emoji:laptop" />}
           classNames={{ itemLabel: 'text-base' }}
           title="테마 변경: 시스템 테마"
           onClick={() => setColorScheme('auto')}
@@ -61,7 +53,7 @@ export const ThemeMenu: React.FC = () => {
           시스템 테마
         </Menu.Item>
         <Menu.Item
-          leftSection={<Icon icon="fluent-emoji:sun-behind-small-cloud" />}
+          leftSection={<Icon query="fluent-emoji:sun-behind-small-cloud" />}
           classNames={{ itemLabel: 'text-base' }}
           title="테마 변경: 밝은 테마"
           onClick={() => setColorScheme('light')}
@@ -70,7 +62,7 @@ export const ThemeMenu: React.FC = () => {
           밝은 테마
         </Menu.Item>
         <Menu.Item
-          leftSection={<Icon icon="fluent-emoji:crescent-moon" />}
+          leftSection={<Icon query="fluent-emoji:crescent-moon" />}
           classNames={{ itemLabel: 'text-base' }}
           title="테마 변경: 어두운 테마"
           onClick={() => setColorScheme('dark')}

@@ -2,11 +2,12 @@ import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import type { Preview } from '@storybook/react'
 import { handlers } from '@/mocks/handlers'
+import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
 
-import '../src/app/reset.css'
+import '@/app/reset.css'
 import '@mantine/core/styles.css'
-import '../src/app/globals.css'
+import '@/app/globals.css'
 
 // Initialize MSW
 initialize()
@@ -35,7 +36,9 @@ const preview: Preview = {
     }),
     (Story, context) => (
       <DesignSystemProvider>
-        <Story {...context} />
+        <QueryProvider disableDevtool>
+          <Story {...context} />
+        </QueryProvider>
       </DesignSystemProvider>
     ),
   ],

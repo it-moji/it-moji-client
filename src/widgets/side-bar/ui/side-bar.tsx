@@ -11,7 +11,7 @@ export const SideBar: React.FC = () => {
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="홈"
-          leftSection={<Icon icon="fluent-emoji:house" />}
+          leftSection={<Icon query="fluent-emoji:house" />}
         />
       </li>
       <li>
@@ -20,7 +20,7 @@ export const SideBar: React.FC = () => {
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="공지사항 관리"
-          leftSection={<Icon icon="fluent-emoji:pushpin" />}
+          leftSection={<Icon query="fluent-emoji:pushpin" />}
         />
       </li>
       <li>
@@ -29,7 +29,7 @@ export const SideBar: React.FC = () => {
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="출석 관리"
-          leftSection={<Icon icon="fluent-emoji:check-mark-button" />}
+          leftSection={<Icon query="fluent-emoji:check-mark-button" />}
         />
       </li>
     </ul>

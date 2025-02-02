@@ -10,13 +10,20 @@ const QUERY_CLIENT_CONFIG: QueryClientConfig = {
   },
 } as const
 
-export const QueryProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+export interface QueryProviderProps extends React.PropsWithChildren {
+  disableDevtool?: boolean
+}
+
+export const QueryProvider: React.FC<QueryProviderProps> = ({
+  children,
+  disableDevtool = false,
+}) => {
   const [client] = useState(() => new QueryClient(QUERY_CLIENT_CONFIG))
 
   return (
     <QueryClientProvider client={client}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {!disableDevtool && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   )
 }
