@@ -4,19 +4,19 @@ import { createPaginationResponseSchema, createPaginationParamsSchema, server } 
 import { PostCategorySchema, PostItemSchema } from '../model'
 import { POST_ENDPOINT } from './endpoint'
 
-export const PostListResponseSchema = createPaginationResponseSchema({
+export const GetPostListResponseSchema = createPaginationResponseSchema({
   content: z.array(PostItemSchema),
   category: z.union([PostCategorySchema, z.null()]),
 })
 
-export const PostListParamsSchema = createPaginationParamsSchema(['category'])
+export const GetPostListParamsSchema = createPaginationParamsSchema(['category'])
 
-export type PostListParams = z.infer<typeof PostListParamsSchema>
+export type GetPostListParams = z.infer<typeof GetPostListParamsSchema>
 
-export type PostListResponse = CommonResponse<typeof PostListResponseSchema>
+export type GetPostListResponse = CommonResponse<typeof GetPostListResponseSchema>
 
 export const getPostList = async (params: SearchParams) =>
   await server.request(POST_ENDPOINT.LIST, {
-    schema: PostListResponseSchema,
+    schema: GetPostListResponseSchema,
     params,
   })

@@ -2,7 +2,7 @@
 
 import { Group, Pagination } from '@mantine/core'
 import Link from 'next/link'
-import { PostListParamsSchema } from '@/entities/announcement'
+import { GetPostListParamsSchema } from '@/entities/announcement'
 import { createSearchParamsToURL } from '@/shared/lib'
 
 export interface PageControllerProps {
@@ -19,18 +19,21 @@ export const PageController: React.FC<PageControllerProps> = ({ page, total, bas
       total={total}
       getItemProps={(page) => ({
         component: Link,
-        href: href([PostListParamsSchema.Enum.page, page]),
+        href: href([GetPostListParamsSchema.Enum.page, page]),
       })}
     >
       <Group gap={8}>
         <Pagination.First component={Link} href={baseURL} />
         <Pagination.Previous
           component={Link}
-          href={href([PostListParamsSchema.Enum.page, page - 1])}
+          href={href([GetPostListParamsSchema.Enum.page, page - 1])}
         />
         <Pagination.Items />
-        <Pagination.Next component={Link} href={href([PostListParamsSchema.Enum.page, page + 1])} />
-        <Pagination.Last component={Link} href={href([PostListParamsSchema.Enum.page, total])} />
+        <Pagination.Next
+          component={Link}
+          href={href([GetPostListParamsSchema.Enum.page, page + 1])}
+        />
+        <Pagination.Last component={Link} href={href([GetPostListParamsSchema.Enum.page, total])} />
       </Group>
     </Pagination.Root>
   )

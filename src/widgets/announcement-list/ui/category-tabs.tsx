@@ -7,7 +7,7 @@ import {
   type PostCategory,
   POST_CATEGORY_LABEL,
   PostCategorySchema,
-  PostListParamsSchema,
+  GetPostListParamsSchema,
 } from '@/entities/announcement'
 import { createSearchParamsToURL } from '@/shared/lib'
 import classes from './category-tabs.module.css'
@@ -32,7 +32,7 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({ baseURL, current }) 
   const onSubmit = (category: ExtendedPostCategory) =>
     category === all
       ? push(baseURL)
-      : push(createSearchParamsToURL(baseURL)([PostListParamsSchema.Enum.category, category]))
+      : push(createSearchParamsToURL(baseURL)([GetPostListParamsSchema.Enum.category, category]))
 
   return (
     <Tabs

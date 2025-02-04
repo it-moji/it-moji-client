@@ -1,7 +1,12 @@
-import { http, HttpResponse } from 'msw'
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
+import type { SearchParams } from '@/shared/api'
+import {
+  createMockHandler,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MOCK_COMMON_RESPONSE,
+} from '@/shared/api'
 import { POST_ENDPOINT } from '../endpoint'
-import { type PostListResponse, PostListParamsSchema } from '../../api'
+import { type GetPostListResponse, GetPostListParamsSchema } from '../../api'
 import type { PostCategory, PostItem } from '../../model'
 
 export const POST_LIST_MOCK_DATA: PostItem[] = [
@@ -133,16 +138,14 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
   },
 ]
 
-export const postListMockHandler = http.get(
-  `${process.env.NEXT_PUBLIC_SERVER_DOMAIN_ADDRESS}${POST_ENDPOINT.LIST}`,
-  ({ request }) => {
-    console.log(`✅ ${request.method} - ${request.url}`)
-
+export const postListMockHandler = createMockHandler<GetPostListResponse['data']>({
+  endpoint: POST_ENDPOINT.LIST,
+  handler: ({ request }) => {
     const url = new URL(request.url)
     const searchParams = new URLSearchParams(url.search)
-    const page = Number(searchParams.get(PostListParamsSchema.Enum.page)) || DEFAULT_PAGE
-    const size = Number(searchParams.get(PostListParamsSchema.Enum.size)) || DEFAULT_PAGE_SIZE
-    const category = searchParams.get(PostListParamsSchema.Enum.category) as PostCategory | null
+    const page = Number(searchParams.get(GetPostListParamsSchema.Enum.page)) || DEFAULT_PAGE
+    const size = Number(searchParams.get(GetPostListParamsSchema.Enum.size)) || DEFAULT_PAGE_SIZE
+    const category = searchParams.get(GetPostListParamsSchema.Enum.category) as PostCategory | null
 
     const filteredData = category
       ? POST_LIST_MOCK_DATA.filter((post) => post.postCategory === category)
@@ -154,9 +157,7 @@ export const postListMockHandler = http.get(
     const endIdx = startIdx + size
     const content = filteredData.slice(startIdx, endIdx)
 
-    return HttpResponse.json({
-      message: 'Success',
-      status: 'OK',
+    return Promise.resolve({
       data: {
         number: page,
         size: size,
@@ -167,6 +168,21 @@ export const postListMockHandler = http.get(
         content: content,
         category,
       },
-    } satisfies PostListResponse)
+    })
   },
-)
+})
+
+export const postListEmptyMockHandler = (searchParams: SearchParams) =>
+  Promise.resolve({
+    ...MOCK_COMMON_RESPONSE.SUCCESS,
+    data: {
+      number: 1,
+      size: 10,
+      totalElements: 0,
+      totalPages: 1,
+      first: true,
+      last: true,
+      content: [],
+      category: searchParams[GetPostListParamsSchema.Enum.category] || null,
+    },
+  } as GetPostListResponse)
