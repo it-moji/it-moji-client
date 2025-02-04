@@ -1,24 +1,15 @@
-'use client'
-
-import { Badge, Table } from '@mantine/core'
-import { POST_CATEGORY_LABEL, type PostItem } from '@/entities/announcement'
-import { formatDateFromNow } from '@/shared/lib'
+import type { PostItem } from '@/entities/announcement'
+import { AnnouncementItem } from './announcement-item'
 
 export interface AnnouncementListProps extends React.PropsWithChildren {
   contents: PostItem[]
+  pinned?: boolean
 }
 
-export const AnnouncementList: React.FC<AnnouncementListProps> = ({ contents }) => (
+export const AnnouncementList: React.FC<AnnouncementListProps> = ({ contents, pinned }) => (
   <>
-    {contents.map(({ id, title, postCategory, createdAt, viewCount }) => (
-      <Table.Tr key={id}>
-        <Table.Td className="text-center">
-          <Badge variant="light">{POST_CATEGORY_LABEL[postCategory]}</Badge>
-        </Table.Td>
-        <Table.Td>{title}</Table.Td>
-        <Table.Td className="text-center">{formatDateFromNow(createdAt)}</Table.Td>
-        <Table.Td className="text-center">{viewCount}</Table.Td>
-      </Table.Tr>
+    {contents.map((props) => (
+      <AnnouncementItem key={props.id} {...props} pinned={pinned} />
     ))}
   </>
 )
