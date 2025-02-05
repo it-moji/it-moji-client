@@ -10,6 +10,7 @@ import { GetPostListParamsSchema } from '@/entities/announcement'
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
 import { createSearchParamsFilter } from '@/shared/lib'
 import { FallbackRender, Icon } from '@/shared/ui'
+import { ROUTES } from '@/shared/config'
 
 export interface AnnouncementManagementPageProps {
   getPostList: () => Promise<GetPostListResponse>
@@ -30,7 +31,7 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
       [GetPostListParamsSchema.Enum.size, data.size, DEFAULT_PAGE_SIZE],
       [GetPostListParamsSchema.Enum.category, data.category],
     ],
-    pathname: '/admin/announcement',
+    pathname: ROUTES.ADMIN.ANNOUNCEMENT.ROOT,
   })
 
   return (

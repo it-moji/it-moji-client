@@ -1,13 +1,14 @@
 import { NavLink } from '@mantine/core'
 import Link from 'next/link'
 import { Icon } from '@/shared/ui'
+import { ROUTES } from '@/shared/config'
 
 export const SideBar: React.FC = () => {
   return (
     <ul>
       <li>
         <NavLink
-          href="/admin"
+          href={ROUTES.ADMIN.ROOT}
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="홈"
@@ -16,7 +17,7 @@ export const SideBar: React.FC = () => {
       </li>
       <li>
         <NavLink
-          href="/admin/announcement"
+          href={ROUTES.ADMIN.ANNOUNCEMENT.ROOT}
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="공지사항 관리"
@@ -25,7 +26,7 @@ export const SideBar: React.FC = () => {
       </li>
       <li>
         <NavLink
-          href="/admin/attendance"
+          href={ROUTES.ADMIN.ATTENDANCE.ROOT}
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="출석 관리"
