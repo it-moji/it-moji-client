@@ -172,7 +172,7 @@ export const postListMockHandler = createMockHandler<GetPostListResponse['data']
   },
 })
 
-export const postListEmptyMockHandler = (searchParams: SearchParams) =>
+export const getPostListEmptyMock = (searchParams: SearchParams) =>
   Promise.resolve({
     ...MOCK_COMMON_RESPONSE.SUCCESS,
     data: {

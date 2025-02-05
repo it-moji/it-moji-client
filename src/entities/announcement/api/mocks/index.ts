@@ -3,5 +3,5 @@ import { postListMockHandler } from './post-list'
 
 export const postHandlers = [postListMockHandler, pinnedPostListMockHandler]
 
-export { postListEmptyMockHandler } from './post-list'
-export { pinnedPostListEmptyMockHandler } from './pinned-post-list'
+export { getPostListEmptyMock } from './post-list'
+export { getPinnedPostListEmptyMock } from './pinned-post-list'

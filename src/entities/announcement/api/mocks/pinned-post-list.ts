@@ -38,7 +38,7 @@ export const pinnedPostListMockHandler = createMockHandler({
   handler: () => Promise.resolve({ data: PINNED_POST_LIST_MOCK_DATA }),
 })
 
-export const pinnedPostListEmptyMockHandler = () =>
+export const getPinnedPostListEmptyMock = () =>
   Promise.resolve({
     ...MOCK_COMMON_RESPONSE.SUCCESS,
     data: [],

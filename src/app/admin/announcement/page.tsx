@@ -1,11 +1,6 @@
 import type { Metadata } from 'next'
 import { AnnouncementManagementPage } from '@/views/announcement'
-import {
-  getPinnedPostList,
-  getPostList,
-  // pinnedPostListEmptyMockHandler,
-  // postListEmptyMockHandler,
-} from '@/entities/announcement'
+import { getPinnedPostList, getPostList } from '@/entities/announcement'
 import { type SearchParams } from '@/shared/api'
 
 export const metadata: Metadata = {
@@ -23,9 +18,6 @@ const AnnouncementPage: React.FC<AnnouncementPageProps> = async ({ searchParams 
     <AnnouncementManagementPage
       getPostList={() => getPostList(params)}
       getPinnedPostList={getPinnedPostList}
-      // TODO: storybook 세팅 시 주석 제거
-      // getPostList={() => postListEmptyMockHandler(params)}
-      // getPinnedPostList={pinnedPostListEmptyMockHandler}
     />
   )
 }
