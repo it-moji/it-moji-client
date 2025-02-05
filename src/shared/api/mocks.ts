@@ -14,7 +14,6 @@ export interface CreateMockHandlerParams<T> {
   ) => Promise<{ data: T } & HttpResponseInit>
   method?: keyof typeof http
   delay?: number
-  type?: keyof typeof MOCK_COMMON_RESPONSE
 }
 
 export const createMockHandler = <T>({
@@ -22,7 +21,6 @@ export const createMockHandler = <T>({
   handler,
   method = 'get',
   delay,
-  type = 'SUCCESS',
 }: CreateMockHandlerParams<T>) =>
   http[method](`${process.env.NEXT_PUBLIC_SERVER_DOMAIN_ADDRESS}${endpoint}`, async (params) => {
     if (delay) {
@@ -30,8 +28,9 @@ export const createMockHandler = <T>({
     }
 
     const { data, ...init } = await handler(params)
+    const key = (init.status ?? 200) >= 400 ? 'FAILED' : 'SUCCESS'
 
     console.log(`✅ ${params.request.method} - ${params.request.url}`)
 
-    return HttpResponse.json({ ...MOCK_COMMON_RESPONSE[type], data }, init)
+    return HttpResponse.json({ ...MOCK_COMMON_RESPONSE[key], data }, init)
   })
