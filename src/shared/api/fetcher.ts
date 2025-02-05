@@ -44,7 +44,11 @@ export class Fetcher {
     const schemaType = createCommonResponseSchema(schema)
     const { data } = schemaType.safeParse(await response.json())
 
-    if (!response.ok || !data) {
+    if (!data) {
+      throw new Exception('올바르지 않은 응답 형식이에요')
+    }
+
+    if (!response.ok) {
       const exception: CommonExceptionResponse = Object.assign(response, data)
 
       onException?.(exception)
