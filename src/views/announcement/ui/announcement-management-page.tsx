@@ -8,9 +8,9 @@ import {
 import type { GetPinnedPostListResponse, GetPostListResponse } from '@/entities/announcement'
 import { GetPostListParamsSchema } from '@/entities/announcement'
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
-import { createSearchParamsFilter } from '@/shared/lib'
-import { FallbackRender, Icon } from '@/shared/ui'
 import { ROUTES } from '@/shared/config'
+import { createSearchParamsFilter } from '@/shared/lib'
+import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
 
 export interface AnnouncementManagementPageProps {
   getPostList: () => Promise<GetPostListResponse>
@@ -35,12 +35,12 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
   })
 
   return (
-    <div className="overflow-hidden rounded-lg border border-solid border-gray-300 bg-white p-5 dark:border-dark-400 dark:bg-dark-800">
-      <h2 className="mb-8 flex items-center border text-lg font-bold">
+    <AdminContainer className="overflow-hidden">
+      <AdminTitle>
         <Icon query="fluent-emoji:pushpin" className="mr-2" />
         공지사항 관리
-      </h2>
-      <div className="mb-6">
+      </AdminTitle>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <CategoryTabs
           baseURL={href([GetPostListParamsSchema.Enum.page, GetPostListParamsSchema.Enum.category])}
           current={data.category}
@@ -64,6 +64,6 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
           baseURL={href([GetPostListParamsSchema.Enum.page])}
         />
       </div>
-    </div>
+    </AdminContainer>
   )
 }
