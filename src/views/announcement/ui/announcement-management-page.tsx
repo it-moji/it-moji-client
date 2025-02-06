@@ -4,6 +4,7 @@ import {
   CategoryTabs,
   EmptyList,
   PageController,
+  SearchInput,
 } from '@/widgets/announcement-list'
 import type { GetPinnedPostListResponse, GetPostListResponse } from '@/entities/announcement'
 import { GetPostListParamsSchema } from '@/entities/announcement'
@@ -45,6 +46,7 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
           baseURL={href([GetPostListParamsSchema.Enum.page, GetPostListParamsSchema.Enum.category])}
           current={data.category}
         />
+        <SearchInput />
       </div>
       <div className="overflow-x-auto pb-3">
         <AnnouncementTable className="min-w-[48rem]">

@@ -11,7 +11,7 @@ export const GetPostListResponseSchema = createPaginationResponseSchema({
 
 export const GetPostListParamsSchema = createPaginationParamsSchema(['category'])
 
-export type GetPostListParams = z.infer<typeof GetPostListParamsSchema>
+export type GetPostListParamsKey = z.infer<typeof GetPostListParamsSchema>
 
 export type GetPostListResponse = CommonResponse<typeof GetPostListResponseSchema>
 
