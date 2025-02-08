@@ -4,7 +4,7 @@ import { createPaginationResponseSchema, createPaginationParamsSchema, server } 
 import { PostItemSchema } from '../model'
 import { POST_ENDPOINT } from './endpoint'
 
-export const SearchPostParamsSchema = createPaginationParamsSchema(['q', 'type'])
+export const SearchPostParamsSchema = createPaginationParamsSchema(['query', 'type'])
 
 export const SearchPostTypeSchema = z.enum(['TITLE', 'CONTENT', 'TITLE_CONTENT'])
 
@@ -14,7 +14,6 @@ export type SearchPostParamsKey = z.infer<typeof SearchPostParamsSchema>
 
 export const SearchPostResponseSchema = createPaginationResponseSchema({
   content: z.array(PostItemSchema),
-  type: z.union([SearchPostTypeSchema, z.null()]),
 })
 
 export type SearchPostResponse = CommonResponse<typeof SearchPostResponseSchema>
@@ -30,7 +29,7 @@ export const searchPost = async ({ query, type, params }: SearchPostParams) =>
     schema: SearchPostResponseSchema,
     params: {
       ...params,
-      [SearchPostParamsSchema.Enum.q]: query,
+      [SearchPostParamsSchema.Enum.query]: query,
       [SearchPostParamsSchema.Enum.type]: type,
     },
   })

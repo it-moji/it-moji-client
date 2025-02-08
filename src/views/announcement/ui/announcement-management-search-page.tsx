@@ -27,15 +27,13 @@ export const AnnouncementManagementSearchPage: React.FC<
 
   const href = createSearchParamsFilter({
     params: [
-      [SearchPostParamsSchema.Enum.q, defaultQuery],
+      [SearchPostParamsSchema.Enum.query, defaultQuery],
       [SearchPostParamsSchema.Enum.type, defaultType],
       [SearchPostParamsSchema.Enum.page, data.number, DEFAULT_PAGE],
       [SearchPostParamsSchema.Enum.size, data.size, DEFAULT_PAGE_SIZE],
     ],
     pathname: ROUTES.ADMIN.ANNOUNCEMENT.SEARCH,
   })
-
-  console.log(data.content)
 
   return (
     <AdminContainer>

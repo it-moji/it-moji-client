@@ -33,7 +33,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const handleSubmit = () => {
     push(
       createSearchParamsToURL(ROUTES.ADMIN.ANNOUNCEMENT.SEARCH)(
-        [SearchPostParamsSchema.Enum.q, query],
+        [SearchPostParamsSchema.Enum.query, query],
         [SearchPostParamsSchema.Enum.type, type],
       ),
     )

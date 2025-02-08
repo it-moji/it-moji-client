@@ -20,7 +20,7 @@ export const searchPostMockHandler = createMockHandler<SearchPostResponse['data'
   handler: ({ request }) => {
     const url = new URL(request.url)
     const searchParams = new URLSearchParams(url.search)
-    const query = searchParams.get(SearchPostParamsSchema.Enum.q) || ''
+    const query = searchParams.get(SearchPostParamsSchema.Enum.query) || ''
     const type =
       SearchPostTypeSchema.safeParse(searchParams.get(SearchPostParamsSchema.Enum.type))?.data ||
       null
@@ -51,7 +51,6 @@ export const searchPostMockHandler = createMockHandler<SearchPostResponse['data'
         first: page === DEFAULT_PAGE,
         last: page === totalPages,
         content: content,
-        type: type,
       },
     })
   },

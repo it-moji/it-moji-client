@@ -15,7 +15,7 @@ interface AnnouncementSearchPageProps {
 const AnnouncementSearchPage: React.FC<AnnouncementSearchPageProps> = async ({ searchParams }) => {
   const params = await searchParams
 
-  const query = z.string().safeParse(params[SearchPostParamsSchema.Enum.q])?.data || ''
+  const query = z.string().safeParse(params[SearchPostParamsSchema.Enum.query])?.data || ''
   const type =
     SearchPostTypeSchema.safeParse(params[SearchPostParamsSchema.Enum.type])?.data ||
     SearchPostTypeSchema.Enum.TITLE
