@@ -87,9 +87,9 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
             onSuccess(`공지사항 ${label}에 성공했어요`)
           })
           .catch(() => {
-            setIsPending(false)
             onError(`공지사항 ${label}에 실패했어요`)
           })
+          .finally(() => setIsPending(false))
       })}
     >
       <AdminContainer>
