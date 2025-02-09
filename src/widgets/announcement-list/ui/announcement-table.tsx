@@ -17,6 +17,7 @@ export const AnnouncementTable: React.FC<React.PropsWithChildren<PropsWithClassN
       <col />
       <col />
       <col />
+      <col />
     </colgroup>
     <Table.Thead>
       <Table.Tr>
@@ -24,6 +25,7 @@ export const AnnouncementTable: React.FC<React.PropsWithChildren<PropsWithClassN
         <Table.Th>제목</Table.Th>
         <Table.Th className="text-center">날짜</Table.Th>
         <Table.Th className="text-center">조회수</Table.Th>
+        <Table.Th className="text-center">수정</Table.Th>
         <Table.Th className="text-center">삭제</Table.Th>
       </Table.Tr>
     </Table.Thead>

@@ -1,15 +1,15 @@
 import { createMockHandler } from '@/shared/api'
-import { CreatePostBodySchema } from '../create-post'
 import { POST_ENDPOINT } from '../endpoint'
+import { PostBodySchema } from '../../model'
 import { POST_LIST_MOCK_DATA } from './post-list'
 
-const MAX_PINNED_POST = 3
+export const MAX_PINNED_POST = 3
 
 export const createPostMockHandler = createMockHandler({
   endpoint: POST_ENDPOINT.LIST,
   handler: async ({ request }) => {
     const body = await request.json()
-    const { data } = CreatePostBodySchema.safeParse(body)
+    const { data } = PostBodySchema.safeParse(body)
 
     if (!data) {
       return { status: 400 }

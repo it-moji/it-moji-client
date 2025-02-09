@@ -7,7 +7,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
 import {
-  type CreatePostBody,
+  type PostBody,
   POST_CATEGORY_LABEL,
   PostCategorySchema,
   createPost,
@@ -18,14 +18,15 @@ import { ROUTES } from '@/shared/config'
 import { AdminContainer, AdminTitle, Icon, TextEditor } from '@/shared/ui'
 
 export interface CreateAnnouncementFormPageProps {
-  fetcher?: (body: CreatePostBody, onException?: ExceptionInterceptor) => Promise<unknown>
-  revalidate?: (body: CreatePostBody) => Promise<unknown>
+  fetcher?: (body: PostBody, onException?: ExceptionInterceptor) => Promise<unknown>
+  revalidate?: (body: PostBody) => Promise<unknown>
   onSuccess?: (message: string) => void
   onError?: (message: string) => void
+  onCancel?: () => void
   label?: string
   route?: string
   extraButton?: React.ReactNode
-  initialBody?: Partial<CreatePostBody>
+  initialBody?: Partial<PostBody>
 }
 
 export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProps> = ({
@@ -33,8 +34,9 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
   revalidate = createPostWithRevalidate,
   onSuccess = toast.success,
   onError = toast.error,
+  onCancel,
   label = '작성',
-  route = ROUTES.ADMIN.ANNOUNCEMENT.CREATE,
+  route = ROUTES.ADMIN.ANNOUNCEMENT.CREATE(),
   extraButton,
   initialBody = {},
 }) => {
@@ -48,7 +50,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
     }
   }
 
-  const form = useForm<CreatePostBody>({
+  const form = useForm<PostBody>({
     mode: 'uncontrolled',
     initialValues: {
       title: initialBody.title ?? '',
@@ -68,6 +70,8 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
       },
     },
   })
+
+  const inputProps = form.getInputProps('isPinned')
 
   return (
     <form
@@ -112,8 +116,9 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
               input: 'cursor-pointer',
               label: 'cursor-pointer select-none',
             }}
+            defaultChecked={inputProps.defaultValue}
             key={form.key('isPinned')}
-            {...form.getInputProps('isPinned')}
+            {...inputProps}
           />
         </div>
         <TextInput
@@ -130,7 +135,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
           {...form.getInputProps('content')}
         />
         <div className="mt-8 flex items-center justify-end space-x-2">
-          <Button variant="light" color="gray" onClick={back} disabled={isPending}>
+          <Button variant="light" color="gray" onClick={onCancel ?? back} disabled={isPending}>
             취소
           </Button>
           {extraButton}

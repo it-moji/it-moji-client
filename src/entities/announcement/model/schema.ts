@@ -29,3 +29,12 @@ export const PostDetailSchema = PostItemSchema.extend({
 })
 
 export type PostDetail = z.infer<typeof PostDetailSchema>
+
+export const PostBodySchema = PostDetailSchema.pick({
+  title: true,
+  content: true,
+  postCategory: true,
+  isPinned: true,
+})
+
+export type PostBody = z.infer<typeof PostBodySchema>

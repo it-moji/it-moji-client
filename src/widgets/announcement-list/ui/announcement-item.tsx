@@ -1,6 +1,6 @@
 'use client'
 
-import { Badge, Table } from '@mantine/core'
+import { Badge, Button, Table } from '@mantine/core'
 import Link from 'next/link'
 import { type PostItem, POST_CATEGORY_LABEL } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
@@ -37,6 +37,18 @@ export const AnnouncementItem: React.FC<AnnouncementItemProps> = ({
     </Table.Td>
     <Table.Td className="text-center">{formatDateFromNow(createdAt)}</Table.Td>
     <Table.Td className="text-center">{viewCount}</Table.Td>
+    <Table.Td className="text-center">
+      <Button
+        href={ROUTES.ADMIN.ANNOUNCEMENT.MODIFY(id)}
+        title={`수정하러 가기: ${title}`}
+        component={Link}
+        size="xs"
+        variant="light"
+        color="gray"
+      >
+        수정
+      </Button>
+    </Table.Td>
     <Table.Td className="text-center">
       <DeleteButton id={id} size="xs" variant="light" />
     </Table.Td>

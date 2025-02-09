@@ -1,5 +1,6 @@
 import { createPostMockHandler } from './create-post'
 import { deletePostMockHandler } from './delete-post'
+import { modifyPostMockHandler } from './modify-post'
 import { pinnedPostListMockHandler } from './pinned-post-list'
 import { postDetailMockHandler } from './post-detail'
 import { postListMockHandler } from './post-list'
@@ -12,6 +13,7 @@ export const postHandlers = [
   createPostMockHandler,
   postDetailMockHandler,
   deletePostMockHandler,
+  modifyPostMockHandler,
 ]
 
 export { getPostListEmptyMock } from './post-list'
