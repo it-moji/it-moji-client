@@ -11,12 +11,8 @@ export interface RequestOptions extends RequestInit {
   params?: SearchParams
 }
 
-export interface CommonExceptionResponse extends Response {
-  message: string
-}
-
 export interface ExceptionInterceptor {
-  (cause: CommonExceptionResponse): unknown
+  (cause: Response): unknown
 }
 
 export interface FetcherOptions<T extends z.ZodType> extends RequestOptions {
@@ -49,11 +45,9 @@ export class Fetcher {
     }
 
     if (!response.ok) {
-      const exception: CommonExceptionResponse = Object.assign(response, data)
+      onException?.(response)
 
-      onException?.(exception)
-
-      throw new Exception(exception.message || '')
+      throw new Exception(data.message || '')
     }
 
     return data
