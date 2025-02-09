@@ -11,7 +11,7 @@ export interface CreateMockHandlerParams<T> {
   endpoint: string
   handler: (
     params: Parameters<Parameters<typeof http.all>[1]>[0],
-  ) => Promise<{ data: T } & HttpResponseInit>
+  ) => Promise<{ data?: T | null } & HttpResponseInit>
   method?: keyof typeof http
   delay?: number
 }
