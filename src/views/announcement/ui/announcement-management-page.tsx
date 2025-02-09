@@ -1,3 +1,5 @@
+import { Button } from '@mantine/core'
+import Link from 'next/link'
 import {
   AnnouncementList,
   AnnouncementTable,
@@ -32,7 +34,7 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
       [GetPostListParamsSchema.Enum.size, data.size, DEFAULT_PAGE_SIZE],
       [GetPostListParamsSchema.Enum.category, data.category],
     ],
-    pathname: ROUTES.ADMIN.ANNOUNCEMENT.ROOT,
+    pathname: ROUTES.ADMIN.ANNOUNCEMENT(),
   })
 
   return (
@@ -60,11 +62,22 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
         <p className="mb-2 px-1 py-2 text-sm md:mb-0">
           총 {data.totalElements + pinned.data.length}개의 공지가 있어요
         </p>
-        <PageController
-          page={data.number}
-          total={data.totalPages}
-          baseURL={href([GetPostListParamsSchema.Enum.page])}
-        />
+        <div className="flex items-center space-x-4">
+          {!isEmpty && (
+            <PageController
+              page={data.number}
+              total={data.totalPages}
+              baseURL={href([GetPostListParamsSchema.Enum.page])}
+            />
+          )}
+          <Button
+            component={Link}
+            href={ROUTES.ADMIN.ANNOUNCEMENT.CREATE()}
+            title="공지사항 작성 페이지 이동"
+          >
+            글쓰기
+          </Button>
+        </div>
       </div>
     </AdminContainer>
   )

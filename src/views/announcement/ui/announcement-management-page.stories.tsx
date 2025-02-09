@@ -10,7 +10,7 @@ const meta: Meta<typeof AnnouncementManagementPage> = {
     nextjs: {
       appDirectory: true,
       router: {
-        basePath: ROUTES.ADMIN.ANNOUNCEMENT.ROOT,
+        basePath: ROUTES.ADMIN.ANNOUNCEMENT(),
       },
     },
   },

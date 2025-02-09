@@ -12,7 +12,7 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
     <ul>
       <li>
         <NavLink
-          href={ROUTES.ADMIN.ROOT}
+          href={ROUTES.ADMIN()}
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="홈"
@@ -22,7 +22,7 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
       </li>
       <li>
         <NavLink
-          href={ROUTES.ADMIN.ANNOUNCEMENT.ROOT}
+          href={ROUTES.ADMIN.ANNOUNCEMENT()}
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="공지사항 관리"
@@ -32,7 +32,7 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
       </li>
       <li>
         <NavLink
-          href={ROUTES.ADMIN.ATTENDANCE.ROOT}
+          href={ROUTES.ADMIN.ATTENDANCE()}
           classNames={{ root: 'h-10 rounded-lg', label: 'font-medium' }}
           component={Link}
           label="출석 관리"

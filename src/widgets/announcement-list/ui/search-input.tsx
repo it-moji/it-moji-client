@@ -1,6 +1,7 @@
 'use client'
 
 import { ActionIcon, Select, TextInput } from '@mantine/core'
+import { useInputState } from '@mantine/hooks'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { SearchPostType } from '@/entities/announcement'
@@ -22,9 +23,9 @@ export interface SearchInputProps {
 export const SearchInput: React.FC<SearchInputProps> = ({
   defaultQuery = '',
   defaultType = SearchPostTypeSchema.Enum.TITLE,
-  baseURL = ROUTES.ADMIN.ANNOUNCEMENT.ROOT,
+  baseURL = ROUTES.ADMIN.ANNOUNCEMENT(),
 }) => {
-  const [query, setQuery] = useState(defaultQuery)
+  const [query, setQuery] = useInputState(defaultQuery)
   const [type, setType] = useState<SearchPostType>(defaultType)
 
   const { push } = useRouter()
@@ -32,7 +33,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 
   const handleSubmit = () => {
     push(
-      createSearchParamsToURL(ROUTES.ADMIN.ANNOUNCEMENT.SEARCH)(
+      createSearchParamsToURL(ROUTES.ADMIN.ANNOUNCEMENT.SEARCH())(
         [SearchPostParamsSchema.Enum.query, query],
         [SearchPostParamsSchema.Enum.type, type],
       ),
@@ -40,7 +41,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   }
 
   useEffect(() => {
-    if (!query && pathname === ROUTES.ADMIN.ANNOUNCEMENT.SEARCH) {
+    if (!query && pathname === ROUTES.ADMIN.ANNOUNCEMENT.SEARCH()) {
       push(baseURL)
     }
   }, [query, baseURL, pathname, push])
@@ -64,7 +65,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           className="w-full"
           classNames={{ input: 'pr-10' }}
           value={query}
-          onChange={(e) => setQuery(e.currentTarget.value)}
+          onChange={setQuery}
           onKeyDown={(e) => {
             if (e.key === 'Enter') handleSubmit()
           }}

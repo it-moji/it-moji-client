@@ -10,7 +10,7 @@ const meta: Meta<typeof AnnouncementManagementSearchPage> = {
     nextjs: {
       appDirectory: true,
       router: {
-        basePath: ROUTES.ADMIN.ANNOUNCEMENT.SEARCH,
+        basePath: ROUTES.ADMIN.ANNOUNCEMENT.SEARCH(),
       },
     },
   },

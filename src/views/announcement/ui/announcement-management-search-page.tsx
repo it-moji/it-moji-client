@@ -32,7 +32,7 @@ export const AnnouncementManagementSearchPage: React.FC<
       [SearchPostParamsSchema.Enum.page, data.number, DEFAULT_PAGE],
       [SearchPostParamsSchema.Enum.size, data.size, DEFAULT_PAGE_SIZE],
     ],
-    pathname: ROUTES.ADMIN.ANNOUNCEMENT.SEARCH,
+    pathname: ROUTES.ADMIN.ANNOUNCEMENT.SEARCH(),
   })
 
   return (
@@ -54,16 +54,18 @@ export const AnnouncementManagementSearchPage: React.FC<
           </FallbackRender>
         </AnnouncementTable>
       </div>
-      <div className="mt-2 flex flex-col items-center justify-center md:flex-row md:justify-between">
-        <p className="mb-2 px-1 py-2 text-sm md:mb-0">
-          총 {data.totalElements}개의 검색결과가 있어요
-        </p>
-        <PageController
-          page={data.number}
-          total={data.totalPages}
-          baseURL={href([SearchPostParamsSchema.Enum.page])}
-        />
-      </div>
+      {!isEmpty && (
+        <div className="mt-2 flex flex-col items-center justify-center md:flex-row md:justify-between">
+          <p className="mb-2 px-1 py-2 text-sm md:mb-0">
+            총 {data.totalElements}개의 검색결과가 있어요
+          </p>
+          <PageController
+            page={data.number}
+            total={data.totalPages}
+            baseURL={href([SearchPostParamsSchema.Enum.page])}
+          />
+        </div>
+      )}
     </AdminContainer>
   )
 }
