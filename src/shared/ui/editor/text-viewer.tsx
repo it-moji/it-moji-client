@@ -24,7 +24,7 @@ export const TextViewer: React.FC<TextViewerProps> = ({ value, className }) => {
     <RichTextEditor
       editor={editor}
       className={classes['editor-root']}
-      classNames={{ root: cn('!border-0', className), content: '*:!p-0' }}
+      classNames={{ root: cn('!border-0', className), content: '*:!p-0 !bg-transparent' }}
     >
       <RichTextEditor.Content />
     </RichTextEditor>
