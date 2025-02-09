@@ -19,6 +19,7 @@ export const PageController: React.FC<PageControllerProps> = ({ page, total, bas
 
   return (
     <Pagination.Root
+      value={page}
       total={total}
       getItemProps={(page) => ({
         component: Link,
