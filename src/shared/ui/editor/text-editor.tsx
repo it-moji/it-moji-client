@@ -11,12 +11,14 @@ import classes from './editor.module.css'
 
 export interface TextEditorProps {
   value?: string
+  defaultValue?: string
   placeholder?: string
   onChange?: (value: string) => void
 }
 
 export const TextEditor: React.FC<TextEditorProps> = ({
   value = '',
+  defaultValue,
   placeholder = '텍스트를 입력해주세요',
   onChange,
 }) => {
@@ -25,7 +27,7 @@ export const TextEditor: React.FC<TextEditorProps> = ({
 
   const editor = useEditor({
     extensions: [...DEFAULT_EXTENSIONS, Placeholder.configure({ placeholder })],
-    content: value,
+    content: defaultValue || value,
     onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
     editable: true,
     immediatelyRender: false,
