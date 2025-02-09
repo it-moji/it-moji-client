@@ -1,11 +1,7 @@
-import { Button } from '@mantine/core'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { DetailView } from '@/widgets/announcement-detail'
+import { AnnouncementManagementDetailPage } from '@/views/announcement'
 import { getPostDetail } from '@/entities/announcement'
-import { ROUTES } from '@/shared/config'
-import { AdminContainer } from '@/shared/ui'
 
 interface AnnouncementDetailPageParams {
   postId: string
@@ -48,16 +44,7 @@ const AnnouncementDetailPage: React.FC<AnnouncementDetailPageProps> = async ({ p
     if (status === 404) notFound()
   })
 
-  return (
-    <AdminContainer>
-      <DetailView post={post.data} />
-      <div className="mt-8 flex items-center justify-end">
-        <Button href={ROUTES.ADMIN.ANNOUNCEMENT()} title="목록 페이지 이동" component={Link}>
-          목록
-        </Button>
-      </div>
-    </AdminContainer>
-  )
+  return <AnnouncementManagementDetailPage post={post.data} />
 }
 
 export default AnnouncementDetailPage

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { type PostItem, POST_CATEGORY_LABEL } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
 import { cn, formatDateFromNow } from '@/shared/lib'
+import { DeleteButton } from './delete-button'
 
 export interface AnnouncementItemProps extends PostItem {
   pinned?: boolean
@@ -36,5 +37,8 @@ export const AnnouncementItem: React.FC<AnnouncementItemProps> = ({
     </Table.Td>
     <Table.Td className="text-center">{formatDateFromNow(createdAt)}</Table.Td>
     <Table.Td className="text-center">{viewCount}</Table.Td>
+    <Table.Td className="text-center">
+      <DeleteButton id={id} size="xs" variant="light" />
+    </Table.Td>
   </Table.Tr>
 )

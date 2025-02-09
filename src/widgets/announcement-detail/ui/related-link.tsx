@@ -2,7 +2,7 @@ import { Divider } from '@mantine/core'
 import Link from 'next/link'
 import type { PostDetail } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
-import { formatDateTimeDetail } from '@/shared/lib'
+import { formatDateDetail } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
 
 export interface RelatedLinkProps {
@@ -28,7 +28,7 @@ export const RelatedLink: React.FC<RelatedLinkProps> = ({ value: { prev, next } 
               {prev.title}
             </Link>
             <span className="text-sm text-gray-600 md:text-base dark:text-dark-200">
-              {formatDateTimeDetail(prev.createdAt)}
+              {formatDateDetail(prev.createdAt)}
             </span>
           </p>
         </div>
@@ -51,7 +51,7 @@ export const RelatedLink: React.FC<RelatedLinkProps> = ({ value: { prev, next } 
               {next.title}
             </Link>
             <span className="text-sm text-gray-600 md:text-base dark:text-dark-200">
-              {formatDateTimeDetail(next.createdAt)}
+              {formatDateDetail(next.createdAt)}
             </span>
           </p>
         </div>
