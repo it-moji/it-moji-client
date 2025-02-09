@@ -1,7 +1,9 @@
 'use client'
 
 import { Badge, Table } from '@mantine/core'
+import Link from 'next/link'
 import { type PostItem, POST_CATEGORY_LABEL } from '@/entities/announcement'
+import { ROUTES } from '@/shared/config'
 import { cn, formatDateFromNow } from '@/shared/lib'
 
 export interface AnnouncementItemProps extends PostItem {
@@ -9,6 +11,7 @@ export interface AnnouncementItemProps extends PostItem {
 }
 
 export const AnnouncementItem: React.FC<AnnouncementItemProps> = ({
+  id,
   title,
   createdAt,
   viewCount,
@@ -22,8 +25,14 @@ export const AnnouncementItem: React.FC<AnnouncementItemProps> = ({
       </Badge>
     </Table.Td>
     <Table.Td>
-      {isPinned ? <>📌&nbsp;&nbsp;&nbsp;</> : null}
-      {title}
+      <Link
+        href={ROUTES.ADMIN.ANNOUNCEMENT.DETAIL(id)}
+        title={`페이지 이동: ${title}`}
+        className="hover:underline"
+      >
+        {isPinned ? <>📌&nbsp;&nbsp;&nbsp;</> : null}
+        {title}
+      </Link>
     </Table.Td>
     <Table.Td className="text-center">{formatDateFromNow(createdAt)}</Table.Td>
     <Table.Td className="text-center">{viewCount}</Table.Td>

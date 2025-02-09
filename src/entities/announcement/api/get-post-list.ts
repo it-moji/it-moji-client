@@ -6,7 +6,7 @@ import { POST_ENDPOINT, POST_TAG } from './endpoint'
 
 export const GetPostListResponseSchema = createPaginationResponseSchema({
   content: z.array(PostItemSchema),
-  category: z.union([PostCategorySchema, z.null()]),
+  category: z.union([z.null(), PostCategorySchema]),
 })
 
 export const GetPostListParamsSchema = createPaginationParamsSchema(['category'])

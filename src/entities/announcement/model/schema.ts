@@ -15,3 +15,17 @@ export const PostItemSchema = z.object({
 })
 
 export type PostItem = z.infer<typeof PostItemSchema>
+
+export const PostItemSummarySchema = PostItemSchema.pick({ id: true, title: true, createdAt: true })
+
+export type PostItemSummary = z.infer<typeof PostItemSummarySchema>
+
+export const PostDetailSchema = PostItemSchema.extend({
+  isPinned: z.boolean(),
+  related: z.object({
+    prev: z.union([z.null(), PostItemSummarySchema]),
+    next: z.union([z.null(), PostItemSummarySchema]),
+  }),
+})
+
+export type PostDetail = z.infer<typeof PostDetailSchema>

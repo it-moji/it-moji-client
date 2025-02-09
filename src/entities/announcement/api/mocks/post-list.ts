@@ -9,24 +9,26 @@ import { POST_ENDPOINT } from '../endpoint'
 import { type GetPostListResponse, GetPostListParamsSchema } from '../../api'
 import type { PostCategory, PostItem } from '../../model'
 
-export const POST_LIST_MOCK_DATA: PostItem[] = [
+export const POST_LIST_MOCK_DATA: (PostItem & { isPinned: boolean })[] = [
   {
     id: 1,
     title: '서비스 점검 안내',
     content: '<p>내일 오전 2시부터 4시까지 정기 점검이 진행됩니다.</p>',
     postCategory: 'MAINTENANCE',
     createdAt: '2025-02-01T10:00:00Z',
-    modifiedAt: '2025-02-01T10:00:00Z',
+    modifiedAt: '2025-02-06T10:00:00Z',
     viewCount: 102,
+    isPinned: false,
   },
   {
     id: 2,
     title: '신규 업데이트 안내',
     content: '<p>새로운 기능이 추가되었습니다! 자세한 내용은 본문을 확인해주세요.</p>',
     postCategory: 'UPDATE',
-    createdAt: '2025-01-30T12:30:00Z',
+    createdAt: '2025-01-24T12:30:00Z',
     modifiedAt: '2025-01-30T12:30:00Z',
     viewCount: 257,
+    isPinned: true,
   },
   {
     id: 3,
@@ -34,8 +36,9 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     content: '<p>겨울 시즌을 맞아 특별 할인 이벤트를 진행합니다!</p>',
     postCategory: 'EVENT',
     createdAt: '2025-01-25T15:00:00Z',
-    modifiedAt: '2025-01-25T15:00:00Z',
+    modifiedAt: '2025-01-28T15:00:00Z',
     viewCount: 315,
+    isPinned: false,
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2025-01-20T08:00:00Z',
     modifiedAt: '2025-01-20T08:00:00Z',
     viewCount: 189,
+    isPinned: true,
   },
   {
     id: 5,
@@ -54,6 +58,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2025-01-18T22:00:00Z',
     modifiedAt: '2025-01-18T22:00:00Z',
     viewCount: 412,
+    isPinned: false,
   },
   {
     id: 6,
@@ -63,6 +68,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2025-01-15T10:30:00Z',
     modifiedAt: '2025-01-15T10:30:00Z',
     viewCount: 290,
+    isPinned: false,
   },
   {
     id: 7,
@@ -72,6 +78,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2025-01-10T18:45:00Z',
     modifiedAt: '2025-01-10T18:45:00Z',
     viewCount: 550,
+    isPinned: false,
   },
   {
     id: 8,
@@ -81,6 +88,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2025-01-05T09:15:00Z',
     modifiedAt: '2025-01-05T09:15:00Z',
     viewCount: 134,
+    isPinned: false,
   },
   {
     id: 9,
@@ -90,6 +98,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2024-12-30T14:20:00Z',
     modifiedAt: '2024-12-30T14:20:00Z',
     viewCount: 220,
+    isPinned: false,
   },
   {
     id: 10,
@@ -99,6 +108,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2024-12-25T17:00:00Z',
     modifiedAt: '2024-12-25T17:00:00Z',
     viewCount: 376,
+    isPinned: false,
   },
   {
     id: 11,
@@ -108,6 +118,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2024-12-20T08:40:00Z',
     modifiedAt: '2024-12-20T08:40:00Z',
     viewCount: 210,
+    isPinned: false,
   },
   {
     id: 12,
@@ -117,6 +128,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2024-12-15T11:00:00Z',
     modifiedAt: '2024-12-15T11:00:00Z',
     viewCount: 398,
+    isPinned: false,
   },
   {
     id: 13,
@@ -126,6 +138,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2024-12-10T14:10:00Z',
     modifiedAt: '2024-12-10T14:10:00Z',
     viewCount: 512,
+    isPinned: false,
   },
   {
     id: 14,
@@ -135,6 +148,7 @@ export const POST_LIST_MOCK_DATA: PostItem[] = [
     createdAt: '2024-12-05T07:30:00Z',
     modifiedAt: '2024-12-05T07:30:00Z',
     viewCount: 325,
+    isPinned: false,
   },
 ]
 
@@ -148,8 +162,8 @@ export const postListMockHandler = createMockHandler<GetPostListResponse['data']
     const category = searchParams.get(GetPostListParamsSchema.Enum.category) as PostCategory | null
 
     const filteredData = category
-      ? POST_LIST_MOCK_DATA.filter((post) => post.postCategory === category)
-      : POST_LIST_MOCK_DATA
+      ? POST_LIST_MOCK_DATA.filter((post) => !post.isPinned && post.postCategory === category)
+      : POST_LIST_MOCK_DATA.filter((post) => !post.isPinned)
 
     const totalElements = filteredData.length
     const totalPages = Math.ceil(totalElements / size)
