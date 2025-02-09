@@ -24,7 +24,7 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
   return (
     <CreateAnnouncementFormPage
       label="수정"
-      fetcher={(body) => modifyPost({ id, body })}
+      fetcher={(body, onException) => modifyPost({ id, body, onException })}
       revalidate={(body) => modifyPostWithRevalidate(id, body)}
       initialBody={initialBody}
       route={ROUTES.ADMIN.ANNOUNCEMENT.MODIFY(id)}
