@@ -12,7 +12,7 @@ export interface RequestOptions extends RequestInit {
 }
 
 export interface ExceptionInterceptor {
-  (cause: Response): unknown
+  (cause: Response, data: CommonResponse<z.ZodUndefined>): unknown
 }
 
 export interface FetcherOptions<T extends z.ZodType> extends RequestOptions {
@@ -38,19 +38,21 @@ export class Fetcher {
     const response = await this.fetch(url, { method, ...options })
 
     const schemaType = createCommonResponseSchema(schema)
-    const { data } = schemaType.safeParse(await response.json())
-
-    if (!data) {
-      throw new Exception('올바르지 않은 응답 형식이에요')
-    }
+    const data = await response.json()
 
     if (!response.ok) {
-      onException?.(response)
+      onException?.(response, data)
 
       throw new Exception(data.message || '')
     }
 
-    return data
+    const valid = schemaType.safeParse(data)
+
+    if (!valid.data) {
+      throw new Exception('올바르지 않은 응답 형식이에요')
+    }
+
+    return valid.data
   }
 
   private async fetch(
