@@ -1,5 +1,6 @@
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import { createTheme, rem } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
 import { breakpoints } from './breakpoint'
 
 export const defaultThemeSchema = createTheme({
@@ -12,6 +13,6 @@ export const defaultThemeSchema = createTheme({
 export const DesignSystemProvider: React.FC<React.PropsWithChildren> = ({ children }) => (
   <MantineProvider theme={defaultThemeSchema} defaultColorScheme="auto">
     <ColorSchemeScript defaultColorScheme="auto" />
-    {children}
+    <ModalsProvider labels={{ confirm: '확인', cancel: '취소' }}>{children}</ModalsProvider>
   </MantineProvider>
 )

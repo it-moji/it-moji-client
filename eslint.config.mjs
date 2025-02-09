@@ -65,7 +65,6 @@ const eslintConfig = [
             { pattern: '@/app/**/*', group: 'internal', position: 'after' },
             { pattern: '@/views/**/*', group: 'internal', position: 'after' },
             { pattern: '@/widgets/**/*', group: 'internal', position: 'after' },
-            { pattern: '@/features/**/*', group: 'internal', position: 'after' },
             { pattern: '@/entities/**/*', group: 'internal', position: 'after' },
             { pattern: '@/shared/**/*', group: 'internal', position: 'after' },
             { pattern: '../../api', group: 'parent', position: 'after' },

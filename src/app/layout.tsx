@@ -1,3 +1,4 @@
+import { Toaster } from 'react-hot-toast'
 import type { Metadata } from 'next'
 import { MockProvider } from '@/mocks/mock-provider'
 import { QueryProvider } from '@/shared/api'
@@ -20,7 +21,9 @@ if (
 ) {
   const { server } = await import('@/mocks/server')
 
-  server.listen()
+  server.listen({
+    onUnhandledRequest: 'bypass',
+  })
 }
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
@@ -28,7 +31,10 @@ const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
     <body className="relative flex min-h-screen min-w-[17.5rem] flex-col items-stretch justify-start bg-white text-gray-800 dark:bg-dark-900 dark:text-dark-50">
       <DesignSystemProvider>
         <MockProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <Toaster position="bottom-right" />
+          </QueryProvider>
         </MockProvider>
       </DesignSystemProvider>
     </body>

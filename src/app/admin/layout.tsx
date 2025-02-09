@@ -34,7 +34,7 @@ const AdminLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
         <ThemeMenu />
       </AppShell.Header>
       <AppShell.Navbar ref={setSideBar} p="md" className="max-w-80">
-        <SideBar />
+        <SideBar onClick={close} />
       </AppShell.Navbar>
       <AppShell.Main className="bg-gray-50 dark:bg-dark-900">{children}</AppShell.Main>
     </AppShell>

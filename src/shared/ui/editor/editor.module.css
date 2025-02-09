@@ -1,0 +1,6 @@
+.editor-root ul {
+  list-style: disc;
+}
+.editor-root ol {
+  list-style: numeric;
+}
