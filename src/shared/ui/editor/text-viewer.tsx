@@ -1,7 +1,7 @@
 'use client'
 
 import { RichTextEditor } from '@mantine/tiptap'
-import { useEditor } from '@tiptap/react'
+import { useEditor, type UseEditorOptions } from '@tiptap/react'
 import { type PropsWithClassName, cn } from '@/shared/lib'
 import { DEFAULT_EXTENSIONS } from './editor.config'
 
@@ -13,12 +13,14 @@ export type TextViewerProps = PropsWithClassName<{
 }>
 
 export const TextViewer: React.FC<TextViewerProps> = ({ value, className }) => {
-  const editor = useEditor({
+  const options: UseEditorOptions = {
     extensions: DEFAULT_EXTENSIONS,
     content: value,
     editable: false,
     immediatelyRender: false,
-  })
+  }
+
+  const editor = useEditor(options, [value])
 
   return (
     <RichTextEditor
