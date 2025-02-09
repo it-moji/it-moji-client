@@ -21,7 +21,9 @@ if (
 ) {
   const { server } = await import('@/mocks/server')
 
-  server.listen()
+  server.listen({
+    onUnhandledRequest: 'bypass',
+  })
 }
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (

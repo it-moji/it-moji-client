@@ -24,18 +24,20 @@ export class Fetcher {
   private static readonly REVALIDATE_TAG_ALL = 'fetcher-all'
 
   private endpoint: string
+  private prefix: string
   private timeout: number
 
-  public constructor(options: { endpoint: string; timeout: number }) {
+  public constructor(options: { endpoint: string; prefix?: string; timeout: number }) {
     this.endpoint = options.endpoint
+    this.prefix = options.prefix || ''
     this.timeout = options.timeout
   }
 
   public async request<T extends z.ZodType>(
-    url: string | URL,
+    url: string,
     { schema, onException, method = 'GET', ...options }: FetcherOptions<T>,
   ): Promise<CommonResponse<T>> {
-    const response = await this.fetch(url, { method, ...options })
+    const response = await this.fetch(`${this.prefix}${url}`, { method, ...options })
 
     const schemaType = createCommonResponseSchema(schema)
     const data = await response.json()
@@ -90,6 +92,7 @@ export class Fetcher {
 }
 
 export const server = new Fetcher({
-  endpoint: process.env.NEXT_PUBLIC_SERVER_DOMAIN_ADDRESS!,
+  endpoint: process.env.NEXT_PUBLIC_DOMAIN_ADDRESS!,
   timeout: 5_000,
+  prefix: '/server',
 })

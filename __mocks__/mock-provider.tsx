@@ -5,6 +5,7 @@ import { Suspense, use } from 'react'
 const enableMocking =
   typeof window !== 'undefined'
     ? import('@/mocks/browser').then(async ({ browser }) => {
+        if (process.env.MOCK_ENABLED !== 'true') return
         if (process.env.NODE_ENV === 'production') return
 
         await browser.start({
@@ -20,19 +21,19 @@ const enableMocking =
     : Promise.resolve()
 
 export interface MockProviderProps extends React.PropsWithChildren {
-  forceEnabled?: true
+  enabled?: boolean
 }
 
-const MockWrapper: React.FC<MockProviderProps> = ({ forceEnabled, children }) => {
-  if (forceEnabled || process.env.MOCK_ENABLED === 'true') {
+const MockWrapper: React.FC<MockProviderProps> = ({ enabled = false, children }) => {
+  if (enabled) {
     use(enableMocking)
   }
 
   return children
 }
 
-export const MockProvider: React.FC<MockProviderProps> = ({ forceEnabled, children }) => (
+export const MockProvider: React.FC<MockProviderProps> = ({ enabled, children }) => (
   <Suspense fallback={null}>
-    <MockWrapper forceEnabled={forceEnabled}>{children}</MockWrapper>
+    <MockWrapper enabled={enabled}>{children}</MockWrapper>
   </Suspense>
 )
