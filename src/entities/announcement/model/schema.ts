@@ -7,10 +7,8 @@ export type PostCategory = z.infer<typeof PostCategorySchema>
 export const PostItemSchema = z.object({
   id: z.number(),
   title: z.string(),
-  content: z.string(),
   postCategory: PostCategorySchema,
-  createdAt: z.string().datetime(),
-  modifiedAt: z.string().datetime(),
+  createdAt: z.string(),
   viewCount: z.number(),
 })
 
@@ -21,6 +19,8 @@ export const PostItemSummarySchema = PostItemSchema.pick({ id: true, title: true
 export type PostItemSummary = z.infer<typeof PostItemSummarySchema>
 
 export const PostDetailSchema = PostItemSchema.extend({
+  content: z.string(),
+  modifiedAt: z.string(),
   isPinned: z.boolean(),
   related: z.object({
     prev: z.union([z.null(), PostItemSummarySchema]),

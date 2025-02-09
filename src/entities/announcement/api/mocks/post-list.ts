@@ -7,9 +7,9 @@ import {
 } from '@/shared/api'
 import { POST_ENDPOINT } from '../endpoint'
 import { type GetPostListResponse, GetPostListParamsSchema } from '../../api'
-import type { PostCategory, PostItem } from '../../model'
+import type { PostCategory, PostDetail } from '../../model'
 
-export const POST_LIST_MOCK_DATA: (PostItem & { isPinned: boolean })[] = [
+export const POST_LIST_MOCK_DATA: Omit<PostDetail, 'related'>[] = [
   {
     id: 1,
     title: '서비스 점검 안내',
