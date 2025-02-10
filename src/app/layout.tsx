@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { MockProvider } from '@/mocks/mock-provider'
 import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
+import { LoadingProgressBar } from '@/shared/ui'
 import { Pretendard } from './font'
 
 import './reset.css'
@@ -32,6 +33,7 @@ const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
       <DesignSystemProvider>
         <MockProvider>
           <QueryProvider>
+            <LoadingProgressBar />
             {children}
             <Toaster position="bottom-right" />
           </QueryProvider>
