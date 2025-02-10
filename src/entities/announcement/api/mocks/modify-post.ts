@@ -35,9 +35,11 @@ export const modifyPostMockHandler = createMockHandler({
     POST_LIST_MOCK_DATA[targetPostIndex] = {
       ...POST_LIST_MOCK_DATA[targetPostIndex],
       ...data,
+      modifiedAt: new Date().toISOString(),
     }
 
     return { data: {} }
   },
   method: 'patch',
+  delay: 1_200,
 })

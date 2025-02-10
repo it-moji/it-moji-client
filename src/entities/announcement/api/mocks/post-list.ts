@@ -161,9 +161,11 @@ export const postListMockHandler = createMockHandler<GetPostListResponse['data']
     const size = Number(searchParams.get(GetPostListParamsSchema.Enum.size)) || DEFAULT_PAGE_SIZE
     const category = searchParams.get(GetPostListParamsSchema.Enum.category) as PostCategory | null
 
-    const filteredData = category
-      ? POST_LIST_MOCK_DATA.filter((post) => !post.isPinned && post.postCategory === category)
-      : POST_LIST_MOCK_DATA.filter((post) => !post.isPinned)
+    const filteredData = (
+      category
+        ? POST_LIST_MOCK_DATA.filter((post) => !post.isPinned && post.postCategory === category)
+        : POST_LIST_MOCK_DATA.filter((post) => !post.isPinned)
+    ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
     const totalElements = filteredData.length
     const totalPages = Math.ceil(totalElements / size)
@@ -184,6 +186,7 @@ export const postListMockHandler = createMockHandler<GetPostListResponse['data']
       },
     })
   },
+  delay: 1200,
 })
 
 export const getPostListEmptyMock = (searchParams: SearchParams) =>

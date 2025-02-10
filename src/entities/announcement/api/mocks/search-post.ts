@@ -12,7 +12,7 @@ import {
   SearchPostTypeSchema,
   SearchPostParamsSchema,
 } from '../../api'
-import type { PostItem } from '../../model'
+import type { PostDetail } from '../../model'
 import { POST_LIST_MOCK_DATA } from './post-list'
 
 export const searchPostMockHandler = createMockHandler<SearchPostResponse['data']>({
@@ -27,14 +27,17 @@ export const searchPostMockHandler = createMockHandler<SearchPostResponse['data'
     const page = Number(searchParams.get(SearchPostParamsSchema.Enum.page)) || DEFAULT_PAGE
     const size = Number(searchParams.get(SearchPostParamsSchema.Enum.size)) || DEFAULT_PAGE_SIZE
 
-    const filter: Record<SearchPostType, (post: PostItem) => unknown> = {
-      [SearchPostTypeSchema.Enum.TITLE]: (post) => post.title.includes(query),
-      [SearchPostTypeSchema.Enum.CONTENT]: (post) => post.content.includes(query),
-      [SearchPostTypeSchema.Enum.TITLE_CONTENT]: (post) =>
-        post.title.includes(query) || post.content.includes(query),
-    }
+    const filter: Record<SearchPostType, (post: Pick<PostDetail, 'title' | 'content'>) => unknown> =
+      {
+        [SearchPostTypeSchema.Enum.TITLE]: (post) => post.title.includes(query),
+        [SearchPostTypeSchema.Enum.CONTENT]: (post) => post.content.includes(query),
+        [SearchPostTypeSchema.Enum.TITLE_CONTENT]: (post) =>
+          post.title.includes(query) || post.content.includes(query),
+      }
 
-    const filteredData = POST_LIST_MOCK_DATA.filter(filter[type ?? SearchPostTypeSchema.Enum.TITLE])
+    const filteredData = POST_LIST_MOCK_DATA.filter(
+      filter[type ?? SearchPostTypeSchema.Enum.TITLE],
+    ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
     const totalElements = filteredData.length
     const totalPages = Math.ceil(totalElements / size)
@@ -54,6 +57,7 @@ export const searchPostMockHandler = createMockHandler<SearchPostResponse['data'
       },
     })
   },
+  delay: 600,
 })
 
 export const searchPostEmptyMock = (searchParams: SearchParams) =>
