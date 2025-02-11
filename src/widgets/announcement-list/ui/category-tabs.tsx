@@ -9,7 +9,7 @@ import {
   PostCategorySchema,
   GetPostListParamsSchema,
 } from '@/entities/announcement'
-import { createSearchParamsToURL } from '@/shared/lib'
+import { createSearchParamsToURL, useLoaderSwitch } from '@/shared/lib'
 import classes from './category-tabs.module.css'
 
 export interface CategoryTabsProps {
@@ -28,11 +28,16 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({ baseURL, current }) 
     setControlsRefs((prev) => Object.assign(prev, { [val]: node }))
 
   const { push } = useRouter()
+  const { on } = useLoaderSwitch()
 
-  const onSubmit = (category: ExtendedPostCategory) =>
-    category === all
-      ? push(baseURL)
-      : push(createSearchParamsToURL(baseURL)([GetPostListParamsSchema.Enum.category, category]))
+  const onSubmit = (category: ExtendedPostCategory) => {
+    on()
+    push(
+      category === all
+        ? baseURL
+        : createSearchParamsToURL(baseURL)([GetPostListParamsSchema.Enum.category, category]),
+    )
+  }
 
   return (
     <Tabs

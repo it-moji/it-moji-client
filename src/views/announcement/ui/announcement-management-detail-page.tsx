@@ -1,7 +1,6 @@
 'use client'
 
 import { Button } from '@mantine/core'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -9,7 +8,8 @@ import { DetailView } from '@/widgets/announcement-detail'
 import { DeleteButton } from '@/widgets/announcement-list'
 import type { PostDetail } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
-import { AdminContainer } from '@/shared/ui'
+import { useLoaderSwitch } from '@/shared/lib'
+import { AdminContainer, LinkWithLoader } from '@/shared/ui'
 import { ModifyAnnouncementFormPage } from './modify-announcement-form-page'
 
 export interface AnnouncementManagementDetailPageProps {
@@ -20,7 +20,9 @@ export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDe
   post,
 }) => {
   const { replace } = useRouter()
+  const { on, off } = useLoaderSwitch()
   const [isModifyMode, setIsModifyMode] = useState(false)
+  const [isPending, setIsPending] = useState(false)
 
   if (isModifyMode) {
     return (
@@ -28,6 +30,7 @@ export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDe
         id={post.id}
         initialBody={post}
         onSuccess={(message) => {
+          off()
           setIsModifyMode(false)
           toast.success(message)
         }}
@@ -40,17 +43,33 @@ export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDe
     <AdminContainer>
       <DetailView post={post} />
       <div className="mt-8 flex items-center justify-end space-x-2">
-        <Button variant="light" color="gray" onClick={() => setIsModifyMode(true)}>
+        <Button
+          variant="light"
+          color="gray"
+          disabled={isPending}
+          onClick={() => setIsModifyMode(true)}
+        >
           수정
         </Button>
         <DeleteButton
           id={post.id}
+          onStart={() => setIsPending(true)}
           onSuccess={(message) => {
+            on()
             replace(ROUTES.ADMIN.ANNOUNCEMENT())
             toast.success(message)
           }}
+          onFailed={(message) => {
+            setIsPending(false)
+            toast.error(message)
+          }}
         />
-        <Button href={ROUTES.ADMIN.ANNOUNCEMENT()} title="목록 페이지 이동" component={Link}>
+        <Button
+          href={ROUTES.ADMIN.ANNOUNCEMENT()}
+          title="목록 페이지 이동"
+          component={LinkWithLoader}
+          disabled={isPending}
+        >
           목록
         </Button>
       </div>

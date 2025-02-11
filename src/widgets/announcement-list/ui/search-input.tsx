@@ -11,27 +11,27 @@ import {
   SearchPostTypeSchema,
 } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
-import { createSearchParamsToURL } from '@/shared/lib'
+import { createSearchParamsToURL, useLoaderSwitch } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
 
 export interface SearchInputProps {
   defaultQuery?: string
   defaultType?: SearchPostType
-  baseURL?: string
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
   defaultQuery = '',
   defaultType = SearchPostTypeSchema.Enum.TITLE,
-  baseURL = ROUTES.ADMIN.ANNOUNCEMENT(),
 }) => {
   const [query, setQuery] = useInputState(defaultQuery)
   const [type, setType] = useState<SearchPostType>(defaultType)
 
-  const { push } = useRouter()
+  const { push, back } = useRouter()
+  const { on } = useLoaderSwitch()
   const pathname = usePathname()
 
   const handleSubmit = () => {
+    on()
     push(
       createSearchParamsToURL(ROUTES.ADMIN.ANNOUNCEMENT.SEARCH())(
         [SearchPostParamsSchema.Enum.query, query],
@@ -42,9 +42,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 
   useEffect(() => {
     if (!query && pathname === ROUTES.ADMIN.ANNOUNCEMENT.SEARCH()) {
-      push(baseURL)
+      back()
     }
-  }, [query, baseURL, pathname, push])
+  }, [query, pathname, back])
 
   return (
     <div className="w-full max-w-md items-center space-y-2 sm:flex sm:space-x-2 sm:space-y-0">

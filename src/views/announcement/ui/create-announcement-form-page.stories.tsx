@@ -23,7 +23,7 @@ export const EmptyForm: Story = {
     fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
     revalidate: fn(() => Promise.resolve()),
     onSuccess: fn(),
-    onError: fn(),
+    onFailed: fn(),
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -77,9 +77,7 @@ export const EmptyForm: Story = {
       await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
       await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
       expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onError).not.toHaveBeenCalledOnce()
-
-      expect(buttonEl).not.toBeDisabled()
+      expect(args.onFailed).not.toHaveBeenCalledOnce()
     })
   },
 }
@@ -99,7 +97,7 @@ export const FilledForm: Story = {
     fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
     revalidate: fn(() => Promise.resolve()),
     onSuccess: fn(),
-    onError: fn(),
+    onFailed: fn(),
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -155,9 +153,7 @@ export const FilledForm: Story = {
       await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
       await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
       expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onError).not.toHaveBeenCalledOnce()
-
-      expect(buttonEl).not.toBeDisabled()
+      expect(args.onFailed).not.toHaveBeenCalledOnce()
     })
   },
 }
