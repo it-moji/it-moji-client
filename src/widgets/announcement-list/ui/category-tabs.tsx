@@ -31,7 +31,10 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({ baseURL, current }) 
   const { on } = useLoaderSwitch()
 
   const onSubmit = (category: ExtendedPostCategory) => {
-    on()
+    if (selected !== category) {
+      on()
+    }
+
     push(
       category === all
         ? baseURL
