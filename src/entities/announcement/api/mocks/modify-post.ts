@@ -14,13 +14,6 @@ export const modifyPostMockHandler = createMockHandler({
       return { status: 400 }
     }
 
-    if (
-      data.isPinned &&
-      POST_LIST_MOCK_DATA.filter((post) => post.isPinned).length >= MAX_PINNED_POST
-    ) {
-      return { status: 400 }
-    }
-
     const { id } = params
     const targetId = Number(id)
 
@@ -29,7 +22,15 @@ export const modifyPostMockHandler = createMockHandler({
     })
 
     if (targetPostIndex < 0) {
-      return Promise.resolve({ status: 400 })
+      return { status: 400 }
+    }
+
+    if (
+      !POST_LIST_MOCK_DATA[targetPostIndex].isPinned &&
+      data.isPinned &&
+      POST_LIST_MOCK_DATA.filter((post) => post.isPinned).length >= MAX_PINNED_POST
+    ) {
+      return { status: 400 }
     }
 
     POST_LIST_MOCK_DATA[targetPostIndex] = {
