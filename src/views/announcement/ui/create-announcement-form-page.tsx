@@ -2,7 +2,6 @@
 
 import { Button, Checkbox, InputLabel, Select, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
@@ -15,7 +14,7 @@ import {
 } from '@/entities/announcement'
 import type { ExceptionInterceptor } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
-import { useLoaderSwitch } from '@/shared/lib'
+import { useRouter } from '@/shared/lib'
 import { AdminContainer, AdminTitle, Icon, TextEditor } from '@/shared/ui'
 
 export interface CreateAnnouncementFormPageProps {
@@ -46,16 +45,8 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
   extraButton: ExtraButton,
   initialBody = {},
 }) => {
-  const { back, push } = useRouter()
-  const { on, off } = useLoaderSwitch()
-
+  const { back, push, on, off } = useRouter()
   const [isPending, setIsPending] = useState(false)
-
-  const interceptor: ExceptionInterceptor = ({ status }) => {
-    if (400 <= status && status < 500) {
-      onFailed('지정된 고정된 공지사항 수를 초과했어요')
-    }
-  }
 
   const form = useForm<PostBody>({
     mode: 'uncontrolled',
@@ -80,10 +71,14 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
       onSubmit={form.onSubmit(async (body) => {
         setIsPending(true)
         on()
-        await fetcher(body, interceptor)
+        await fetcher(body, ({ status }) => {
+          if (400 <= status && status < 500) {
+            onFailed('지정된 고정된 공지사항 수를 초과했어요')
+          }
+        })
           .then(() => revalidate(body))
           .then(() => {
-            if (window.location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
+            if (location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
               push(ROUTES.ADMIN.ANNOUNCEMENT())
             }
 
@@ -115,6 +110,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
               value: category,
               label: POST_CATEGORY_LABEL[category],
             }))}
+            checkIconPosition="right"
             key={form.key('postCategory')}
             {...form.getInputProps('postCategory')}
           />

@@ -1,14 +1,13 @@
 'use client'
 
 import { Button } from '@mantine/core'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { DetailView } from '@/widgets/announcement-detail'
 import { DeleteButton } from '@/widgets/announcement-list'
 import type { PostDetail } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
-import { useLoaderSwitch } from '@/shared/lib'
+import { useRouter } from '@/shared/lib'
 import { AdminContainer, LinkWithLoader } from '@/shared/ui'
 import { ModifyAnnouncementFormPage } from './modify-announcement-form-page'
 
@@ -19,8 +18,7 @@ export interface AnnouncementManagementDetailPageProps {
 export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDetailPageProps> = ({
   post,
 }) => {
-  const { replace } = useRouter()
-  const { on, off } = useLoaderSwitch()
+  const { replace, off } = useRouter()
   const [isModifyMode, setIsModifyMode] = useState(false)
   const [isPending, setIsPending] = useState(false)
 
@@ -55,7 +53,6 @@ export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDe
           id={post.id}
           onStart={() => setIsPending(true)}
           onSuccess={(message) => {
-            on()
             replace(ROUTES.ADMIN.ANNOUNCEMENT())
             toast.success(message)
           }}

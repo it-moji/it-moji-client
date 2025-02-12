@@ -2,7 +2,7 @@
 
 import { ActionIcon, Select, TextInput } from '@mantine/core'
 import { useInputState } from '@mantine/hooks'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { SearchPostType } from '@/entities/announcement'
 import {
@@ -11,7 +11,7 @@ import {
   SearchPostTypeSchema,
 } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
-import { createSearchParamsToURL, useLoaderSwitch } from '@/shared/lib'
+import { createSearchParamsToURL, useRouter } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
 
 export interface SearchInputProps {
@@ -27,11 +27,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const [type, setType] = useState<SearchPostType>(defaultType)
 
   const { push, back } = useRouter()
-  const { on } = useLoaderSwitch()
   const pathname = usePathname()
 
   const handleSubmit = () => {
-    on()
     push(
       createSearchParamsToURL(ROUTES.ADMIN.ANNOUNCEMENT.SEARCH())(
         [SearchPostParamsSchema.Enum.query, query],
@@ -58,28 +56,23 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         onChange={(value) => setType(value as SearchPostType)}
         value={type}
         allowDeselect={false}
+        checkIconPosition="right"
       />
-      <div className="relative w-full">
-        <TextInput
-          type="search"
-          className="w-full"
-          classNames={{ input: 'pr-10' }}
-          value={query}
-          onChange={setQuery}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSubmit()
-          }}
-          placeholder="검색어를 입력해주세요"
-        />
-        <ActionIcon
-          className="absolute inset-y-0 right-1 my-auto"
-          variant="subtle"
-          color="gray"
-          onClick={handleSubmit}
-        >
-          <Icon query="fluent:search-32-regular" />
-        </ActionIcon>
-      </div>
+      <TextInput
+        type="search"
+        className="w-full"
+        value={query}
+        onChange={setQuery}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') handleSubmit()
+        }}
+        placeholder="검색어를 입력해주세요"
+        rightSection={
+          <ActionIcon variant="subtle" color="gray" onClick={handleSubmit}>
+            <Icon query="fluent:search-32-regular" />
+          </ActionIcon>
+        }
+      />
     </div>
   )
 }

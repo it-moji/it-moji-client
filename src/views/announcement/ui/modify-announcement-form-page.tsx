@@ -1,11 +1,10 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { DeleteButton } from '@/widgets/announcement-list'
 import { modifyPost, modifyPostWithRevalidate } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
-import { useLoaderSwitch } from '@/shared/lib'
+import { useRouter } from '@/shared/lib'
 import {
   type CreateAnnouncementFormPageProps,
   CreateAnnouncementFormPage,
@@ -19,7 +18,6 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
   id,
   ...props
 }) => {
-  const { on } = useLoaderSwitch()
   const { replace } = useRouter()
 
   return (
@@ -32,7 +30,6 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
           id={id}
           onStart={() => setIsPending(true)}
           onSuccess={(message) => {
-            on()
             replace(ROUTES.ADMIN.ANNOUNCEMENT())
             toast.success(message)
           }}
@@ -44,7 +41,6 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
         />
       )}
       onSuccess={(message) => {
-        on()
         replace(ROUTES.ADMIN.ANNOUNCEMENT.DETAIL(id))
         toast.success(message)
       }}

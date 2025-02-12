@@ -1,3 +1,6 @@
+'use client'
+
+import { useRouter as useNextRouter } from 'next/navigation'
 import { create } from 'zustand'
 
 export interface LoaderSwitchState {
@@ -19,3 +22,30 @@ export const useLoaderSwitch = (): LoaderSwitchState => ({
   on: useLoaderState((store) => store.on),
   off: useLoaderState((store) => store.off),
 })
+
+export interface AppRouterWithLoaderInstance
+  extends ReturnType<typeof useNextRouter>,
+    LoaderSwitchState {}
+
+export const useRouter = (): AppRouterWithLoaderInstance => {
+  const loader = useLoaderSwitch()
+  const router = useNextRouter()
+
+  const push: typeof router.push = (href, options) => {
+    if (href !== `${location.pathname}${location.search}`) {
+      loader.on()
+    }
+
+    router.push(href, options)
+  }
+
+  const replace: typeof router.replace = (href, options) => {
+    if (href !== `${location.pathname}${location.search}`) {
+      loader.on()
+    }
+
+    router.replace(href, options)
+  }
+
+  return { ...router, ...loader, push, replace }
+}

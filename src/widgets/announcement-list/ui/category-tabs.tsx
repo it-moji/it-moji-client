@@ -1,7 +1,6 @@
 'use client'
 
 import { FloatingIndicator, Tabs } from '@mantine/core'
-import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import {
   type PostCategory,
@@ -9,7 +8,7 @@ import {
   PostCategorySchema,
   GetPostListParamsSchema,
 } from '@/entities/announcement'
-import { createSearchParamsToURL, useLoaderSwitch } from '@/shared/lib'
+import { createSearchParamsToURL, useRouter } from '@/shared/lib'
 import classes from './category-tabs.module.css'
 
 export interface CategoryTabsProps {
@@ -28,13 +27,7 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({ baseURL, current }) 
     setControlsRefs((prev) => Object.assign(prev, { [val]: node }))
 
   const { push } = useRouter()
-  const { on } = useLoaderSwitch()
-
   const onSubmit = (category: ExtendedPostCategory) => {
-    if (selected !== category) {
-      on()
-    }
-
     push(
       category === all
         ? baseURL
