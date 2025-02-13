@@ -1,4 +1,5 @@
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import type { Preview } from '@storybook/react'
 import { handlers } from '@/mocks/handlers'
@@ -20,6 +21,9 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+    },
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
     },
   },
   // Provide the MSW addon loader globally
