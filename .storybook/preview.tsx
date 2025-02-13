@@ -36,7 +36,7 @@ const preview: Preview = {
     }),
     (Story, context) => (
       <DesignSystemProvider>
-        <QueryProvider disableDevtool>
+        <QueryProvider withoutDevtools>
           <Story {...context} />
         </QueryProvider>
       </DesignSystemProvider>
