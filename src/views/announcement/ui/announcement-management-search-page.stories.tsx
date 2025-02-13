@@ -4,7 +4,7 @@ import { ROUTES } from '@/shared/config'
 import { AnnouncementManagementSearchPage } from './announcement-management-search-page'
 
 const meta: Meta<typeof AnnouncementManagementSearchPage> = {
-  title: '관리자 페이지/공지사항 관리 - 검색',
+  title: '관리자 페이지/공지사항 관리/검색',
   component: AnnouncementManagementSearchPage,
   parameters: {
     nextjs: {
@@ -19,7 +19,7 @@ const meta: Meta<typeof AnnouncementManagementSearchPage> = {
 export default meta
 type Story = StoryObj<typeof AnnouncementManagementSearchPage>
 
-export const Empty: Story = {
+export const 검색결과_없음: Story = {
   render: (args) => <AnnouncementManagementSearchPage {...args} />,
   args: {
     searchPost: () => searchPostEmptyMock({}),
