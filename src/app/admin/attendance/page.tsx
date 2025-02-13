@@ -1,6 +1,6 @@
 import { AdminContainer, FallbackRouteButtonGroup, UnderConstruction } from '@/shared/ui'
 
-const AdminMainPage: React.FC = () => (
+const AttendancePage: React.FC = () => (
   <AdminContainer>
     <UnderConstruction>
       <FallbackRouteButtonGroup admin />
@@ -8,4 +8,4 @@ const AdminMainPage: React.FC = () => (
   </AdminContainer>
 )
 
-export default AdminMainPage
+export default AttendancePage
