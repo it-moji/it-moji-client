@@ -34,6 +34,8 @@ export const useRouter = (): AppRouterWithLoaderInstance => {
   const push: typeof router.push = (href, options) => {
     if (href !== `${location.pathname}${location.search}`) {
       loader.on()
+    } else {
+      loader.off()
     }
 
     router.push(href, options)
@@ -42,6 +44,8 @@ export const useRouter = (): AppRouterWithLoaderInstance => {
   const replace: typeof router.replace = (href, options) => {
     if (href !== `${location.pathname}${location.search}`) {
       loader.on()
+    } else {
+      loader.off()
     }
 
     router.replace(href, options)
