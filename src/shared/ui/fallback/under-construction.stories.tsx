@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { FallbackRouteButtonGroup } from './route-button-group'
 import { UnderConstruction } from './under-construction'
 
 const meta: Meta<typeof UnderConstruction> = {
@@ -14,5 +15,13 @@ const meta: Meta<typeof UnderConstruction> = {
 
 export default meta
 type Story = StoryObj<typeof UnderConstruction>
+
+export const 네비게이션_버튼: Story = {
+  render: (args) => (
+    <UnderConstruction {...args}>
+      <FallbackRouteButtonGroup />
+    </UnderConstruction>
+  ),
+}
 
 export const 기본_상태: Story = {}
