@@ -4,7 +4,7 @@ import { Button } from '@mantine/core'
 import { useRouter } from 'next/navigation'
 import { ROUTES } from '@/shared/config'
 import { Icon } from '../icon'
-import { LinkWithLoader } from '../loader'
+import { LinkWithLoader } from '../loader/link-with-loader'
 import { type PropsWithClassName, cn } from '../../lib'
 
 export type FallbackRouteButtonGroupProps = PropsWithClassName<{
