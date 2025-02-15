@@ -6,9 +6,9 @@ import { handlers } from '@/mocks/handlers'
 import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
 
-import '@/app/reset.css'
+import '@/app/assets/style/reset.css'
 import '@mantine/core/styles.css'
-import '@/app/globals.css'
+import '@/app/assets/style/globals.css'
 
 // Initialize MSW
 initialize()

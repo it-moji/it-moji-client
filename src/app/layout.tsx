@@ -4,11 +4,11 @@ import { MockProvider } from '@/mocks/mock-provider'
 import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
 import { LoadingProgressBar } from '@/shared/ui'
-import { Pretendard } from './font'
+import { Pretendard } from './assets/font'
 
-import './reset.css'
+import './assets/style/reset.css'
 import '@mantine/core/styles.css'
-import './globals.css'
+import './assets/style/globals.css'
 
 export const metadata: Metadata = {
   title: 'ITMOJI - IT인들끼리 MO여 JI식을 나누는 모임 🧑🏻‍💻',
