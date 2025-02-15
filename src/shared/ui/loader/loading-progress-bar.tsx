@@ -18,7 +18,7 @@ export const FakeProgressBar: React.FC = () => {
       className="absolute inset-y-0 left-0"
       style={{ backgroundColor: 'var(--mantine-primary-color-filled)' }}
       initial={{ width: '0%', opacity: 0 }}
-      animate={{ width: `${16 + 0.8 * step}%`, opacity: 1 }}
+      animate={{ width: `${Math.min(16 + 0.8 * step, 92)}%`, opacity: 1 }}
       exit={{ width: '100%', opacity: 0 }}
       transition={{ ease: 'easeInOut', duration: 0.24 }}
     />
