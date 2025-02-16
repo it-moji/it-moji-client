@@ -1,3 +1,7 @@
 'use client'
 
-export { CreateAnnouncementFormPage as default } from '@/views/announcement'
+import { CreateAnnouncementFormPage } from '@/views/announcement'
+
+const AnnouncementFormPage: React.FC = () => <CreateAnnouncementFormPage />
+
+export default AnnouncementFormPage
