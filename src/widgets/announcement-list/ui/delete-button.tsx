@@ -10,6 +10,7 @@ export interface DeleteButtonProps extends ButtonProps {
   id: number
   fetcher?: (id: number) => Promise<unknown>
   revalidate?: (id: number) => Promise<unknown>
+  onStart?: () => void
   onSuccess?: (message: string) => void
   onFailed?: (message: string) => void
 }
@@ -18,6 +19,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   id,
   fetcher = deletePost,
   revalidate = deletePostWithRevalidate,
+  onStart,
   onSuccess = toast.success,
   onFailed = toast.error,
   ...props
@@ -26,15 +28,16 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
 
   const onConfirm = async () => {
     setIsPending(true)
+    onStart?.()
     await fetcher(id)
       .then(() => revalidate(id))
       .then(() => {
         onSuccess('공지사항 삭제에 성공했어요')
       })
       .catch(() => {
+        setIsPending(false)
         onFailed('공지사항 삭제에 실패했어요')
       })
-      .finally(() => setIsPending(false))
   }
 
   const handleClick = () =>
@@ -55,7 +58,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
 
   return (
     <Button onClick={handleClick} color="red" variant="light" disabled={isPending} {...props}>
-      {isPending ? <Loader size="xs" color="red" /> : '삭제'}
+      {isPending ? <Loader size="xs" color="gray" /> : '삭제'}
     </Button>
   )
 }

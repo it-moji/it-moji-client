@@ -3,15 +3,19 @@ import type { Metadata } from 'next'
 import { MockProvider } from '@/mocks/mock-provider'
 import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
-import { Pretendard } from './font'
+import { LoadingProgressBar } from '@/shared/ui'
+import { Pretendard } from './assets/font'
 
-import './reset.css'
+import './assets/style/reset.css'
 import '@mantine/core/styles.css'
-import './globals.css'
+import './assets/style/globals.css'
 
 export const metadata: Metadata = {
-  title: 'ITMOJI - IT인들끼리 MO여 JI식을 나누는 모임 🧑🏻‍💻',
-  description: 'IT인들끼리 모여 지식을 나누는 모임 ITMOJI의 공식 홈페이지입니다.',
+  title: {
+    template: '%s | IT-MOJI',
+    default: '🧑🏻‍💻 IT인들끼리 MO여 JI식을 나누는 모임 | IT-MOJI',
+  },
+  description: 'IT인들끼리 모여 지식을 나누는 모임 IT-MOJI의 공식 홈페이지입니다.',
 }
 
 if (
@@ -32,6 +36,7 @@ const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
       <DesignSystemProvider>
         <MockProvider>
           <QueryProvider>
+            <LoadingProgressBar />
             {children}
             <Toaster position="bottom-right" />
           </QueryProvider>

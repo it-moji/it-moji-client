@@ -38,8 +38,6 @@ export class Fetcher {
     { schema, onException, method = 'GET', ...options }: FetcherOptions<T>,
   ): Promise<CommonResponse<T>> {
     const response = await this.fetch(`${this.prefix}${url}`, { method, ...options })
-
-    const schemaType = createCommonResponseSchema(schema)
     const data = await response.json()
 
     if (!response.ok) {
@@ -48,6 +46,7 @@ export class Fetcher {
       throw new Exception(data.message || '')
     }
 
+    const schemaType = createCommonResponseSchema(schema)
     const valid = schemaType.safeParse(data)
 
     if (!valid.data) {

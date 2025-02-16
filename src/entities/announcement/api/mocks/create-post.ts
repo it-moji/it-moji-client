@@ -23,14 +23,11 @@ export const createPostMockHandler = createMockHandler({
     }
 
     POST_LIST_MOCK_DATA.push({
-      id: POST_LIST_MOCK_DATA.length + 1,
-      title: data.title,
-      content: data.content,
-      postCategory: data.postCategory,
+      id: POST_LIST_MOCK_DATA[POST_LIST_MOCK_DATA.length - 1].id + 1,
+      ...data,
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
       viewCount: 0,
-      isPinned: data.isPinned,
     })
 
     return { data: {} }

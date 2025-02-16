@@ -13,6 +13,11 @@ export const Pretendard = localFont({
       style: 'normal',
     },
     {
+      path: './pretendard-semi-bold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
       path: './pretendard-medium.woff2',
       weight: '500',
       style: 'normal',

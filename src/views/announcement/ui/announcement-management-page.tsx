@@ -1,5 +1,4 @@
 import { Button } from '@mantine/core'
-import Link from 'next/link'
 import {
   AnnouncementList,
   AnnouncementTable,
@@ -13,7 +12,7 @@ import { GetPostListParamsSchema } from '@/entities/announcement'
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
 import { createSearchParamsFilter } from '@/shared/lib'
-import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
+import { AdminContainer, AdminTitle, FallbackRender, Icon, LinkWithLoader } from '@/shared/ui'
 
 export interface AnnouncementManagementPageProps {
   getPostList: () => Promise<GetPostListResponse>
@@ -62,7 +61,7 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
         <p className="mb-2 px-1 py-2 text-sm md:mb-0">
           총 {data.totalElements + pinned.data.length}개의 공지가 있어요
         </p>
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-8">
           {!isEmpty && (
             <PageController
               page={data.number}
@@ -71,7 +70,7 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
             />
           )}
           <Button
-            component={Link}
+            component={LinkWithLoader}
             href={ROUTES.ADMIN.ANNOUNCEMENT.CREATE()}
             title="공지사항 작성 페이지 이동"
           >

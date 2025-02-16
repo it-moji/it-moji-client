@@ -20,6 +20,8 @@ export const postDetailMockHandler = createMockHandler<PostDetail>({
     const prevPost = POST_LIST_MOCK_DATA[targetPostIndex - 1]
     const nextPost = POST_LIST_MOCK_DATA[targetPostIndex + 1]
 
+    POST_LIST_MOCK_DATA[targetPostIndex].viewCount += 1
+
     return Promise.resolve({
       data: {
         ...targetPost,
@@ -34,4 +36,5 @@ export const postDetailMockHandler = createMockHandler<PostDetail>({
       },
     })
   },
+  delay: 400,
 })

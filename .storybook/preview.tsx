@@ -1,13 +1,14 @@
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import type { Preview } from '@storybook/react'
 import { handlers } from '@/mocks/handlers'
 import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
 
-import '@/app/reset.css'
+import '@/app/assets/style/reset.css'
 import '@mantine/core/styles.css'
-import '@/app/globals.css'
+import '@/app/assets/style/globals.css'
 
 // Initialize MSW
 initialize()
@@ -20,6 +21,12 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+    },
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+    },
+    nextjs: {
+      appDirectory: true,
     },
   },
   // Provide the MSW addon loader globally
@@ -36,7 +43,7 @@ const preview: Preview = {
     }),
     (Story, context) => (
       <DesignSystemProvider>
-        <QueryProvider disableDevtool>
+        <QueryProvider withoutDevtools>
           <Story {...context} />
         </QueryProvider>
       </DesignSystemProvider>

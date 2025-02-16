@@ -4,7 +4,7 @@ import { PostCategorySchema } from '@/entities/announcement'
 import { CreateAnnouncementFormPage } from './create-announcement-form-page'
 
 const meta: Meta<typeof CreateAnnouncementFormPage> = {
-  title: '관리자 페이지/공지사항 관리 - 생성 및 수정 폼',
+  title: '관리자 페이지/공지사항 관리/생성 및 수정 폼',
   component: CreateAnnouncementFormPage,
   parameters: {
     nextjs: {
@@ -17,13 +17,13 @@ const meta: Meta<typeof CreateAnnouncementFormPage> = {
 export default meta
 type Story = StoryObj<typeof CreateAnnouncementFormPage>
 
-export const EmptyForm: Story = {
+export const 초기값_없음: Story = {
   render: (args) => <CreateAnnouncementFormPage {...args} />,
   args: {
     fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
     revalidate: fn(() => Promise.resolve()),
     onSuccess: fn(),
-    onError: fn(),
+    onFailed: fn(),
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -77,9 +77,7 @@ export const EmptyForm: Story = {
       await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
       await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
       expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onError).not.toHaveBeenCalledOnce()
-
-      expect(buttonEl).not.toBeDisabled()
+      expect(args.onFailed).not.toHaveBeenCalledOnce()
     })
   },
 }
@@ -87,7 +85,7 @@ export const EmptyForm: Story = {
 const filledTitle = 'Hello 123'
 const filledContent = 'Hello 321'
 
-export const FilledForm: Story = {
+export const 초기값_있음: Story = {
   render: (args) => <CreateAnnouncementFormPage {...args} />,
   args: {
     initialBody: {
@@ -99,7 +97,7 @@ export const FilledForm: Story = {
     fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
     revalidate: fn(() => Promise.resolve()),
     onSuccess: fn(),
-    onError: fn(),
+    onFailed: fn(),
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -155,9 +153,7 @@ export const FilledForm: Story = {
       await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
       await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
       expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onError).not.toHaveBeenCalledOnce()
-
-      expect(buttonEl).not.toBeDisabled()
+      expect(args.onFailed).not.toHaveBeenCalledOnce()
     })
   },
 }

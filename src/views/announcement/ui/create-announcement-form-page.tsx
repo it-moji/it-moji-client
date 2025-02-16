@@ -2,7 +2,6 @@
 
 import { Button, Checkbox, InputLabel, Select, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
@@ -15,49 +14,43 @@ import {
 } from '@/entities/announcement'
 import type { ExceptionInterceptor } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
+import { useRouter } from '@/shared/lib'
 import { AdminContainer, AdminTitle, Icon, TextEditor } from '@/shared/ui'
 
 export interface CreateAnnouncementFormPageProps {
   fetcher?: (body: PostBody, onException?: ExceptionInterceptor) => Promise<unknown>
   revalidate?: (body: PostBody) => Promise<unknown>
   onSuccess?: (message: string) => void
-  onError?: (message: string) => void
+  onFailed?: (message: string) => void
   onCancel?: () => void
   label?: string
-  route?: string
-  extraButton?: React.ReactNode
+  extraButton?: React.FC<{ isPending: boolean; setIsPending: (state: boolean) => void }>
   initialBody?: Partial<PostBody>
+}
+
+const initialValues: PostBody = {
+  title: '',
+  isPinned: false,
+  content: '',
+  postCategory: PostCategorySchema.Enum.NOTICE,
 }
 
 export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProps> = ({
   fetcher = createPost,
   revalidate = createPostWithRevalidate,
   onSuccess = toast.success,
-  onError = toast.error,
+  onFailed = toast.error,
   onCancel,
   label = '작성',
-  route = ROUTES.ADMIN.ANNOUNCEMENT.CREATE(),
-  extraButton,
+  extraButton: ExtraButton,
   initialBody = {},
 }) => {
-  const { back, push } = useRouter()
-
+  const { back, push, on, off } = useRouter()
   const [isPending, setIsPending] = useState(false)
-
-  const interceptor: ExceptionInterceptor = ({ status }) => {
-    if (400 <= status && status < 500) {
-      onError('지정된 고정된 공지사항 수를 초과했어요')
-    }
-  }
 
   const form = useForm<PostBody>({
     mode: 'uncontrolled',
-    initialValues: {
-      title: initialBody.title ?? '',
-      isPinned: initialBody.isPinned ?? false,
-      content: initialBody.content ?? '',
-      postCategory: initialBody.postCategory ?? PostCategorySchema.Enum.NOTICE,
-    },
+    initialValues: { ...initialValues, ...initialBody },
     validate: {
       title: (value) => {
         const { data, error } = z
@@ -77,19 +70,30 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
     <form
       onSubmit={form.onSubmit(async (body) => {
         setIsPending(true)
-        await fetcher(body, interceptor)
+        on()
+        await fetcher(body, ({ status }) => {
+          if (400 <= status && status < 500) {
+            onFailed('지정된 고정된 공지사항 수를 초과했어요')
+          }
+        })
           .then(() => revalidate(body))
           .then(() => {
-            if (window.location.pathname === route) {
+            if (location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
               push(ROUTES.ADMIN.ANNOUNCEMENT())
             }
+
+            form.setFieldValue('title', initialValues.title)
+            form.setFieldValue('isPinned', initialValues.isPinned)
+            form.setFieldValue('content', initialValues.content)
+            form.setFieldValue('postCategory', initialValues.postCategory)
 
             onSuccess(`공지사항 ${label}에 성공했어요`)
           })
           .catch(() => {
-            onError(`공지사항 ${label}에 실패했어요`)
+            off()
+            setIsPending(false)
+            onFailed(`공지사항 ${label}에 실패했어요`)
           })
-          .finally(() => setIsPending(false))
       })}
     >
       <AdminContainer>
@@ -97,7 +101,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
           <Icon query="fluent-emoji:fountain-pen" className="mr-2 size-5" />
           공지사항 {label}
         </AdminTitle>
-        <div className="mb-6 flex items-end space-x-8">
+        <div className="mb-6 flex flex-wrap items-end gap-x-8 gap-y-3">
           <Select
             label="유형"
             className="w-32 min-w-32"
@@ -106,6 +110,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
               value: category,
               label: POST_CATEGORY_LABEL[category],
             }))}
+            checkIconPosition="right"
             key={form.key('postCategory')}
             {...form.getInputProps('postCategory')}
           />
@@ -114,7 +119,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
             classNames={{
               root: 'h-9 flex items-center',
               input: 'cursor-pointer',
-              label: 'cursor-pointer select-none',
+              label: 'cursor-pointer select-none whitespace-nowrap',
             }}
             defaultChecked={inputProps.defaultValue}
             key={form.key('isPinned')}
@@ -138,7 +143,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
           <Button variant="light" color="gray" onClick={onCancel ?? back} disabled={isPending}>
             취소
           </Button>
-          {extraButton}
+          {ExtraButton && <ExtraButton isPending={isPending} setIsPending={setIsPending} />}
           <Button type="submit" disabled={isPending}>
             저장
           </Button>

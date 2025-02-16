@@ -1,8 +1,10 @@
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import type { Metadata } from 'next'
 import { AnnouncementManagementSearchPage } from '@/views/announcement'
 import { searchPost, SearchPostParamsSchema, SearchPostTypeSchema } from '@/entities/announcement'
 import { type SearchParams } from '@/shared/api'
+import { ROUTES } from '@/shared/config'
 
 export const metadata: Metadata = {
   title: '공지사항 검색',
@@ -19,6 +21,10 @@ const AnnouncementSearchPage: React.FC<AnnouncementSearchPageProps> = async ({ s
   const type =
     SearchPostTypeSchema.safeParse(params[SearchPostParamsSchema.Enum.type])?.data ||
     SearchPostTypeSchema.Enum.TITLE
+
+  if (!query) {
+    redirect(ROUTES.ADMIN.ANNOUNCEMENT())
+  }
 
   return (
     <AnnouncementManagementSearchPage

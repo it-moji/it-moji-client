@@ -25,7 +25,7 @@ export const generateMetadata = async ({
     const post = await getPostDetail(id)
 
     return {
-      title: `공지사항 수정 - ${post.data.title}`,
+      title: `[공지사항 수정] ${post.data.title}`,
     }
   } catch {
     return {}

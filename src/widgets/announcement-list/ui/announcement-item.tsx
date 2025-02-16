@@ -1,10 +1,10 @@
 'use client'
 
 import { Badge, Button, Table } from '@mantine/core'
-import Link from 'next/link'
 import { type PostItem, POST_CATEGORY_LABEL } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
 import { cn, formatDateFromNow } from '@/shared/lib'
+import { LinkWithLoader } from '@/shared/ui'
 import { DeleteButton } from './delete-button'
 
 export interface AnnouncementItemProps extends PostItem {
@@ -26,14 +26,14 @@ export const AnnouncementItem: React.FC<AnnouncementItemProps> = ({
       </Badge>
     </Table.Td>
     <Table.Td>
-      <Link
+      <LinkWithLoader
         href={ROUTES.ADMIN.ANNOUNCEMENT.DETAIL(id)}
         title={`페이지 이동: ${title}`}
         className="hover:underline"
       >
         {isPinned ? <>📌&nbsp;&nbsp;&nbsp;</> : null}
         {title}
-      </Link>
+      </LinkWithLoader>
     </Table.Td>
     <Table.Td className="text-center">{formatDateFromNow(createdAt)}</Table.Td>
     <Table.Td className="text-center">{viewCount}</Table.Td>
@@ -41,7 +41,7 @@ export const AnnouncementItem: React.FC<AnnouncementItemProps> = ({
       <Button
         href={ROUTES.ADMIN.ANNOUNCEMENT.MODIFY(id)}
         title={`수정하러 가기: ${title}`}
-        component={Link}
+        component={LinkWithLoader}
         size="xs"
         variant="light"
         color="gray"
