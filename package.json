@@ -8,6 +8,7 @@
     "build:service": "next build",
     "start": "next start",
     "lint": "next lint",
+    "type": "tsc --noEmit --diagnostics",
     "prepare": "husky",
     "dev:storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
