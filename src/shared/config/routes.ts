@@ -7,5 +7,9 @@ export const ROUTES = Object.assign(() => '/', {
       MODIFY: (id: number) => `${ROUTES.ADMIN.ANNOUNCEMENT.DETAIL(id)}/modify` as const,
     } as const),
     ATTENDANCE: () => `${ROUTES.ADMIN()}/attendance` as const,
+    DOCS: Object.assign(() => `${ROUTES.ADMIN()}/docs` as const, {
+      STORYBOOK: () => `${ROUTES.ADMIN.DOCS()}/storybook` as const,
+      SWAGGER: () => `${ROUTES.ADMIN.DOCS()}/swagger` as const,
+    } as const),
   } as const),
 } as const)
