@@ -13,6 +13,20 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: '/admin/docs/storybook',
+        destination: process.env.STORYBOOK_DOMAIN_ADDRESS!,
+        permanent: true,
+      },
+      {
+        source: '/admin/docs/swagger',
+        destination: process.env.SWAGGER_DOMAIN_ADDRESS!,
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig

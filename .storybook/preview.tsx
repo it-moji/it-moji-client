@@ -11,7 +11,11 @@ import '@mantine/core/styles.css'
 import '@/app/assets/style/globals.css'
 
 // Initialize MSW
-initialize()
+initialize({
+  serviceWorker: {
+    url: './mockServiceWorker.js',
+  },
+})
 
 const preview: Preview = {
   parameters: {
