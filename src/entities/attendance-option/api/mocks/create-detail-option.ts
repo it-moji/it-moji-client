@@ -5,7 +5,7 @@ import { AttendanceOptionKeySchema } from '../../model'
 import { OPTION_LIST_MOCK_DATA } from './option-list'
 
 export const createAttendanceDetailOptionMockHandler = createMockHandler({
-  endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey'),
+  endpoint: ATTENDANCE_OPTION_ENDPOINT.PRIMARY(':optionKey'),
   handler: async ({ request, params }) => {
     const body = await request.json()
     const { data } = PostAttendanceOptionBodySchema.safeParse(body)
@@ -33,7 +33,7 @@ export const createAttendanceDetailOptionMockHandler = createMockHandler({
     const maxId =
       allDetailOptions.length > 0 ? Math.max(...allDetailOptions.map((opt) => opt.id)) : 0
 
-    OPTION_LIST_MOCK_DATA[optionKey]?.detailOptions.push({ id: maxId + 1, name })
+    OPTION_LIST_MOCK_DATA[optionKey].detailOptions.push({ id: maxId + 1, name })
 
     return { data: {} }
   },

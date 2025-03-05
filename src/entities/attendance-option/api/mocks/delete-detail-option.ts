@@ -1,10 +1,21 @@
 import { createMockHandler } from '@/shared/api'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
+import { AttendanceOptionKeySchema } from '../../model'
 import { OPTION_LIST_MOCK_DATA } from './option-list'
 
 export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
-  endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':detailOptionId'),
+  endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey', ':detailOptionId'),
   handler: async ({ params }) => {
+    const { data: optionKey } = AttendanceOptionKeySchema.safeParse(params.optionKey)
+
+    if (!optionKey) {
+      return { status: 400 }
+    }
+
+    if (!OPTION_LIST_MOCK_DATA[optionKey]) {
+      return { status: 404 }
+    }
+
     const { detailOptionId } = params
     const targetId = Number(detailOptionId)
 

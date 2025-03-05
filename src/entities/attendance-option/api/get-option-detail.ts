@@ -12,9 +12,9 @@ export type GetAttendanceOptions = z.infer<typeof GetAttendanceOptionDetailSchem
 export type GetAttendanceOptionsResponse = CommonResponse<typeof GetAttendanceOptionDetailSchema>
 
 export const getAttendanceOptionDetail = (optionKey: AttendanceOptionKey) =>
-  server.request(ATTENDANCE_OPTION_ENDPOINT.DETAIL(optionKey), {
+  server.request(ATTENDANCE_OPTION_ENDPOINT.PRIMARY(optionKey), {
     schema: GetAttendanceOptionDetailSchema,
     next: {
-      tags: [ATTENDANCE_OPTION_TAG.DETAIL(optionKey)],
+      tags: [ATTENDANCE_OPTION_TAG.PRIMARY(optionKey)],
     },
   })

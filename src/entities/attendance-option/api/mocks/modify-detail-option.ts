@@ -5,7 +5,7 @@ import { AttendanceOptionKeySchema } from '../../model'
 import { OPTION_LIST_MOCK_DATA } from './option-list'
 
 export const modifyAttendanceDetailOptionMockHandler = createMockHandler({
-  endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey'),
+  endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey', ':detailOptionId'),
   handler: async ({ request, params }) => {
     const body = await request.json()
     const { data } = PutAttendanceOptionBodySchema.safeParse(body)
@@ -24,9 +24,27 @@ export const modifyAttendanceDetailOptionMockHandler = createMockHandler({
       return { status: 404 }
     }
 
-    OPTION_LIST_MOCK_DATA[optionKey].detailOptions = data
+    const { name } = data
 
-    return { data: {} }
+    const { detailOptionId } = params
+    const targetId = Number(detailOptionId)
+
+    const hasModifiedTarget = Object.values(OPTION_LIST_MOCK_DATA).some((option) => {
+      const targetOption = option.detailOptions.find((opt) => opt.id === targetId)
+
+      if (targetOption) {
+        targetOption.name = name
+        return true
+      }
+
+      return false
+    })
+
+    if (hasModifiedTarget) {
+      return { data: {} }
+    }
+
+    return { status: 404 }
   },
   method: 'put',
   delay: 1_200,
