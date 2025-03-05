@@ -8,13 +8,19 @@ export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
     const { detailOptionId } = params
     const targetId = Number(detailOptionId)
 
-    for (const option of Object.values(OPTION_LIST_MOCK_DATA)) {
+    const hasDeletedTarget = Object.values(OPTION_LIST_MOCK_DATA).some((option) => {
       const targetIndex = option.detailOptions.findIndex((opt) => opt.id === targetId)
 
       if (targetIndex !== -1) {
         option.detailOptions.splice(targetIndex, 1)
-        return { data: {} }
+        return true
       }
+
+      return false
+    })
+
+    if (hasDeletedTarget) {
+      return { data: {} }
     }
 
     return { status: 404 }
