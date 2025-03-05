@@ -1,12 +1,17 @@
 import { z } from 'zod'
 import type { CommonResponse } from '@/shared/api'
 import { server } from '@/shared/api'
+import type { AttendanceOptionKey } from '../model'
 import { AttendanceOptionKeySchema, AttendanceOptionSchema } from '../model'
 import { ATTENDANCE_OPTION_ENDPOINT, ATTENDANCE_OPTION_TAG } from './endpoint'
 
-export const GetAttendanceOptionsAllSchema = z.record(
-  AttendanceOptionKeySchema,
-  AttendanceOptionSchema,
+const AttendanceOptionKeys = Object.values(AttendanceOptionKeySchema.Values)
+
+export const GetAttendanceOptionsAllSchema = z.object(
+  Object.fromEntries(AttendanceOptionKeys.map((key) => [key, AttendanceOptionSchema])) as Record<
+    AttendanceOptionKey,
+    typeof AttendanceOptionSchema
+  >,
 )
 
 export type GetAttendanceOptionsAll = z.infer<typeof GetAttendanceOptionsAllSchema>
