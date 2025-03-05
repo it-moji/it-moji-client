@@ -7,7 +7,7 @@ import { OPTION_LIST_MOCK_DATA } from './option-list'
 export const attendanceOptionDetailMockHandler = createMockHandler<
   GetAttendanceOptionsResponse['data']
 >({
-  endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey'),
+  endpoint: ATTENDANCE_OPTION_ENDPOINT.PRIMARY(':optionKey'),
   handler: ({ params }) => {
     const { data: optionKey } = AttendanceOptionKeySchema.safeParse(params.optionKey)
 

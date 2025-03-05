@@ -13,7 +13,7 @@ export const createAttendanceDetailOption = (
   optionKey: AttendanceOptionKey,
   body: PostAttendanceOptionsBody,
 ) =>
-  server.request(ATTENDANCE_OPTION_ENDPOINT.DETAIL(optionKey), {
+  server.request(ATTENDANCE_OPTION_ENDPOINT.PRIMARY(optionKey), {
     schema: z.any(),
     body: JSON.stringify(body),
     method: 'POST',

@@ -5,4 +5,4 @@ import type { AttendanceOptionKey } from '../model'
 import { ATTENDANCE_OPTION_TAG } from './endpoint'
 
 export const deleteAttendanceDetailOptionWithRevalidate = async (key: AttendanceOptionKey) =>
-  [ATTENDANCE_OPTION_TAG.LIST, ATTENDANCE_OPTION_TAG.DETAIL(key)].forEach(revalidateTag)
+  [ATTENDANCE_OPTION_TAG.LIST, ATTENDANCE_OPTION_TAG.PRIMARY(key)].forEach(revalidateTag)
