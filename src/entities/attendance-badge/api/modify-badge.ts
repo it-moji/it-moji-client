@@ -6,7 +6,7 @@ import { ATTENDANCE_BADGE_ENDPOINT } from './endpoint'
 
 export interface ModifyAttendanceBadgeParams {
   id: AttendanceBadge['id']
-  body: Partial<CreateAttendanceBadgeBody>
+  body: CreateAttendanceBadgeBody
   onException: ExceptionInterceptor
 }
 

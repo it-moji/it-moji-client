@@ -7,7 +7,7 @@ export const modifyBadgeMockHandler = createMockHandler({
   endpoint: ATTENDANCE_BADGE_ENDPOINT.DETAIL(':badgeId'),
   handler: async ({ request, params }) => {
     const body = await request.json()
-    const { data } = PostAttendanceBadgeBodySchema.partial().safeParse(body)
+    const { data } = PostAttendanceBadgeBodySchema.safeParse(body)
 
     if (!data) {
       return { status: 400 }
