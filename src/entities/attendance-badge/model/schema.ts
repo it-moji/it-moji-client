@@ -1,6 +1,8 @@
 import { z } from 'zod'
-import { AttendanceDetailOptionSchema } from '@/entities/attendance-option/@x/detail-option'
-import { AttendanceOptionKeySchema } from '@/entities/attendance-option/@x/option-key'
+import {
+  AttendanceDetailOptionSchema,
+  AttendanceOptionKeySchema,
+} from '@/entities/attendance-option/@x/attendance-badge'
 
 export const AttendanceBadgeSchema = z.object({
   id: z.number(),

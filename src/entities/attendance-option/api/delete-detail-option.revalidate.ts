@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
-import { ATTENDANCE_BADGE_TAG } from '@/entities/attendance-badge/@x/revalidate-tag'
+import { ATTENDANCE_BADGE_TAG } from '@/entities/attendance-badge/@x/attendance-option'
 import type { AttendanceOptionKey } from '../model'
 import { ATTENDANCE_OPTION_TAG } from './endpoint'
 

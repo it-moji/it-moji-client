@@ -23,13 +23,3 @@ export const deleteBadgeMockHandler = createMockHandler({
   method: 'delete',
   delay: 1_200,
 })
-
-export const deleteBadgeDetailOptionInMockData = (targetId: number) => {
-  ATTENDANCE_BADGE_MOCK_DATA.forEach((badge, badgeIdx) => {
-    badge.options.forEach((option, optionIdx) => {
-      ATTENDANCE_BADGE_MOCK_DATA[badgeIdx].options[optionIdx] = option.filter((detailOption) => {
-        return detailOption.key !== targetId
-      })
-    })
-  })
-}

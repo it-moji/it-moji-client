@@ -1,4 +1,4 @@
-import { deleteBadgeDetailOptionInMockData } from '@/entities/attendance-badge/@x/badge-mock-data'
+import { deleteBadgeDetailOptionInMockData } from '@/entities/attendance-badge/@x/attendance-option'
 import { createMockHandler } from '@/shared/api'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 import { AttendanceOptionKeySchema } from '../../model'
