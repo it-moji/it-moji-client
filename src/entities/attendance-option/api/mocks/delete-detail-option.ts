@@ -3,6 +3,7 @@ import { createMockHandler } from '@/shared/api'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 import { AttendanceOptionKeySchema } from '../../model'
 import { OPTION_LIST_MOCK_DATA } from './option-list'
+import { deleteDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 
 export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
   endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey', ':detailOptionId'),
@@ -32,6 +33,8 @@ export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
     })
 
     if (hasDeletedTarget) {
+      deleteDetailOptionInTextParsingOptionMockData(targetId)
+
       return Promise.resolve({ data: {} })
     }
 

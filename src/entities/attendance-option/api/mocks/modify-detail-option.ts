@@ -3,6 +3,7 @@ import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 import { PutAttendanceOptionBodySchema } from '../modify-detail-option'
 import { AttendanceOptionKeySchema } from '../../model'
 import { OPTION_LIST_MOCK_DATA } from './option-list'
+import { updateDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 
 export const modifyAttendanceDetailOptionMockHandler = createMockHandler({
   endpoint: ATTENDANCE_OPTION_ENDPOINT.DETAIL(':optionKey', ':detailOptionId'),
@@ -41,6 +42,8 @@ export const modifyAttendanceDetailOptionMockHandler = createMockHandler({
     })
 
     if (hasModifiedTarget) {
+      updateDetailOptionInTextParsingOptionMockData(targetId, name)
+
       return { data: {} }
     }
 

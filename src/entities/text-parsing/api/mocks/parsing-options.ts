@@ -24,6 +24,16 @@ export const PARSING_OPTIONS_MOCK_DATA: GetParsingOptionsResponse['data'] = {
       name: '5시간 이상 출석',
       identifier: '5시간 이상 출석',
     },
+    {
+      id: 2,
+      name: '운영진 휴가',
+      identifier: '운영진 휴가',
+    },
+    {
+      id: 3,
+      name: '열정멤버 휴가',
+      identifier: '열정멤버 휴가',
+    },
   ],
 }
 
