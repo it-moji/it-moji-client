@@ -5,13 +5,10 @@ import type { AttendanceOptionKey } from '../model'
 import { AttendanceOptionKeySchema, AttendanceOptionSchema } from '../model'
 import { ATTENDANCE_OPTION_ENDPOINT, ATTENDANCE_OPTION_TAG } from './endpoint'
 
-const AttendanceOptionKeys = Object.values(AttendanceOptionKeySchema.Values)
-
 export const GetAttendanceOptionsAllSchema = z.object(
-  Object.fromEntries(AttendanceOptionKeys.map((key) => [key, AttendanceOptionSchema])) as Record<
-    AttendanceOptionKey,
-    typeof AttendanceOptionSchema
-  >,
+  Object.fromEntries(
+    AttendanceOptionKeySchema.options.map((key) => [key, AttendanceOptionSchema]),
+  ) as Record<AttendanceOptionKey, typeof AttendanceOptionSchema>,
 )
 
 export type GetAttendanceOptionsAll = z.infer<typeof GetAttendanceOptionsAllSchema>

@@ -11,7 +11,7 @@ export type PutAttendanceOptionsBody = z.infer<typeof PutAttendanceOptionBodySch
 
 export const PutAttendanceOptionParamsSchema = z.object({
   optionKey: AttendanceOptionKeySchema,
-  detailOptionId: AttendanceDetailOptionSchema.transform((val) => val.id),
+  detailOptionId: AttendanceDetailOptionSchema.shape.id,
   body: PutAttendanceOptionBodySchema,
 })
 
