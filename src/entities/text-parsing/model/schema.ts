@@ -21,11 +21,13 @@ export const DayKeySchema = z.enum([
 
 export type DayKey = z.infer<typeof DayKeySchema>
 
-export const AttendanceDetailExtractOptionsSchema = AttendanceDetailOptionSchema.extend({
+export const AttendanceDetailWithExtractOptionSchema = AttendanceDetailOptionSchema.extend({
   identifier: z.string(),
 })
 
-export type AttendanceDetailExtractOptions = z.infer<typeof AttendanceDetailExtractOptionsSchema>
+export type AttendanceDetailWithExtractOption = z.infer<
+  typeof AttendanceDetailWithExtractOptionSchema
+>
 
 export const ParsingOptionsSchema = z.object({
   delimiter: z.object(
@@ -41,10 +43,10 @@ export const ParsingOptionsSchema = z.object({
     >,
   ),
   name: z.string(),
-  attendanceDetailOptions: z.array(AttendanceDetailExtractOptionsSchema),
+  attendanceDetailOptions: z.array(AttendanceDetailWithExtractOptionSchema),
 })
 
-export type ParsingOption = z.infer<typeof ParsingOptionsSchema>
+export type ParsingOptions = z.infer<typeof ParsingOptionsSchema>
 
 export const AttendanceInfoValueSchema = z.object({
   key: AttendanceOptionKeySchema,
@@ -52,6 +54,14 @@ export const AttendanceInfoValueSchema = z.object({
 })
 
 export type AttendanceInfoValue = z.infer<typeof AttendanceInfoValueSchema>
+
+export const AttendanceStatisticValue = z.object({
+  key: AttendanceOptionKeySchema,
+  detailId: AttendanceDetailOptionSchema.shape.id.optional(),
+  count: z.number(),
+})
+
+export type AttendanceStatisticValue = z.infer<typeof AttendanceStatisticValue>
 
 export const ParsingResultSchema = z.object({
   name: z.string(),
@@ -61,12 +71,7 @@ export const ParsingResultSchema = z.object({
       DayKeySchema.options.map((key) => [key, AttendanceInfoValueSchema]),
     ) as Record<DayKey, typeof AttendanceInfoValueSchema>,
   ),
-  attendanceStatistic: z.array(
-    z.record(
-      z.union([AttendanceOptionKeySchema, AttendanceDetailOptionSchema.shape.id]),
-      z.number(),
-    ),
-  ),
+  attendanceStatistic: z.array(AttendanceStatisticValue),
 })
 
 export type ParsingResult = z.infer<typeof ParsingResultSchema>
