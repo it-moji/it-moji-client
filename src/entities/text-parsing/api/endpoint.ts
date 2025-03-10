@@ -5,4 +5,4 @@ export const TEXT_PARSING_ENDPOINT = {
 
 export const TEXT_PARSING_TAG = {
   PARSING_OPTIONS: 'text-parsing-options',
-}
+} as const
