@@ -1,9 +1,9 @@
+import { createDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 import { createMockHandler } from '@/shared/api'
 import { PostAttendanceOptionBodySchema } from '../create-detail-option'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 import { AttendanceOptionKeySchema } from '../../model'
 import { OPTION_LIST_MOCK_DATA } from './option-list'
-import { createDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 
 export const createAttendanceDetailOptionMockHandler = createMockHandler({
   endpoint: ATTENDANCE_OPTION_ENDPOINT.PRIMARY(':optionKey'),
