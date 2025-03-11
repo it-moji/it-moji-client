@@ -1,3 +1,4 @@
+import { createDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 import { createMockHandler } from '@/shared/api'
 import { PostAttendanceOptionBodySchema } from '../create-detail-option'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
@@ -34,6 +35,8 @@ export const createAttendanceDetailOptionMockHandler = createMockHandler({
       allDetailOptions.length > 0 ? Math.max(...allDetailOptions.map((opt) => opt.id)) : 0
 
     OPTION_LIST_MOCK_DATA[optionKey].detailOptions.push({ id: maxId + 1, name })
+
+    createDetailOptionInTextParsingOptionMockData(maxId + 1, name)
 
     return { data: {} }
   },

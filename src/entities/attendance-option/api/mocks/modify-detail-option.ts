@@ -1,3 +1,4 @@
+import { updateDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 import { createMockHandler } from '@/shared/api'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 import { PutAttendanceOptionBodySchema } from '../modify-detail-option'
@@ -41,6 +42,8 @@ export const modifyAttendanceDetailOptionMockHandler = createMockHandler({
     })
 
     if (hasModifiedTarget) {
+      updateDetailOptionInTextParsingOptionMockData(targetId, name)
+
       return { data: {} }
     }
 

@@ -1,4 +1,5 @@
 import { deleteBadgeDetailOptionInMockData } from '@/entities/attendance-badge/@x/attendance-option'
+import { deleteDetailOptionInTextParsingOptionMockData } from '@/entities/text-parsing/@x/attendance-option'
 import { createMockHandler } from '@/shared/api'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 import { AttendanceOptionKeySchema } from '../../model'
@@ -24,6 +25,7 @@ export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
       if (targetIndex !== -1) {
         OPTION_LIST_MOCK_DATA[optionKey].detailOptions.splice(targetIndex, 1)
         deleteBadgeDetailOptionInMockData(targetId)
+        deleteDetailOptionInTextParsingOptionMockData(targetId)
 
         return true
       }
