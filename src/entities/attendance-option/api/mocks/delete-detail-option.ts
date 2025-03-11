@@ -25,6 +25,7 @@ export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
       if (targetIndex !== -1) {
         OPTION_LIST_MOCK_DATA[optionKey].detailOptions.splice(targetIndex, 1)
         deleteBadgeDetailOptionInMockData(targetId)
+        deleteDetailOptionInTextParsingOptionMockData(targetId)
 
         return true
       }
@@ -33,8 +34,6 @@ export const deleteAttendanceDetailOptionMockHandler = createMockHandler({
     })
 
     if (hasDeletedTarget) {
-      deleteDetailOptionInTextParsingOptionMockData(targetId)
-
       return Promise.resolve({ data: {} })
     }
 
