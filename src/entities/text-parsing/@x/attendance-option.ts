@@ -9,10 +9,10 @@ export const createDetailOptionInTextParsingOptionMockData = (id: number, name: 
 }
 
 export const updateDetailOptionInTextParsingOptionMockData = (id: number, name: string) => {
-  PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions.forEach((detailOption) => {
+  PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions.forEach((detailOption, detailOptionIdx) => {
     if (detailOption.id === id) {
-      detailOption.name = name
-      detailOption.identifier = name
+      PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions[detailOptionIdx].name = name
+      PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions[detailOptionIdx].identifier = name
     }
   })
 }
