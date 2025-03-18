@@ -9,7 +9,6 @@ import {
   GetPostListParamsSchema,
 } from '@/entities/announcement'
 import { createSearchParamsToURL, useRouter } from '@/shared/lib'
-import classes from './category-tabs.module.css'
 
 export interface CategoryTabsProps {
   baseURL: string
@@ -47,7 +46,7 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({ baseURL, current }) 
             key={category}
             value={category}
             ref={setControlRef(category)}
-            className={classes.tab}
+            className="z-[1] font-medium text-gray-700 transition-colors data-[active]:text-black dark:text-gray-100 dark:data-[active]:text-white"
           >
             {category === all ? '전체' : POST_CATEGORY_LABEL[category]}
           </Tabs.Tab>
@@ -55,7 +54,7 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({ baseURL, current }) 
         <FloatingIndicator
           target={controlsRefs[selected]}
           parent={rootRef}
-          className={classes.indicator}
+          className="rounded-md border border-solid border-gray-200 bg-white shadow-sm dark:border-dark-400 dark:bg-dark-600"
         />
       </Tabs.List>
     </Tabs>
