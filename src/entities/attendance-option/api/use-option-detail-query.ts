@@ -1,6 +1,6 @@
 'use client'
 
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import type { AttendanceOptionKey } from '../model'
 import { getAttendanceOptionDetail } from './get-option-detail'
 import { attendanceOptionQueryKeys } from './query-keys'
@@ -14,3 +14,11 @@ export const useOptionDetailSuspenseQuery = ({ optionKey }: UseOptionDetailSuspe
     queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
     queryFn: () => getAttendanceOptionDetail(optionKey).then((res) => res.data),
   })
+
+export const useResetOptionDetailQuery = ({ optionKey }: UseOptionDetailSuspenseQueryParams) => {
+  const queryClient = useQueryClient()
+
+  return () => {
+    queryClient.invalidateQueries({ queryKey: attendanceOptionQueryKeys.optionDetail(optionKey) })
+  }
+}
