@@ -33,15 +33,15 @@ if (
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
   <html lang="ko" className={Pretendard.variable} suppressHydrationWarning>
     <body className="relative flex min-h-screen min-w-[17.5rem] flex-col items-stretch justify-start bg-white text-gray-800 dark:bg-dark-900 dark:text-dark-50">
-      <DesignSystemProvider>
-        <MockProvider>
-          <QueryProvider>
+      <QueryProvider>
+        <DesignSystemProvider>
+          <MockProvider>
             <LoadingProgressBar />
             {children}
             <Toaster position="bottom-right" />
-          </QueryProvider>
-        </MockProvider>
-      </DesignSystemProvider>
+          </MockProvider>
+        </DesignSystemProvider>
+      </QueryProvider>
     </body>
   </html>
 )
