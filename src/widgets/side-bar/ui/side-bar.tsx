@@ -11,11 +11,12 @@ export interface SideBarProps {
 
 export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
   const pathname = usePathname()
+
   const props: NavLinkProps = {
     color: 'gray',
-    onClick,
     classNames: { root: 'h-10 rounded-lg', label: 'font-medium' },
   }
+  const propsWithClickHandler: NavLinkProps = { ...props, onClick }
 
   return (
     <>
@@ -25,7 +26,7 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
         component={LinkWithLoader}
         label="홈"
         leftSection={<Icon query="fluent-emoji:house" />}
-        {...props}
+        {...propsWithClickHandler}
       />
       <InputLabel component="h2" className="mb-2 mt-5 px-1">
         스터디 관리
@@ -38,18 +39,45 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
             component={LinkWithLoader}
             label="공지사항 관리"
             leftSection={<Icon query="fluent-emoji:pushpin" />}
-            {...props}
+            {...propsWithClickHandler}
           />
         </li>
         <li>
           <NavLink
-            href={ROUTES.ADMIN.ATTENDANCE()}
+            component="button"
             active={pathname.startsWith(ROUTES.ADMIN.ATTENDANCE())}
-            component={LinkWithLoader}
             label="출석 관리"
             leftSection={<Icon query="fluent-emoji:check-mark-button" />}
+            childrenOffset={16}
+            defaultOpened
             {...props}
-          />
+          >
+            <NavLink
+              // TODO: 추후 권한 별 접근 제한 기능 추가
+              href={ROUTES.ADMIN.ATTENDANCE.OPTIONS()}
+              active={pathname.startsWith(ROUTES.ADMIN.ATTENDANCE.OPTIONS())}
+              component={LinkWithLoader}
+              label="출석 및 배지 기준 설정"
+              className="mt-1"
+              leftSection={<Icon query="fluent-emoji:trophy" />}
+              rightSection={
+                <Icon
+                  query="fluent:lock-closed-24-regular"
+                  className="text-gray-600 dark:text-dark-300"
+                />
+              }
+              {...propsWithClickHandler}
+            />
+            <NavLink
+              href={ROUTES.ADMIN.ATTENDANCE.TEXT_PARSING()}
+              active={pathname.startsWith(ROUTES.ADMIN.ATTENDANCE.TEXT_PARSING())}
+              component={LinkWithLoader}
+              label="텍스트 분석 및 적용"
+              className="mt-1"
+              leftSection={<Icon query="fluent-emoji:bookmark-tabs" />}
+              {...propsWithClickHandler}
+            />
+          </NavLink>
         </li>
       </ul>
       <InputLabel component="h2" className="mb-2 mt-5 px-1">
@@ -68,7 +96,7 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
                 className="text-gray-600 dark:text-dark-300"
               />
             }
-            {...props}
+            {...propsWithClickHandler}
           />
         </li>
         <li>
@@ -83,7 +111,7 @@ export const SideBar: React.FC<SideBarProps> = ({ onClick }) => {
                 className="text-gray-600 dark:text-dark-300"
               />
             }
-            {...props}
+            {...propsWithClickHandler}
           />
         </li>
       </ul>

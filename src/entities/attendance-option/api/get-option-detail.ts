@@ -3,7 +3,7 @@ import type { CommonResponse } from '@/shared/api'
 import { server } from '@/shared/api'
 import type { AttendanceOptionKey } from '../model'
 import { AttendanceDetailOptionSchema } from '../model'
-import { ATTENDANCE_OPTION_ENDPOINT, ATTENDANCE_OPTION_TAG } from './endpoint'
+import { ATTENDANCE_OPTION_ENDPOINT } from './endpoint'
 
 export const GetAttendanceOptionDetailSchema = z.array(AttendanceDetailOptionSchema)
 
@@ -14,7 +14,4 @@ export type GetAttendanceOptionsResponse = CommonResponse<typeof GetAttendanceOp
 export const getAttendanceOptionDetail = (optionKey: AttendanceOptionKey) =>
   server.request(ATTENDANCE_OPTION_ENDPOINT.PRIMARY(optionKey), {
     schema: GetAttendanceOptionDetailSchema,
-    next: {
-      tags: [ATTENDANCE_OPTION_TAG.PRIMARY(optionKey)],
-    },
   })

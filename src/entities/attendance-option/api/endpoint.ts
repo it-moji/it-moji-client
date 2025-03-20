@@ -9,8 +9,3 @@ export const ATTENDANCE_OPTION_ENDPOINT = {
     detailOptionId: AttendanceDetailOption['id'] | ':detailOptionId',
   ) => `${ATTENDANCE_OPTION_ENDPOINT.PRIMARY(optionKey)}/${detailOptionId}` as const,
 } as const
-
-export const ATTENDANCE_OPTION_TAG = {
-  LIST: 'attendance-option-list',
-  PRIMARY: (key: AttendanceOptionKey) => `attendance-option-detail-${key}`,
-} as const
