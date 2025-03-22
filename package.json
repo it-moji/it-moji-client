@@ -7,6 +7,7 @@
     "dev:service": "next dev",
     "build:service": "next build",
     "start": "next start",
+    "test": "vitest",
     "lint": "next lint",
     "type": "tsc --noEmit --diagnostics",
     "prepare": "husky",
@@ -36,6 +37,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@vitejs/plugin-react": "^4.3.4",
     "class-variance-authority": "^0.7.1",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",
@@ -46,6 +48,7 @@
     "react-error-boundary": "^5.0.0",
     "react-hot-toast": "^2.5.1",
     "tailwind-merge": "^2.6.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
   },
@@ -82,6 +85,7 @@
     "eslint-plugin-tailwindcss": "^3.18.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
+    "jsdom": "^26.0.0",
     "msw": "^2.7.0",
     "msw-storybook-addon": "^2.0.4",
     "postcss": "^8.5.1",
@@ -92,7 +96,8 @@
     "storybook": "^8.5.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
-    "typescript-eslint": "^8.21.0"
+    "typescript-eslint": "^8.21.0",
+    "vitest": "^3.0.9"
   },
   "msw": {
     "workerDirectory": [
