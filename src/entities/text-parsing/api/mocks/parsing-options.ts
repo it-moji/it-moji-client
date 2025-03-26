@@ -4,7 +4,7 @@ import { TEXT_PARSING_ENDPOINT } from '../endpoint'
 
 export const PARSING_OPTIONS_MOCK_DATA: GetParsingOptionsResponse['data'] = {
   delimiter: {
-    person: '-',
+    person: '—',
     line: '\n',
     title: ':',
   },
