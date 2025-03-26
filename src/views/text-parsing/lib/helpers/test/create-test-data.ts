@@ -23,15 +23,15 @@ ${dayMapping.monday}${titleDelimiter}🎖️
 TIL 내용
 ${dayMapping.tuesday}${titleDelimiter}🎖️ 
 TIL 내용
-${dayMapping.wednesday}${titleDelimiter} 
-${dayMapping.thursday}${titleDelimiter} 
+${dayMapping.wednesday}${titleDelimiter}🌱
+${dayMapping.thursday}${titleDelimiter}🌱
 TIL 내용
-${dayMapping.friday}${titleDelimiter}
+${dayMapping.friday}${titleDelimiter}🌱
 휴식
 
-${dayMapping.saturday}${titleDelimiter}
+${dayMapping.saturday}${titleDelimiter}🌱
 TIL 내용
-${dayMapping.sunday}${titleDelimiter} `
+${dayMapping.sunday}${titleDelimiter}🌱`
 
 interface TestDataListParams extends Omit<TestDataParams, 'name'> {
   nameList?: string[]

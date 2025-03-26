@@ -86,7 +86,7 @@ export const getAttendanceInfo = (
       }
     })
 
-    if (content.trim() === '') {
+    if (content.trim() === '' || content.trim() === '🌱') {
       if (day === DayKeySchema.Enum.saturday || day === DayKeySchema.Enum.sunday) {
         attendanceInfo[day].key = AttendanceOptionKeySchema.Enum.rest
         return
@@ -140,7 +140,6 @@ const generateAttendanceData = (
   )
   const attendanceStatistic = transformAttendanceInfoToStatistic(attendanceInfo, attendanceOptions)
   const badgeId = getAttendanceBadgeId(attendanceStatistic, ATTENDANCE_BADGE_MOCK_DATA)
-  console.log(badgeId)
 
   return { name, attendanceInfo, badgeId, attendanceStatistic }
 }
