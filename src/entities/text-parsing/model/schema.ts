@@ -75,3 +75,5 @@ export const ParsingResultSchema = z.object({
 })
 
 export type ParsingResult = z.infer<typeof ParsingResultSchema>
+
+export type EditableParsingResult = Omit<ParsingResult, 'badgeId'> & { badgeId: number | null }
