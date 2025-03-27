@@ -38,7 +38,7 @@ const mergeStatsToFlattenedArray = (
   array: AttendanceStatisticValue[],
   statsMap: Map<string, AttendanceStatisticValue>,
 ) => {
-  return array
+  return array // 이름 수정
     .map((item) => {
       const statKey = item.detailId ? `${item.key}-${item.detailId}` : item.key
       const stat = statsMap.get(statKey)

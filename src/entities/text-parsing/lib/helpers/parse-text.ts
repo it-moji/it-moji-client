@@ -1,4 +1,3 @@
-import { transformAttendanceInfoToStatistic } from '@/views/text-parsing'
 import {
   AttendanceBadgeRangeSchema,
   type AttendanceBadge,
@@ -10,6 +9,7 @@ import { ATTENDANCE_OPTIONS_LABEL, AttendanceOptionKeySchema } from '@/entities/
 import type { ParsingResult } from '@/entities/text-parsing'
 import {
   DayKeySchema,
+  transformAttendanceInfoToStatistic,
   type AttendanceInfoValue,
   type DayKey,
   type ParsingOptions,
@@ -80,7 +80,7 @@ export const getAttendanceInfo = (
   )
 
   rawAttendanceInfo.forEach(({ day, content }) => {
-    AttendanceOptionKeySchema.options.map((optionKey) => {
+    AttendanceOptionKeySchema.options.forEach((optionKey) => {
       if (content.includes(ATTENDANCE_OPTIONS_LABEL[optionKey])) {
         attendanceInfo[day].key = optionKey
       }
@@ -95,7 +95,7 @@ export const getAttendanceInfo = (
       }
     }
 
-    attendanceDetailOptions.map((badge) => {
+    attendanceDetailOptions.forEach((badge) => {
       if (content.includes(badge.identifier)) {
         attendanceInfo[day].detailId = badge.id
       }
@@ -114,7 +114,11 @@ export const getAttendanceBadgeId = (
       badge.options.some((optionGroup) =>
         optionGroup.every(({ key, count, range }) => {
           const stat = attendanceStatistic.find((s) => s.key === key || s.detailId === key)
-          if (!stat) return false
+
+          if (!stat) {
+            return false
+          }
+
           return range === AttendanceBadgeRangeSchema.Enum.more
             ? stat.count >= count
             : stat.count <= count
