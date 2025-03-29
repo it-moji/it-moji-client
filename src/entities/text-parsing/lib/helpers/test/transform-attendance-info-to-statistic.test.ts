@@ -1,11 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import type { ParsingOptions } from '@/entities/text-parsing'
-import {
-  generateAttendanceInfo,
-  TIL_MORE_THAN_5_HOURS_BADGE,
-  transformAttendanceInfoToStatistic,
-} from '@/entities/text-parsing'
-import { PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing/api/mocks/parsing-options'
+import type { ParsingOptions } from '../../../model'
+import { PARSING_OPTIONS_MOCK_DATA } from '../../../api'
+import { TIL_MORE_THAN_5_HOURS_BADGE } from '../../../config'
+import { generateAttendanceInfo } from '../parse-text'
+import { transformAttendanceInfoToStatistic } from '../transform-attendance-info-to-statistic'
 import { createTestData } from './create-test-data'
 
 describe('요일별 출석 정보를 바탕으로 출석 통계를 계산한다.', () => {

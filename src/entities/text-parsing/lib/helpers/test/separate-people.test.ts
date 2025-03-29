@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { separatePeople } from '@/entities/text-parsing'
+import { separatePeople } from '../parse-text'
 import { createTestDataList } from './create-test-data'
 
 describe('인원 분리 기준을 사용해 인원 목록을 분리한다.', () => {

@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { extractName, TIL_DEFAULT_BADGE } from '@/entities/text-parsing'
+import { TIL_DEFAULT_BADGE } from '../../../config'
+import { extractName } from '../parse-text'
 import { createTestData } from './create-test-data'
 
 describe('이름 판단 기준과 키/값 분리 기준, 개행 분리 기준을 사용해 이름을 추출한다.', () => {

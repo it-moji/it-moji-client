@@ -1,9 +1,6 @@
-import {
-  type ParsingOptions,
-  PARSING_OPTIONS_MOCK_DATA,
-  TIL_DEFAULT_BADGE,
-  TIL_MORE_THAN_5_HOURS_BADGE,
-} from '@/entities/text-parsing'
+import type { ParsingOptions } from '../../../model'
+import { PARSING_OPTIONS_MOCK_DATA } from '../../../api'
+import { TIL_DEFAULT_BADGE, TIL_MORE_THAN_5_HOURS_BADGE } from '../../../config'
 
 interface TestDataParams {
   name?: string

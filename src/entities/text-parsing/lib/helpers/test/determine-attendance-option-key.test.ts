@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { TIL_DEFAULT_BADGE } from '@/entities/text-parsing'
+import { TIL_DEFAULT_BADGE } from '../../../config'
 import { determineAttendanceOptionKey } from '../parse-text'
 
 describe('TIL 작성 내용을 기반으로 출석 옵션 키를 결정한다.', () => {

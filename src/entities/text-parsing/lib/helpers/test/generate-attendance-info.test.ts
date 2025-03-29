@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { generateAttendanceInfo, TIL_MORE_THAN_5_HOURS_BADGE } from '@/entities/text-parsing'
-import { PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing/api/mocks/parsing-options'
+import { PARSING_OPTIONS_MOCK_DATA } from '../../../api'
+import { TIL_MORE_THAN_5_HOURS_BADGE } from '../../../config'
+import { generateAttendanceInfo } from '../parse-text'
 import { createTestData } from './create-test-data'
 
 describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 출석 정보를 추출한다.', () => {

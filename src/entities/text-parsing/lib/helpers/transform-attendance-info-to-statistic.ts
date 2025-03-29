@@ -1,5 +1,5 @@
 import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
-import type { AttendanceStatisticValue, ParsingResult } from '@/entities/text-parsing'
+import type { AttendanceStatisticValue, ParsingResult } from '../../model'
 
 /**
  * 출석 정보를 바탕으로 출석 통계 Map을 생성하는 함수입니다.

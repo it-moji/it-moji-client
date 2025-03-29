@@ -9,16 +9,16 @@ import {
   type AttendanceOptionKey,
   type GetAttendanceOptionsAll,
 } from '@/entities/attendance-option/@x/text-parsing'
+import { Exception } from '@/shared/api'
+import { TIL_DEFAULT_BADGE } from '../../config'
 import {
   DayKeySchema,
-  transformAttendanceInfoToStatistic,
   type EditableParsingResult,
   type AttendanceInfoValue,
   type DayKey,
   type ParsingOptions,
-  TIL_DEFAULT_BADGE,
-} from '@/entities/text-parsing'
-import { Exception } from '@/shared/api'
+} from '../../model'
+import { transformAttendanceInfoToStatistic } from './transform-attendance-info-to-statistic'
 
 /**
  * TIL 템플릿 텍스트에서 작성자 이름을 추출하는 함수입니다.
