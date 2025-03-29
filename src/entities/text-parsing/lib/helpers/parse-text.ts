@@ -67,7 +67,7 @@ export const determineAttendanceOptionKey = (
 }
 
 /**
- * TIL 템플릿 텍스트에서 요일, 배지, TIL 내용을 추출하여 출석 정보를 생성하는 함수입니다.
+ * TIL 템플릿 텍스트에서 요일, TIL 내용을 추출하여 출석 정보를 생성하는 함수입니다.
  *
  * @param text TIL 템플릿 텍스트
  * @param dayMapping 날짜 판단 기준
