@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ATTENDANCE_BADGE_MOCK_DATA } from '@/entities/attendance-badge/api/mocks/badge-list'
+import { ATTENDANCE_BADGE_MOCK_DATA } from '@/entities/attendance-badge/@x/text-parsing'
 import { getAttendanceBadgeId } from '../parse-text'
 
 describe('출석 통계를 바탕으로 배지를 계산한다.', () => {

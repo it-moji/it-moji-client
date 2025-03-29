@@ -1,4 +1,4 @@
-import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
+import type { GetAttendanceOptionsAll } from '@/entities/attendance-option/@x/text-parsing'
 import type { AttendanceStatisticValue, ParsingResult } from '../../model'
 
 /**
