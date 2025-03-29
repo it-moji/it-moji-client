@@ -1,5 +1,4 @@
-import { describe } from 'node:test'
-import { test, expect } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import { determineAttendanceOptionKey } from '../parse-text'
 
 describe('TIL 작성 내용을 기반으로 출석 옵션 키를 결정한다.', () => {
