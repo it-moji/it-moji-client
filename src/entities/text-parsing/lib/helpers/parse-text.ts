@@ -152,7 +152,7 @@ export const getAttendanceBadgeId = (
     )
     .sort((a, b) => a.id - b.id)[0]
 
-  return badge ? badge.id : null
+  return badge?.id || null
 }
 
 /**
