@@ -1,4 +1,4 @@
-import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
+import type { GetAttendanceOptionsAll } from '@/entities/attendance-option/@x/text-parsing'
 
 export const transformAttendanceOptionsToFlat = (data: GetAttendanceOptionsAll) =>
   Object.entries(data).flatMap(([key, { name, detailOptions }]) => [

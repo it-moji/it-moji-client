@@ -1,4 +1,7 @@
-import type { AttendanceOptionKey, GetAttendanceOptionsAll } from '@/entities/attendance-option'
+import type {
+  AttendanceOptionKey,
+  GetAttendanceOptionsAll,
+} from '@/entities/attendance-option/@x/text-parsing'
 
 export const findParentKeyById = (id: number, attendanceOptions: GetAttendanceOptionsAll) => {
   let result = null
