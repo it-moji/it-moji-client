@@ -1,5 +1,4 @@
-import type { ParsingOptions } from '@/entities/text-parsing'
-import { PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing/api/mocks/parsing-options'
+import { type ParsingOptions, PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing'
 
 interface TestDataParams {
   name?: string

@@ -1,14 +1,18 @@
 import {
   AttendanceBadgeRangeSchema,
+  ATTENDANCE_BADGE_MOCK_DATA,
   type GetAttendanceBadgeDetailResponse,
-} from '@/entities/attendance-badge'
-import { ATTENDANCE_BADGE_MOCK_DATA } from '@/entities/attendance-badge/api/mocks/badge-list'
-import type { AttendanceOptionKey, GetAttendanceOptionsAll } from '@/entities/attendance-option'
-import { ATTENDANCE_OPTIONS_LABEL, AttendanceOptionKeySchema } from '@/entities/attendance-option'
-import type { EditableParsingResult } from '@/entities/text-parsing'
+} from '@/entities/attendance-badge/@x/text-parsing'
+import {
+  ATTENDANCE_OPTIONS_LABEL,
+  AttendanceOptionKeySchema,
+  type AttendanceOptionKey,
+  type GetAttendanceOptionsAll,
+} from '@/entities/attendance-option/@x/text-parsing'
 import {
   DayKeySchema,
   transformAttendanceInfoToStatistic,
+  type EditableParsingResult,
   type AttendanceInfoValue,
   type DayKey,
   type ParsingOptions,

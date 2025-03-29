@@ -7,3 +7,5 @@ export const textParsingHandlers = [
   modifyParsingOptionsMockHandler,
   postParsingResultMockHandler,
 ]
+
+export * from './parsing-options'
