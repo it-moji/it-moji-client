@@ -1,6 +1,10 @@
 import { describe, expect, test } from 'vitest'
 import type { ParsingOptions } from '@/entities/text-parsing'
-import { generateAttendanceInfo, transformAttendanceInfoToStatistic } from '@/entities/text-parsing'
+import {
+  generateAttendanceInfo,
+  TIL_MORE_THAN_5_HOURS_BADGE,
+  transformAttendanceInfoToStatistic,
+} from '@/entities/text-parsing'
 import { PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing/api/mocks/parsing-options'
 import { createTestData } from './create-test-data'
 
@@ -10,7 +14,7 @@ describe('요일별 출석 정보를 바탕으로 출석 통계를 계산한다.
       {
         id: 1,
         name: '5시간 이상 출석',
-        identifier: '🎖️',
+        identifier: TIL_MORE_THAN_5_HOURS_BADGE,
       },
     ]
 

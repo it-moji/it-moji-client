@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { extractName } from '@/entities/text-parsing'
+import { extractName, TIL_DEFAULT_BADGE } from '@/entities/text-parsing'
 import { createTestData } from './create-test-data'
 
 describe('이름 판단 기준과 키/값 분리 기준, 개행 분리 기준을 사용해 이름을 추출한다.', () => {
@@ -22,7 +22,7 @@ describe('이름 판단 기준과 키/값 분리 기준, 개행 분리 기준을
   test('주어진 옵션으로 이름이 올바르게 추출되지 않는 경우 예외가 발생한다.', () => {
     const testData = `이름: 김나나
     
-    월:🌱
+    월:${TIL_DEFAULT_BADGE}
     TIL 내용`
 
     expect(() => extractName(testData, '성명', ':', '\n')).toThrow()

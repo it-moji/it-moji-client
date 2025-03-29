@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { generateAttendanceInfo } from '@/entities/text-parsing'
+import { generateAttendanceInfo, TIL_MORE_THAN_5_HOURS_BADGE } from '@/entities/text-parsing'
 import { PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing/api/mocks/parsing-options'
 import { createTestData } from './create-test-data'
 
@@ -29,7 +29,7 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
     {
       id: 1,
       name: '5시간 이상 출석',
-      identifier: '🎖️',
+      identifier: TIL_MORE_THAN_5_HOURS_BADGE,
     },
   ]
 

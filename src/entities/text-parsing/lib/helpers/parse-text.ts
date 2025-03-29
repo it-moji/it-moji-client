@@ -16,6 +16,7 @@ import {
   type AttendanceInfoValue,
   type DayKey,
   type ParsingOptions,
+  TIL_DEFAULT_BADGE,
 } from '@/entities/text-parsing'
 import { Exception } from '@/shared/api'
 
@@ -55,7 +56,7 @@ export const determineAttendanceOptionKey = (
 ): AttendanceOptionKey => {
   const isWeekend = dayKey === DayKeySchema.Enum.saturday || dayKey === DayKeySchema.Enum.sunday
 
-  if (content.trim() === '' || content.trim() === '🌱') {
+  if (content.trim() === '' || content.trim() === TIL_DEFAULT_BADGE) {
     return isWeekend ? AttendanceOptionKeySchema.Enum.rest : AttendanceOptionKeySchema.Enum.absence
   }
 

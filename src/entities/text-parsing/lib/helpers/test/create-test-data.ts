@@ -1,4 +1,9 @@
-import { type ParsingOptions, PARSING_OPTIONS_MOCK_DATA } from '@/entities/text-parsing'
+import {
+  type ParsingOptions,
+  PARSING_OPTIONS_MOCK_DATA,
+  TIL_DEFAULT_BADGE,
+  TIL_MORE_THAN_5_HOURS_BADGE,
+} from '@/entities/text-parsing'
 
 interface TestDataParams {
   name?: string
@@ -26,14 +31,39 @@ export const createTestData = ({
   (nameIdentifier + titleDelimiter + name + lineDelimiter) +
   ('이번 주 한 마디: 아자아자 파이팅' + lineDelimiter) +
   lineDelimiter +
-  (dayMapping.monday + titleDelimiter + '🎖️' + lineDelimiter + 'TIL 내용' + lineDelimiter) +
-  (dayMapping.tuesday + titleDelimiter + '🎖️' + lineDelimiter + 'TIL 내용' + lineDelimiter) +
-  (dayMapping.wednesday + titleDelimiter + '🌱' + lineDelimiter) +
-  (dayMapping.thursday + titleDelimiter + '🌱' + lineDelimiter + 'TIL 내용' + lineDelimiter) +
-  (dayMapping.friday + titleDelimiter + '🌱' + lineDelimiter + '휴식' + lineDelimiter) +
+  (dayMapping.monday +
+    titleDelimiter +
+    TIL_MORE_THAN_5_HOURS_BADGE +
+    lineDelimiter +
+    'TIL 내용' +
+    lineDelimiter) +
+  (dayMapping.tuesday +
+    titleDelimiter +
+    TIL_MORE_THAN_5_HOURS_BADGE +
+    lineDelimiter +
+    'TIL 내용' +
+    lineDelimiter) +
+  (dayMapping.wednesday + titleDelimiter + TIL_DEFAULT_BADGE + lineDelimiter) +
+  (dayMapping.thursday +
+    titleDelimiter +
+    TIL_DEFAULT_BADGE +
+    lineDelimiter +
+    'TIL 내용' +
+    lineDelimiter) +
+  (dayMapping.friday +
+    titleDelimiter +
+    TIL_DEFAULT_BADGE +
+    lineDelimiter +
+    '휴식' +
+    lineDelimiter) +
   lineDelimiter +
-  (dayMapping.saturday + titleDelimiter + '🌱' + lineDelimiter + 'TIL 내용' + lineDelimiter) +
-  (dayMapping.sunday + titleDelimiter + '🌱')
+  (dayMapping.saturday +
+    titleDelimiter +
+    TIL_DEFAULT_BADGE +
+    lineDelimiter +
+    'TIL 내용' +
+    lineDelimiter) +
+  (dayMapping.sunday + titleDelimiter + TIL_DEFAULT_BADGE)
 
 interface TestDataListParams extends Omit<TestDataParams, 'name'> {
   nameList?: string[]
