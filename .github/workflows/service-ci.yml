@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        command: ['build:service', 'build:storybook']
+        command: ['build:service', 'build:storybook', 'test']
 
     steps:
       - name: Checkout
