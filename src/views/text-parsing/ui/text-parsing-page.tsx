@@ -6,7 +6,6 @@ import React, { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
 import type { ParsingOptions } from '@/entities/text-parsing'
-import { Exception } from '@/shared/api'
 import { FallbackError } from '@/shared/ui'
 import { TextParsingInput } from './text-parsing-input'
 import { TextParsingOptionsSetting } from './text-parsing-options-setting'
@@ -26,11 +25,8 @@ export const TextParsingPage: React.FC<TextParsingPageProps> = ({
       {({ reset }) => (
         <ErrorBoundary
           onReset={reset}
-          FallbackComponent={({ resetErrorBoundary }) => (
-            <FallbackError
-              error={new Exception('텍스트 분석 설정 조회에 실패했어요')}
-              reset={resetErrorBoundary}
-            />
+          FallbackComponent={({ error, resetErrorBoundary }) => (
+            <FallbackError error={error} reset={resetErrorBoundary} />
           )}
         >
           <Suspense
