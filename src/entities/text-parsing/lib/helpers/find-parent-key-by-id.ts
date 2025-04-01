@@ -3,7 +3,10 @@ import type {
   GetAttendanceOptionsAll,
 } from '@/entities/attendance-option/@x/text-parsing'
 
-export const findParentKeyById = (id: number, attendanceOptions: GetAttendanceOptionsAll) => {
+export const findParentKeyById = (
+  id: number,
+  attendanceOptions: GetAttendanceOptionsAll,
+): AttendanceOptionKey | null => {
   let result = null
 
   Object.keys(attendanceOptions).forEach((key) => {
