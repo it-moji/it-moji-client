@@ -226,6 +226,10 @@ export const parseText = (
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAll,
 ): EditableParsingResult[] => {
+  if (text.trim() === '') {
+    throw new Exception('분석할 텍스트를 입력해주세요')
+  }
+
   const persons = separatePeople(text, parsingOptions.delimiter.person)
 
   return persons.map((person) => generateAttendanceData(person, parsingOptions, attendanceOptions))
