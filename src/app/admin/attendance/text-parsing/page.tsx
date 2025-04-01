@@ -1,9 +1,5 @@
 import type { Metadata } from 'next'
-import {
-  TextParsingInput,
-  TextParsingOptionsSetting,
-  TextParsingResult,
-} from '@/views/text-parsing'
+import { TextParsingPage } from '@/views/text-parsing'
 import { ATTENDANCE_BADGE_MOCK_DATA } from '@/entities/attendance-badge'
 import { getParsingOptions } from '@/entities/text-parsing'
 
@@ -17,17 +13,7 @@ const AttendanceTextParsingPage: React.FC = async () => {
     ATTENDANCE_BADGE_MOCK_DATA, // NOTE - 추후 배지 목록 조회 API로 수정 예정
   ])
 
-  return (
-    <div className="flex flex-col gap-4 lg:flex-row">
-      <div className="basis-2/5 flex-col space-y-4">
-        <TextParsingInput />
-        <TextParsingOptionsSetting parsingOptions={parsingOptions} />
-      </div>
-      <div className="basis-3/5">
-        <TextParsingResult badgeOptions={badgeOptions} />
-      </div>
-    </div>
-  )
+  return <TextParsingPage parsingOptions={parsingOptions} badgeOptions={badgeOptions} />
 }
 
 export default AttendanceTextParsingPage
