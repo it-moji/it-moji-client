@@ -56,10 +56,11 @@ export const useModifyDetailOption = ({
     onSuccess: (_, __, context) => {
       if (!context?.status) {
         queryClient.invalidateQueries({
-          queryKey: [
-            attendanceOptionQueryKeys.optionList(),
-            attendanceOptionQueryKeys.optionDetail(optionKey),
-          ],
+          queryKey: attendanceOptionQueryKeys.optionList(),
+        })
+
+        queryClient.invalidateQueries({
+          queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
         })
       }
 
