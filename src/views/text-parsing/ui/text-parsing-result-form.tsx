@@ -33,7 +33,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
   const result = useTextParsingStore((state) => state.result)
   const options = useTextParsingStore((state) => state.options)
 
-  const form = useForm({
+  const { setValues, ...form } = useForm({
     mode: 'uncontrolled',
     initialValues: { values: result },
   })
@@ -77,8 +77,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
   }
 
   useEffect(() => {
-    form.setValues({ values: result })
-  }, [result])
+    setValues({ values: result })
+  }, [result, setValues])
 
   return (
     <form
