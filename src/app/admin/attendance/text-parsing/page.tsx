@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: '텍스트 분석 및 적용',
 }
 
+export const dynamic = 'force-dynamic'
+
 const AttendanceTextParsingPage: React.FC = async () => {
   const [{ data: parsingOptions }, badgeOptions] = await Promise.all([
     getParsingOptions(),
