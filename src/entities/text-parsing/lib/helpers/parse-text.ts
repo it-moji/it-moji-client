@@ -68,6 +68,32 @@ export const determineAttendanceOptionKey = (
 }
 
 /**
+ * 주어진 텍스트에서 날짜(요일)을 찾는 함수입니다.
+ *
+ * @param line 날짜(요일)을 찾을 텍스트(한 줄)
+ * @param dayMapping 날짜 판단 기준
+ * @param titleDelimiter 키/값 분리 기준
+ * @returns 날짜(요일) 반환 (찾지 못한 경우 `undefined`)
+ */
+export const findDayInLine = (
+  line: string,
+  dayMapping: ParsingOptions['dayMapping'],
+  titleDelimiter: ParsingOptions['delimiter']['title'],
+) => {
+  const titleDelimiterIndex = line.indexOf(titleDelimiter)
+
+  if (titleDelimiterIndex === -1) {
+    return
+  }
+
+  const day = Object.values(dayMapping).find((day) =>
+    line.slice(0, titleDelimiterIndex).includes(day),
+  )
+
+  return day
+}
+
+/**
  * TIL 템플릿 텍스트에서 요일, TIL 내용을 추출하여 출석 정보를 생성하는 함수입니다.
  *
  * @param text TIL 템플릿 텍스트
@@ -89,16 +115,17 @@ export const generateAttendanceInfo = (
   const lines = text.split(lineDelimiter)
 
   lines.forEach((line, idx) => {
-    if (!Object.values(dayMapping).includes(line.split(titleDelimiter)[0])) {
+    const day = findDayInLine(line, dayMapping, titleDelimiter)
+
+    if (!day) {
       return
     }
 
-    const day = line.split(titleDelimiter)[0]
     const dayKey = Object.entries(dayMapping).find(([, value]) => day === value)![0] as DayKey
     const nextLine = lines[idx + 1]
 
     const content =
-      !nextLine || Object.values(dayMapping).includes(nextLine.split(titleDelimiter)[0])
+      !nextLine || findDayInLine(nextLine, dayMapping, titleDelimiter)
         ? ''
         : line.split(titleDelimiter)[1] + nextLine
 
