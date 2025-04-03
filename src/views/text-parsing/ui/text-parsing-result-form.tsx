@@ -12,10 +12,12 @@ import {
   createParsingResult,
   DAY_OPTIONS_LABEL,
   getAttendanceBadgeId,
-  useTextParsingStore,
   findParentKeyById,
   transformAttendanceInfoToStatistic,
+  useParsingResult,
+  useParsingOptions,
 } from '@/entities/text-parsing'
+import { Exception } from '@/shared/api'
 import { omit } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
 
@@ -30,8 +32,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 }) => {
   const { data: attendanceOptions } = useOptionListSuspenseQuery()
 
-  const result = useTextParsingStore((state) => state.result)
-  const options = useTextParsingStore((state) => state.options)
+  const result = useParsingResult()
+  const options = useParsingOptions()
 
   const { setValues, ...form } = useForm({
     mode: 'uncontrolled',
@@ -67,13 +69,18 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
         ),
       })) as ParsingResult[]
 
-    await createParsingResult(Number(team), body)
-      .then(() => {
-        toast.success('출석 정보 저장에 성공했어요')
-      })
-      .catch(() => {
-        toast.error('출석 정보 저장에 실패했어요')
-      })
+    try {
+      await createParsingResult(Number(team), body)
+
+      toast.success('출석 정보 저장에 성공했어요')
+    } catch (error: unknown) {
+      if (error instanceof Exception) {
+        toast.error(Exception.extractMessage(error))
+        return
+      }
+
+      toast.error('출석 정보 저장에 실패했어요')
+    }
   }
 
   useEffect(() => {

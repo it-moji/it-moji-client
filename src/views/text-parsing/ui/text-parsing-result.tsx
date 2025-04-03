@@ -3,7 +3,7 @@
 import { Button, Group, Select } from '@mantine/core'
 import { useState } from 'react'
 import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
-import { useTextParsingStore } from '@/entities/text-parsing'
+import { useParsingResult } from '@/entities/text-parsing'
 import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
 import { TextParsingResultEmpty } from './text-parsing-result-empty'
 import { TextParsingResultForm } from './text-parsing-result-form'
@@ -15,7 +15,8 @@ export interface TextParsingResultProps {
 export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
   const [team, setTeam] = useState<string | null>(null)
 
-  const result = useTextParsingStore((state) => state.result)
+  const result = useParsingResult()
+  // const isSubmitting = useParsingFormSubmitting()
 
   return (
     <AdminContainer className="h-fit w-full">

@@ -10,7 +10,8 @@ import {
   DAY_OPTIONS_LABEL,
   modifyParsingOptions,
   modifyTextParsingOptionsWithRevalidate,
-  useTextParsingStore,
+  useParsingText,
+  useTextParsingActions,
 } from '@/entities/text-parsing'
 import { Exception } from '@/shared/api'
 import { cn } from '@/shared/lib'
@@ -26,8 +27,9 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
 }) => {
   const { data: attendanceOptions } = useOptionListSuspenseQuery()
 
-  const text = useTextParsingStore((state) => state.text)
-  const { setOptions } = useTextParsingStore((state) => state.actions)
+  const text = useParsingText()
+
+  const { setOptions } = useTextParsingActions()
 
   const form = useForm({
     mode: 'uncontrolled',

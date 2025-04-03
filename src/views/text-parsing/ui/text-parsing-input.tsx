@@ -4,16 +4,17 @@ import { Button, Textarea } from '@mantine/core'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useOptionListSuspenseQuery } from '@/entities/attendance-option'
-import { useTextParsingStore } from '@/entities/text-parsing'
+import { useParsingOptions, useParsingText, useTextParsingActions } from '@/entities/text-parsing'
 import { AdminContainer, AdminTitle, Icon } from '@/shared/ui'
 import { parseTextSafely } from '../lib'
 
 export const TextParsingInput: React.FC = () => {
   const { data: attendanceOptions } = useOptionListSuspenseQuery()
 
-  const text = useTextParsingStore((state) => state.text)
-  const options = useTextParsingStore((state) => state.options)
-  const { setText, setOptions, setResult } = useTextParsingStore((state) => state.actions)
+  const text = useParsingText()
+  const options = useParsingOptions()
+
+  const { resetTextParsingStore, setText } = useTextParsingActions()
 
   const handleParsingText = () => {
     if (options) {
@@ -28,11 +29,9 @@ export const TextParsingInput: React.FC = () => {
 
   useEffect(() => {
     return () => {
-      setText('')
-      setOptions(null)
-      setResult([])
+      resetTextParsingStore()
     }
-  }, [setText, setOptions, setResult])
+  }, [resetTextParsingStore])
 
   return (
     <AdminContainer>
