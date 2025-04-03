@@ -3,7 +3,7 @@
 import { Button, Group, Select } from '@mantine/core'
 import { useState } from 'react'
 import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
-import { useParsingResult } from '@/entities/text-parsing'
+import { useParsingResult, useParsingFormSubmitting } from '@/entities/text-parsing'
 import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
 import { TextParsingResultEmpty } from './text-parsing-result-empty'
 import { TextParsingResultForm } from './text-parsing-result-form'
@@ -16,7 +16,7 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
   const [team, setTeam] = useState<string | null>(null)
 
   const result = useParsingResult()
-  // const isSubmitting = useParsingFormSubmitting()
+  const isSubmitting = useParsingFormSubmitting()
 
   return (
     <AdminContainer className="h-fit w-full">
@@ -39,7 +39,11 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
             checkIconPosition="right"
             onChange={(_, option) => setTeam(option?.value ?? null)}
           />
-          <Button form="parsing-result-form" type="submit" disabled={result.length <= 0 || !team}>
+          <Button
+            form="parsing-result-form"
+            type="submit"
+            disabled={result.length <= 0 || !team || isSubmitting}
+          >
             반영하기
           </Button>
         </Group>

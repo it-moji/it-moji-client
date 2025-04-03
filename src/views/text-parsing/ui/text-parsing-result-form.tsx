@@ -16,6 +16,8 @@ import {
   transformAttendanceInfoToStatistic,
   useParsingResult,
   useParsingOptions,
+  useTextParsingActions,
+  useParsingFormSubmitting,
 } from '@/entities/text-parsing'
 import { Exception } from '@/shared/api'
 import { omit } from '@/shared/lib'
@@ -34,10 +36,14 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   const result = useParsingResult()
   const options = useParsingOptions()
+  const isSubmitting = useParsingFormSubmitting()
+
+  const { setIsSubmitting } = useTextParsingActions()
 
   const { setValues, ...form } = useForm({
     mode: 'uncontrolled',
     initialValues: { values: result },
+    enhanceGetInputProps: () => ({ disabled: isSubmitting }),
   })
 
   const handleSave = async (parsingResultList: EditableParsingResult[]) => {
@@ -70,6 +76,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
       })) as ParsingResult[]
 
     try {
+      setIsSubmitting(true)
+
       await createParsingResult(Number(team), body)
 
       toast.success('출석 정보 저장에 성공했어요')
@@ -80,6 +88,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
       }
 
       toast.error('출석 정보 저장에 실패했어요')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 

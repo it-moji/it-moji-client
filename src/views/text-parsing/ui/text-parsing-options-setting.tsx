@@ -10,6 +10,7 @@ import {
   DAY_OPTIONS_LABEL,
   modifyParsingOptions,
   modifyTextParsingOptionsWithRevalidate,
+  useParsingFormSubmitting,
   useParsingText,
   useTextParsingActions,
 } from '@/entities/text-parsing'
@@ -28,8 +29,9 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
   const { data: attendanceOptions } = useOptionListSuspenseQuery()
 
   const text = useParsingText()
+  const isSubmitting = useParsingFormSubmitting()
 
-  const { setOptions } = useTextParsingActions()
+  const { setOptions, setIsSubmitting } = useTextParsingActions()
 
   const form = useForm({
     mode: 'uncontrolled',
@@ -51,6 +53,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
       },
       name: isNotEmpty(),
     },
+    enhanceGetInputProps: () => ({ disabled: isSubmitting }),
   })
 
   const handleApplyOptions = () => {
@@ -66,6 +69,8 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
 
   const handleSaveOptions = async () => {
     try {
+      setIsSubmitting(true)
+
       await modifyParsingOptions(form.getValues())
       await modifyTextParsingOptionsWithRevalidate()
 
@@ -90,6 +95,8 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
       }
 
       toast.error('분석 옵션 저장에 실패했어요')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -105,10 +112,14 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
           분석 옵션 설정
         </div>
         <Group gap="xs" justify="flex-end">
-          <Button variant="light" onClick={handleApplyOptions} disabled={!text.trim()}>
+          <Button
+            variant="light"
+            onClick={handleApplyOptions}
+            disabled={!text.trim() || isSubmitting}
+          >
             적용하기
           </Button>
-          <Button form="parsing-options-form" type="submit">
+          <Button form="parsing-options-form" type="submit" disabled={isSubmitting}>
             저장하기
           </Button>
         </Group>
@@ -182,6 +193,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
               className="flex flex-col space-y-2"
               legend="출석 상세 옵션 판단 기준"
               classNames={{ legend: 'font-semibold' }}
+              disabled={isSubmitting}
             >
               {parsingOptions.attendanceDetailOptions.map((option, idx) => (
                 <div className="flex items-center space-x-4" key={option.id}>
