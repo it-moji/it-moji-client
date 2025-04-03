@@ -4,16 +4,12 @@ import { Select } from '@mantine/core'
 import type { SelectProps } from '@mantine/core'
 import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
 
-export interface AttendanceOptionSelectProps extends SelectProps {
+export interface AttendanceOptionSelectProps extends Omit<SelectProps, 'data'> {
   attendanceOptions: GetAttendanceOptionsAll
 }
 
 export const AttendanceOptionSelect: React.FC<AttendanceOptionSelectProps> = ({
   attendanceOptions,
-  value,
-  onChange,
-  className,
-  classNames,
   checkIconPosition = 'right',
   allowDeselect = false,
   ...props
@@ -26,10 +22,6 @@ export const AttendanceOptionSelect: React.FC<AttendanceOptionSelectProps> = ({
   return (
     <Select
       data={options}
-      value={value}
-      onChange={onChange}
-      className={className}
-      classNames={classNames}
       checkIconPosition={checkIconPosition}
       allowDeselect={allowDeselect}
       {...props}
