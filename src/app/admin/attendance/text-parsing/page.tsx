@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 const AttendanceTextParsingPage: React.FC = async () => {
   const [{ data: parsingOptions }, badgeOptions] = await Promise.all([
     getParsingOptions(),
-    ATTENDANCE_BADGE_MOCK_DATA, // NOTE - 추후 배지 목록 조회 API로 수정 예정
+    ATTENDANCE_BADGE_MOCK_DATA, // TODO - 추후 배지 목록 조회 API로 수정 예정
   ])
 
   return <TextParsingPage parsingOptions={parsingOptions} badgeOptions={badgeOptions} />
