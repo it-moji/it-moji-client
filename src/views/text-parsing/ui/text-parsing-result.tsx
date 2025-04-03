@@ -24,7 +24,7 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
           <Icon query="fluent-emoji:desktop-computer" className="mr-2" />
           결과 확인
         </div>
-        <Group gap="xs">
+        <Group gap="xs" justify="flex-end">
           <Select
             data={[
               { value: '1', label: '1팀' },

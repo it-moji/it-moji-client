@@ -36,13 +36,15 @@ export const TextParsingPage: React.FC<TextParsingPageProps> = ({
               </Center>
             }
           >
-            <div className="flex flex-col gap-4 lg:flex-row">
-              <div className="basis-2/5 flex-col space-y-4">
-                <TextParsingInput />
-                <TextParsingOptionsSetting parsingOptions={parsingOptions} />
-              </div>
-              <div className="basis-3/5">
-                <TextParsingResult badgeOptions={badgeOptions} />
+            <div className="@container/page">
+              <div className="flex flex-col gap-4 @5xl/page:flex-row">
+                <div className="flex-col space-y-4">
+                  <TextParsingInput />
+                  <TextParsingOptionsSetting parsingOptions={parsingOptions} />
+                </div>
+                <div className="flex-1">
+                  <TextParsingResult badgeOptions={badgeOptions} />
+                </div>
               </div>
             </div>
           </Suspense>

@@ -88,7 +88,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
     >
       {result.map((person, idx) => (
         <div
-          className="rounded-lg border border-solid border-gray-300 p-4 dark:border-dark-400"
+          className="rounded-lg border border-solid border-gray-300 p-4 @container/parsingResult dark:border-dark-400"
           key={person.name}
         >
           <Group gap="md">
@@ -119,7 +119,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
               allowDeselect={false}
             />
           </Group>
-          <div className="mt-8 flex items-start space-x-4">
+          <div className="mt-8 flex flex-col items-start gap-x-4 gap-y-8 @xl/parsingResult:flex-row">
             <div className="flex-1">
               <Title order={4} className="mb-2 flex items-center text-base font-semibold">
                 <Icon query="fluent-emoji:spiral-calendar" className="mr-2" />

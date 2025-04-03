@@ -96,13 +96,13 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
   }, [parsingOptions, setOptions])
 
   return (
-    <AdminContainer className="overflow-auto">
+    <AdminContainer>
       <AdminTitle className="mb-6 flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex flex-none items-center">
           <Icon query="fluent-emoji:gear" className="mr-2" />
           분석 옵션 설정
         </div>
-        <Group gap="xs">
+        <Group gap="xs" justify="flex-end">
           <Button variant="light" onClick={handleApplyOptions} disabled={!text.trim()}>
             적용하기
           </Button>
@@ -140,7 +140,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
           />
         </Group>
 
-        <div className="mt-8 flex space-x-8">
+        <div className="mt-8 flex flex-row flex-wrap gap-8">
           <Fieldset
             className="flex flex-col space-y-2"
             legend="날짜 판단 기준"
@@ -153,7 +153,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
                 </InputLabel>
                 <TextInput
                   id={`text-input-${key}`}
-                  className="w-40"
+                  className="max-w-40"
                   defaultValue={parsingOptions.dayMapping[key as DayKey]}
                   key={form.key(`dayMapping.${key}`)}
                   {...form.getInputProps(`dayMapping.${key}`)}
@@ -185,7 +185,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
                   </InputLabel>
                   <TextInput
                     id={`detail-option-${option.id}`}
-                    className="w-40"
+                    className="max-w-40"
                     key={form.key(`attendanceDetailOptions.${option}`)}
                     onChange={(e) => {
                       form.setFieldValue(`attendanceDetailOptions.${idx}`, {
