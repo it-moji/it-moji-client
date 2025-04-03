@@ -38,20 +38,20 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
     initialValues: { values: result },
   })
 
-  const handleSave = async (values: EditableParsingResult[]) => {
-    for (const item of values.values()) {
-      if (!item.name) {
+  const handleSave = async (parsingResultList: EditableParsingResult[]) => {
+    for (const parsingResult of parsingResultList) {
+      if (!parsingResult.name) {
         toast.error('이름을 모두 입력해주세요')
         return
       }
 
-      if (!item.badgeId) {
+      if (!parsingResult.badgeId) {
         toast.error('배지를 모두 선택해주세요')
         return
       }
     }
 
-    const body = values
+    const body = parsingResultList
       .map((value) => omit(value, ['attendanceStatistic']))
       .map((value) => ({
         ...value,
