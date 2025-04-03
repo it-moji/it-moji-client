@@ -6,16 +6,16 @@ import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { AttendanceOptionSelect } from '@/widgets/attendance-options-select'
 import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
-import { ATTENDANCE_OPTIONS_LABEL } from '@/entities/attendance-option'
-import { useOptionListSuspenseQuery } from '@/entities/attendance-option'
+import { ATTENDANCE_OPTIONS_LABEL, useOptionListSuspenseQuery } from '@/entities/attendance-option'
 import type { DayKey, EditableParsingResult, ParsingResult } from '@/entities/text-parsing'
 import {
   createParsingResult,
   DAY_OPTIONS_LABEL,
   getAttendanceBadgeId,
   useTextParsingStore,
+  findParentKeyById,
+  transformAttendanceInfoToStatistic,
 } from '@/entities/text-parsing'
-import { findParentKeyById, transformAttendanceInfoToStatistic } from '@/entities/text-parsing'
 import { omit } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
 
