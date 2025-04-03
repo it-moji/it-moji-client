@@ -41,7 +41,7 @@ export const TextParsingInput: React.FC = () => {
           <Icon query="fluent-emoji:books" className="mr-2" />
           텍스트 분석
         </div>
-        <Button onClick={handleParsingText} disabled={text.trim() === ''}>
+        <Button onClick={handleParsingText} disabled={!text.trim()}>
           분석하기
         </Button>
       </AdminTitle>

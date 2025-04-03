@@ -29,8 +29,9 @@ export const parseTextSafely = ({
   } catch (error: unknown) {
     if (error instanceof Exception) {
       toast.error(Exception.extractMessage(error))
-    } else {
-      toast.error('입력된 원본 텍스트의 형식을 확인해주세요')
+      return
     }
+
+    toast.error('입력된 원본 텍스트의 형식을 확인해주세요')
   }
 }

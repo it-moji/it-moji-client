@@ -56,7 +56,7 @@ export const determineAttendanceOptionKey = (
 ): AttendanceOptionKey => {
   const isWeekend = dayKey === DayKeySchema.Enum.saturday || dayKey === DayKeySchema.Enum.sunday
 
-  if (content.trim() === '' || content.trim() === TIL_DEFAULT_BADGE) {
+  if (!content.trim() || content.trim() === TIL_DEFAULT_BADGE) {
     return isWeekend ? AttendanceOptionKeySchema.Enum.rest : AttendanceOptionKeySchema.Enum.absence
   }
 
@@ -253,7 +253,7 @@ export const parseText = (
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAll,
 ): EditableParsingResult[] => {
-  if (text.trim() === '') {
+  if (!text.trim()) {
     throw new Exception('분석할 텍스트를 입력해주세요')
   }
 

@@ -35,7 +35,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
     validate: {
       delimiter: {
         person: isNotEmpty(),
-        line: (value) => (JSON.stringify(value).replaceAll('"', '') === '' ? true : false),
+        line: (value) => !JSON.stringify(value).replaceAll('"', ''),
         title: isNotEmpty(),
       },
       dayMapping: {
@@ -69,7 +69,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
 
       toast.success('분석 옵션 저장에 성공했어요')
 
-      if (text.trim() === '') {
+      if (!text.trim()) {
         return
       }
 
@@ -84,9 +84,10 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
     } catch (error: unknown) {
       if (error instanceof Exception) {
         toast.error(Exception.extractMessage(error))
-      } else {
-        toast.error('분석 옵션 저장에 실패했어요')
+        return
       }
+
+      toast.error('분석 옵션 저장에 실패했어요')
     }
   }
 
@@ -102,7 +103,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
           분석 옵션 설정
         </div>
         <Group gap="xs">
-          <Button variant="light" onClick={handleApplyOptions} disabled={text.trim() === ''}>
+          <Button variant="light" onClick={handleApplyOptions} disabled={!text.trim()}>
             적용하기
           </Button>
           <Button form="parsing-options-form" type="submit">
