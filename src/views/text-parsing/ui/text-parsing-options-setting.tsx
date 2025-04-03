@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Fieldset, Group, InputLabel, TextInput } from '@mantine/core'
+import { Button, Fieldset, Group, InputLabel, Text, TextInput } from '@mantine/core'
 import { isNotEmpty, useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -111,6 +111,12 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
           </Button>
         </Group>
       </AdminTitle>
+
+      {Object.keys(form.errors).length > 0 && (
+        <Text c="var(--mantine-color-error)" className="mb-4 text-sm font-semibold">
+          모든 옵션을 입력해주세요
+        </Text>
+      )}
 
       <form id="parsing-options-form" onSubmit={form.onSubmit(handleSaveOptions)}>
         <Group gap="md">
