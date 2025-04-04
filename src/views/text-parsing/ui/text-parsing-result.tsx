@@ -38,6 +38,7 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
             placeholder="팀 선택"
             checkIconPosition="right"
             onChange={(_, option) => setTeam(option?.value ?? null)}
+            disabled={isSubmitting}
           />
           <Button
             form="parsing-result-form"
