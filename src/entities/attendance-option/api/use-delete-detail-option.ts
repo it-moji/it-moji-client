@@ -46,11 +46,11 @@ export const useDeleteDetailOption = ({
       }
     },
     onSuccess: (_, __, context) => {
-      if (!context?.status) {
-        queryClient.invalidateQueries({
-          queryKey: attendanceOptionQueryKeys.optionList(),
-        })
+      queryClient.invalidateQueries({
+        queryKey: attendanceOptionQueryKeys.optionList(),
+      })
 
+      if (!context?.status) {
         queryClient.invalidateQueries({
           queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
         })
