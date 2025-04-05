@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { OPTION_LIST_MOCK_DATA } from '@/entities/attendance-option/@x/text-parsing'
 import { PARSING_OPTIONS_MOCK_DATA } from '../../../api'
 import { TIL_MORE_THAN_5_HOURS_BADGE } from '../../../config'
 import { generateAttendanceInfo } from '../parse-text'
@@ -70,6 +71,7 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         ':',
         '\n',
         attendanceDetailOptions,
+        OPTION_LIST_MOCK_DATA,
       )
 
       expect(result).toStrictEqual(expectedResult)
@@ -108,6 +110,7 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         ':',
         '\n',
         attendanceDetailOptions,
+        OPTION_LIST_MOCK_DATA,
       ),
     ).toThrow()
 
@@ -118,6 +121,7 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         ':',
         '\n',
         attendanceDetailOptions,
+        OPTION_LIST_MOCK_DATA,
       ),
     ).toThrow()
   })
@@ -132,6 +136,7 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         ':',
         '\n',
         attendanceDetailOptions,
+        OPTION_LIST_MOCK_DATA,
       ),
     ).toThrow()
   })

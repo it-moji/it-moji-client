@@ -6,7 +6,6 @@ import {
 import {
   ATTENDANCE_OPTIONS_LABEL,
   AttendanceOptionKeySchema,
-  type AttendanceOptionKey,
   type GetAttendanceOptionsAll,
 } from '@/entities/attendance-option/@x/text-parsing'
 import { Exception } from '@/shared/api'
@@ -18,6 +17,7 @@ import {
   type DayKey,
   type ParsingOptions,
 } from '../../model'
+import { findParentKeyById } from './find-parent-key-by-id'
 import { transformAttendanceInfoToStatistic } from './transform-attendance-info-to-statistic'
 
 /**
@@ -44,27 +44,70 @@ export const extractName = (
 }
 
 /**
- * TIL 작성 내용(배지 포함)을 기반으로 출석 옵션 키를 결정하는 함수입니다.
+ * TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으로 출석 정보를 결정하는 함수입니다.
  *
- * @param content TIL 작성 내용(배지 포함)
+ * @param content TIL 작성 내용
  * @param dayKey 현재 요일을 나타내는 키
- * @returns 출석 옵션 키
+ * @param attendanceDetailOptions 출석 상세 옵션 판단 기준
+ * @param attendanceOptions 출석 옵션
+ * @returns 출석 정보
  */
-export const determineAttendanceOptionKey = (
+export const determineAttendanceInfo = (
   content: string,
   dayKey: DayKey,
-): AttendanceOptionKey => {
+  attendanceDetailOptions: ParsingOptions['attendanceDetailOptions'],
+  attendanceOptions: GetAttendanceOptionsAll,
+): AttendanceInfoValue => {
   const isWeekend = dayKey === DayKeySchema.Enum.saturday || dayKey === DayKeySchema.Enum.sunday
 
-  if (content.trim() === '' || content.trim() === TIL_DEFAULT_BADGE) {
-    return isWeekend ? AttendanceOptionKeySchema.Enum.rest : AttendanceOptionKeySchema.Enum.absence
+  if (!content.trim() || content.trim() === TIL_DEFAULT_BADGE) {
+    return {
+      key: isWeekend ? AttendanceOptionKeySchema.Enum.rest : AttendanceOptionKeySchema.Enum.absence,
+    }
+  }
+
+  const badge = attendanceDetailOptions.find((badge) => content.includes(badge.identifier))
+
+  if (badge) {
+    const key = findParentKeyById(badge.id, attendanceOptions)
+
+    return {
+      key: key || AttendanceOptionKeySchema.Enum.attendance,
+      detailId: badge.id,
+    }
   }
 
   const attendanceKey = AttendanceOptionKeySchema.options.find((optionKey) =>
     content.includes(ATTENDANCE_OPTIONS_LABEL[optionKey]),
   )
 
-  return attendanceKey || AttendanceOptionKeySchema.Enum.attendance
+  return { key: attendanceKey || AttendanceOptionKeySchema.Enum.attendance }
+}
+
+/**
+ * 주어진 텍스트에서 날짜(요일)을 찾는 함수입니다.
+ *
+ * @param line 날짜(요일)을 찾을 텍스트(한 줄)
+ * @param dayMapping 날짜 판단 기준
+ * @param titleDelimiter 키/값 분리 기준
+ * @returns 날짜(요일) 반환 (찾지 못한 경우 `undefined`)
+ */
+export const findDayInLine = (
+  line: string,
+  dayMapping: ParsingOptions['dayMapping'],
+  titleDelimiter: ParsingOptions['delimiter']['title'],
+) => {
+  const titleDelimiterIndex = line.indexOf(titleDelimiter)
+
+  if (titleDelimiterIndex === -1) {
+    return
+  }
+
+  const day = Object.values(dayMapping).find((day) =>
+    line.slice(0, titleDelimiterIndex).includes(day),
+  )
+
+  return day
 }
 
 /**
@@ -74,7 +117,8 @@ export const determineAttendanceOptionKey = (
  * @param dayMapping 날짜 판단 기준
  * @param titleDelimiter 키/값 분리 기준
  * @param lineDelimiter 개행 분리 기준
- * @param attendanceDetailOptions 출석 상세 옵션
+ * @param attendanceDetailOptions 출석 상세 옵션 판단 기준
+ * @param attendanceOptions 출석 옵션
  * @returns 출석 정보
  */
 export const generateAttendanceInfo = (
@@ -83,34 +127,32 @@ export const generateAttendanceInfo = (
   titleDelimiter: ParsingOptions['delimiter']['title'],
   lineDelimiter: ParsingOptions['delimiter']['line'],
   attendanceDetailOptions: ParsingOptions['attendanceDetailOptions'],
+  attendanceOptions: GetAttendanceOptionsAll,
 ): EditableParsingResult['attendanceInfo'] => {
   const attendanceInfo = {} as Record<DayKey, AttendanceInfoValue>
 
   const lines = text.split(lineDelimiter)
 
   lines.forEach((line, idx) => {
-    if (!Object.values(dayMapping).includes(line.split(titleDelimiter)[0])) {
+    const day = findDayInLine(line, dayMapping, titleDelimiter)
+
+    if (!day) {
       return
     }
 
-    const day = line.split(titleDelimiter)[0]
     const dayKey = Object.entries(dayMapping).find(([, value]) => day === value)![0] as DayKey
     const nextLine = lines[idx + 1]
 
     const content =
-      !nextLine || Object.values(dayMapping).includes(nextLine.split(titleDelimiter)[0])
-        ? ''
-        : line.split(titleDelimiter)[1] + nextLine
+      line.split(titleDelimiter)[1] +
+      (!nextLine || findDayInLine(nextLine, dayMapping, titleDelimiter) ? '' : nextLine)
 
-    attendanceInfo[dayKey] = {
-      key: determineAttendanceOptionKey(content, dayKey),
-    }
-
-    attendanceDetailOptions.forEach((badge) => {
-      if (content.includes(badge.identifier)) {
-        attendanceInfo[dayKey].detailId = badge.id
-      }
-    })
+    attendanceInfo[dayKey] = determineAttendanceInfo(
+      content,
+      dayKey,
+      attendanceDetailOptions,
+      attendanceOptions,
+    )
   })
 
   if (Object.keys(attendanceInfo).length !== 7) {
@@ -141,13 +183,11 @@ export const getAttendanceBadgeId = (
         optionGroup.every(({ key, count, range }) => {
           const stat = attendanceStatistic.find((s) => s.key === key || s.detailId === key)
 
-          if (!stat) {
-            return false
+          if (range === AttendanceBadgeRangeSchema.Enum.more) {
+            return (stat?.count || 0) >= count
           }
 
-          return range === AttendanceBadgeRangeSchema.Enum.more
-            ? stat.count >= count
-            : stat.count <= count
+          return (stat?.count || 0) <= count
         }),
       ),
     )
@@ -187,6 +227,7 @@ const generateAttendanceData = (
     parsingOptions.delimiter.title,
     parsingOptions.delimiter.line,
     parsingOptions.attendanceDetailOptions,
+    attendanceOptions,
   )
 
   const attendanceStatistic = transformAttendanceInfoToStatistic(attendanceInfo, attendanceOptions)
@@ -226,6 +267,10 @@ export const parseText = (
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAll,
 ): EditableParsingResult[] => {
+  if (!text.trim()) {
+    throw new Exception('분석할 텍스트를 입력해주세요')
+  }
+
   const persons = separatePeople(text, parsingOptions.delimiter.person)
 
   return persons.map((person) => generateAttendanceData(person, parsingOptions, attendanceOptions))

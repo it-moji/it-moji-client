@@ -27,6 +27,16 @@ describe('출석 통계를 바탕으로 배지를 계산한다.', () => {
         ATTENDANCE_BADGE_MOCK_DATA,
       ),
     ).toBe(3)
+
+    expect(
+      getAttendanceBadgeId(
+        [
+          { key: 'attendance', count: 7 },
+          { key: 'attendance', detailId: 1, count: 2 },
+        ],
+        ATTENDANCE_BADGE_MOCK_DATA,
+      ),
+    ).toBe(2)
   })
 
   test('배지가 없는 경우 null을 반환한다.', () => {
@@ -35,7 +45,7 @@ describe('출석 통계를 바탕으로 배지를 계산한다.', () => {
         [
           { key: 'attendance', count: 3 },
           { key: 'attendance', detailId: 1, count: 2 },
-          { key: 'absence', count: 1 },
+          { key: 'absence', count: 2 },
           { key: 'rest', count: 2 },
         ],
         ATTENDANCE_BADGE_MOCK_DATA,

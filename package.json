@@ -67,6 +67,7 @@
     "@storybook/nextjs": "^8.5.1",
     "@storybook/react": "^8.5.1",
     "@storybook/test": "^8.5.1",
+    "@tailwindcss/container-queries": "^0.1.1",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",

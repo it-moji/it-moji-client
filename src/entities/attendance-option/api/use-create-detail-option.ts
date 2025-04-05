@@ -33,7 +33,14 @@ export const useCreateDetailOption = ({
       onMutate?.()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: attendanceOptionQueryKeys.optionDetail(optionKey) })
+      queryClient.invalidateQueries({
+        queryKey: attendanceOptionQueryKeys.optionList(),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
+      })
+
       onSuccess?.()
     },
     onError: (error) => {

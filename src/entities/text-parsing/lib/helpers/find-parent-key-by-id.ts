@@ -4,15 +4,11 @@ import type {
 } from '@/entities/attendance-option/@x/text-parsing'
 
 export const findParentKeyById = (id: number, attendanceOptions: GetAttendanceOptionsAll) => {
-  let result = null
-
-  Object.keys(attendanceOptions).forEach((key) => {
-    if (
-      attendanceOptions[key as AttendanceOptionKey].detailOptions.some((option) => option.id === id)
-    ) {
-      result = key
+  for (const key of Object.keys(attendanceOptions) as AttendanceOptionKey[]) {
+    if (attendanceOptions[key].detailOptions.some((option) => option.id === id)) {
+      return key
     }
-  })
+  }
 
-  return result
+  return null
 }

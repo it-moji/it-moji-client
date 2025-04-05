@@ -6,6 +6,7 @@ export * from './modify-detail-option'
 export * from './delete-detail-option'
 export * from './mocks'
 
+export * from './use-option-list-query'
 export * from './use-option-detail-query'
 export * from './use-create-detail-option'
 export * from './use-modify-detail-option'
