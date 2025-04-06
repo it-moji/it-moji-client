@@ -1,4 +1,3 @@
-import { revalidateTag } from 'next/cache'
 import type { z } from 'zod'
 import { type CommonResponse, createCommonResponseSchema } from './common-response'
 import { Exception } from './exception'
@@ -85,7 +84,7 @@ export class Fetcher {
     })
   }
 
-  public static revalidateAll() {
+  public static revalidateAll(revalidateTag: (tag: string) => void) {
     revalidateTag(Fetcher.REVALIDATE_TAG_ALL)
   }
 }
