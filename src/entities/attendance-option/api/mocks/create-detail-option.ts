@@ -32,7 +32,7 @@ export const createAttendanceDetailOptionMockHandler = createMockHandler({
     )
 
     const maxId =
-      allDetailOptions.length > 0 ? Math.max(...allDetailOptions.map((opt) => opt.id)) : 0
+      allDetailOptions.length > 0 ? Math.max(...allDetailOptions.map((opt) => Number(opt.id))) : 0
 
     OPTION_LIST_MOCK_DATA[optionKey].detailOptions.push({ id: maxId + 1, name })
 

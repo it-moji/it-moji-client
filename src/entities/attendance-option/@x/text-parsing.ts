@@ -1,5 +1,6 @@
 export {
   type AttendanceOptionKey,
+  type AttendanceDetailOption,
   AttendanceOptionKeySchema,
   AttendanceDetailOptionSchema,
 } from '../model'

@@ -1,10 +1,11 @@
 import type {
   AttendanceOptionKey,
+  AttendanceDetailOption,
   GetAttendanceOptionsAllResponseData,
 } from '@/entities/attendance-option/@x/text-parsing'
 
 export const findParentKeyById = (
-  id: number,
+  id: AttendanceDetailOption['id'],
   attendanceOptions: GetAttendanceOptionsAllResponseData,
 ) => {
   for (const key of Object.keys(attendanceOptions) as AttendanceOptionKey[]) {
