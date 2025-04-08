@@ -1,4 +1,3 @@
-import { revalidateTag } from 'next/cache'
 import type { z } from 'zod'
 import { type CommonResponse, createCommonResponseSchema } from './common-response'
 import { Exception } from './exception'
@@ -58,7 +57,7 @@ export class Fetcher {
 
   private async fetch(
     url: string | URL,
-    { params, signal, next, ...options }: RequestOptions = {},
+    { params, signal, next, headers, ...options }: RequestOptions = {},
   ) {
     const targetURL = new URL(url, this.endpoint)
     const controller = new AbortController()
@@ -77,6 +76,10 @@ export class Fetcher {
 
     return await fetch(targetURL, {
       ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
       signal: signal ? AbortSignal.any([signal, controller.signal]) : controller.signal,
       next: {
         revalidate: next?.revalidate,
@@ -85,7 +88,7 @@ export class Fetcher {
     })
   }
 
-  public static revalidateAll() {
+  public static revalidateAll(revalidateTag: (tag: string) => void) {
     revalidateTag(Fetcher.REVALIDATE_TAG_ALL)
   }
 }

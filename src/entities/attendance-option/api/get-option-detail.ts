@@ -7,7 +7,7 @@ import { ATTENDANCE_OPTION_ENDPOINT } from './endpoint'
 
 export const GetAttendanceOptionDetailSchema = z.array(AttendanceDetailOptionSchema)
 
-export type GetAttendanceOptions = z.infer<typeof GetAttendanceOptionDetailSchema>
+export type GetAttendanceOptionsResponseData = z.infer<typeof GetAttendanceOptionDetailSchema>
 
 export type GetAttendanceOptionsResponse = CommonResponse<typeof GetAttendanceOptionDetailSchema>
 

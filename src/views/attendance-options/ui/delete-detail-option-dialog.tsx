@@ -7,6 +7,7 @@ import {
   type UseDeleteDetailOptionParams,
   useDeleteDetailOption,
 } from '@/entities/attendance-option'
+import { Exception } from '@/shared/api'
 
 export interface DeleteDetailOptionDialogProps
   extends Pick<UseDeleteDetailOptionParams, 'optionKey' | 'detailOptionId'> {
@@ -24,7 +25,7 @@ export const DeleteDetailOptionDialog: React.FC<DeleteDetailOptionDialogProps> =
     onSuccess: () => {
       toast.success('상세 옵션이 삭제되었어요!')
     },
-    onException: (exception) => toast.error(exception.message),
+    onException: (exception) => toast.error(Exception.extractMessage(exception)),
     onError: (error) => {
       console.error(error)
       toast.error('예기치 못한 이유로 상세 옵션 삭제에 실패했어요')

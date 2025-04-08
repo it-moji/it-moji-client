@@ -1,4 +1,4 @@
-import type { GetAttendanceOptionsAll } from '@/entities/attendance-option/@x/text-parsing'
+import type { GetAttendanceOptionsAllResponseData } from '@/entities/attendance-option/@x/text-parsing'
 import type { AttendanceStatisticValue, ParsingResult } from '../../model'
 
 /**
@@ -51,7 +51,7 @@ const generateAttendanceStatsMap = (
  * @returns 평탄화된 출석 옵션 (초기 count가 0으로 설정된 출석 통계 항목)
  */
 const flattenAttendanceOptionStructure = (
-  attendanceOptions: GetAttendanceOptionsAll,
+  attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): AttendanceStatisticValue[] =>
   Object.entries(attendanceOptions).flatMap(([key, { detailOptions }]) => [
     { key, count: 0 } as AttendanceStatisticValue,
@@ -94,7 +94,7 @@ const mergeStatsToFlattenedAttendanceOptions = (
  */
 export const transformAttendanceInfoToStatistic = (
   attendanceInfo: ParsingResult['attendanceInfo'],
-  attendanceOptions: GetAttendanceOptionsAll,
+  attendanceOptions: GetAttendanceOptionsAllResponseData,
 ) => {
   const flattenedAttendanceOptions = flattenAttendanceOptionStructure(attendanceOptions)
   const statsMap = generateAttendanceStatsMap(attendanceInfo)

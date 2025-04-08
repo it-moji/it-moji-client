@@ -1,12 +1,12 @@
 import {
+  type GetAttendanceBadgeListWithConditionsResponseData,
   AttendanceBadgeRangeSchema,
   ATTENDANCE_BADGE_MOCK_DATA,
-  type GetAttendanceBadgeDetailResponse,
 } from '@/entities/attendance-badge/@x/text-parsing'
 import {
+  type GetAttendanceOptionsAllResponseData,
   ATTENDANCE_OPTIONS_LABEL,
   AttendanceOptionKeySchema,
-  type GetAttendanceOptionsAll,
 } from '@/entities/attendance-option/@x/text-parsing'
 import { Exception } from '@/shared/api'
 import { TIL_DEFAULT_BADGE } from '../../config'
@@ -56,7 +56,7 @@ export const determineAttendanceInfo = (
   content: string,
   dayKey: DayKey,
   attendanceDetailOptions: ParsingOptions['attendanceDetailOptions'],
-  attendanceOptions: GetAttendanceOptionsAll,
+  attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): AttendanceInfoValue => {
   const isWeekend = dayKey === DayKeySchema.Enum.saturday || dayKey === DayKeySchema.Enum.sunday
 
@@ -127,7 +127,7 @@ export const generateAttendanceInfo = (
   titleDelimiter: ParsingOptions['delimiter']['title'],
   lineDelimiter: ParsingOptions['delimiter']['line'],
   attendanceDetailOptions: ParsingOptions['attendanceDetailOptions'],
-  attendanceOptions: GetAttendanceOptionsAll,
+  attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): EditableParsingResult['attendanceInfo'] => {
   const attendanceInfo = {} as Record<DayKey, AttendanceInfoValue>
 
@@ -175,15 +175,15 @@ export const generateAttendanceInfo = (
  */
 export const getAttendanceBadgeId = (
   attendanceStatistic: EditableParsingResult['attendanceStatistic'],
-  badgeList: GetAttendanceBadgeDetailResponse['data'][],
+  badgeList: GetAttendanceBadgeListWithConditionsResponseData,
 ): EditableParsingResult['badgeId'] => {
   const badge = badgeList
     .filter((badge) =>
-      badge.options.some((optionGroup) =>
-        optionGroup.every(({ key, count, range }) => {
+      badge.conditionGroups.some(({ conditions }) =>
+        conditions.every(({ key, count, range }) => {
           const stat = attendanceStatistic.find((s) => s.key === key || s.detailId === key)
 
-          if (range === AttendanceBadgeRangeSchema.Enum.more) {
+          if (range === AttendanceBadgeRangeSchema.Enum.MORE) {
             return (stat?.count || 0) >= count
           }
 
@@ -212,7 +212,7 @@ export const getAttendanceBadgeId = (
 const generateAttendanceData = (
   text: string,
   parsingOptions: ParsingOptions,
-  attendanceOptions: GetAttendanceOptionsAll,
+  attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): EditableParsingResult => {
   const name = extractName(
     text,
@@ -265,7 +265,7 @@ export const separatePeople = (
 export const parseText = (
   text: string,
   parsingOptions: ParsingOptions,
-  attendanceOptions: GetAttendanceOptionsAll,
+  attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): EditableParsingResult[] => {
   if (!text.trim()) {
     throw new Exception('분석할 텍스트를 입력해주세요')

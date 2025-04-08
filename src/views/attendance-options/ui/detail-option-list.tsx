@@ -2,7 +2,7 @@
 
 import {
   type AttendanceOptionKey,
-  useOptionDetailSuspenseQuery,
+  useAttendanceOptionDetailSuspenseQuery,
 } from '@/entities/attendance-option'
 import { FallbackRender } from '@/shared/ui'
 import { DetailOptionListEmptyFallback } from './detail-option-fallback-ui'
@@ -13,7 +13,7 @@ export interface DetailOptionListProps {
 }
 
 export const DetailOptionList: React.FC<DetailOptionListProps> = ({ optionKey }) => {
-  const { data } = useOptionDetailSuspenseQuery({ optionKey })
+  const { data } = useAttendanceOptionDetailSuspenseQuery({ optionKey })
 
   return (
     <FallbackRender component={<DetailOptionListEmptyFallback />} render={data.length <= 0}>

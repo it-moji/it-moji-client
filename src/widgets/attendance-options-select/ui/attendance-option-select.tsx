@@ -2,26 +2,32 @@
 
 import { Select } from '@mantine/core'
 import type { SelectProps } from '@mantine/core'
-import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
+import type { GetAttendanceOptionsAllResponseData } from '@/entities/attendance-option'
 
 export interface AttendanceOptionSelectProps extends Omit<SelectProps, 'data'> {
-  attendanceOptions: GetAttendanceOptionsAll
+  attendanceOptions: GetAttendanceOptionsAllResponseData | null | undefined
 }
 
 export const AttendanceOptionSelect: React.FC<AttendanceOptionSelectProps> = ({
   attendanceOptions,
+  value,
+  defaultValue,
   checkIconPosition = 'right',
   allowDeselect = false,
   ...props
 }) => {
-  const options = Object.entries(attendanceOptions).flatMap(([key, { name, detailOptions }]) => [
-    { value: key, label: name },
-    ...detailOptions.map(({ id, name }) => ({ value: String(id), label: name })),
-  ])
+  const options = attendanceOptions
+    ? Object.entries(attendanceOptions).flatMap(([key, { name, detailOptions }]) => [
+        { value: key, label: name },
+        ...detailOptions.map(({ id, name }) => ({ value: String(id), label: name })),
+      ])
+    : []
 
   return (
     <Select
       data={options}
+      value={value ? String(value) : value}
+      defaultValue={defaultValue ? String(defaultValue) : defaultValue}
       checkIconPosition={checkIconPosition}
       allowDeselect={allowDeselect}
       {...props}

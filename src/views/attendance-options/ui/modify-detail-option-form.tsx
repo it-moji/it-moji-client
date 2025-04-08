@@ -3,6 +3,7 @@ import { useForm } from '@mantine/form'
 import { useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 import { useModifyDetailOption } from '@/entities/attendance-option'
+import { Exception } from '@/shared/api'
 import { Icon } from '@/shared/ui'
 import { isValidDetailOptionName } from './create-detail-option-form-dialog'
 import { type DetailOptionItemProps } from './detail-option-item'
@@ -31,7 +32,7 @@ export const ModifyDetailOptionForm: React.FC<ModifyDetailOptionFormProps> = ({
       toast.success('상세 옵션 수정에 성공했어요!')
       onCancel()
     },
-    onException: (exception) => toast.error(exception.message),
+    onException: (exception) => toast.error(Exception.extractMessage(exception)),
     onError: (error) => {
       console.error(error)
       toast.error('예기치 못한 이유로 상세 옵션 수정에 실패했어요')

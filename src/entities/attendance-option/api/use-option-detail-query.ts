@@ -5,17 +5,21 @@ import type { AttendanceOptionKey } from '../model'
 import { getAttendanceOptionDetail } from './get-option-detail'
 import { attendanceOptionQueryKeys } from './query-keys'
 
-export interface UseOptionDetailSuspenseQueryParams {
+export interface UseAttendanceOptionDetailSuspenseQueryParams {
   optionKey: AttendanceOptionKey
 }
 
-export const useOptionDetailSuspenseQuery = ({ optionKey }: UseOptionDetailSuspenseQueryParams) =>
+export const useAttendanceOptionDetailSuspenseQuery = ({
+  optionKey,
+}: UseAttendanceOptionDetailSuspenseQueryParams) =>
   useSuspenseQuery({
     queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
     queryFn: () => getAttendanceOptionDetail(optionKey).then((res) => res.data),
   })
 
-export const useResetOptionDetailQuery = ({ optionKey }: UseOptionDetailSuspenseQueryParams) => {
+export const useResetAttendanceOptionDetailQuery = ({
+  optionKey,
+}: UseAttendanceOptionDetailSuspenseQueryParams) => {
   const queryClient = useQueryClient()
 
   return () => {
