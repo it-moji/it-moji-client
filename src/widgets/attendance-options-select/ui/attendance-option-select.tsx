@@ -26,8 +26,8 @@ export const AttendanceOptionSelect: React.FC<AttendanceOptionSelectProps> = ({
   return (
     <Select
       data={options}
-      value={String(value) || value}
-      defaultValue={String(defaultValue) || defaultValue}
+      value={value ? String(value) : value}
+      defaultValue={defaultValue ? String(defaultValue) : defaultValue}
       checkIconPosition={checkIconPosition}
       allowDeselect={allowDeselect}
       {...props}
