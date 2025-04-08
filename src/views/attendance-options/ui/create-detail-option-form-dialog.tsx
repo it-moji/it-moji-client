@@ -10,6 +10,7 @@ import {
   useIsDetailOptionMutating,
   ATTENDANCE_OPTIONS_LABEL,
 } from '@/entities/attendance-option'
+import { Exception } from '@/shared/api'
 
 export interface CreateDetailOptionFormProps {
   optionKey: AttendanceOptionKey
@@ -31,7 +32,7 @@ export const CreateDetailOptionForm: React.FC<CreateDetailOptionFormProps> = ({ 
       toast.success('상세 옵션 생성에 성공했어요!')
       modals.closeAll()
     },
-    onException: (exception) => toast.error(exception.message),
+    onException: (exception) => toast.error(Exception.extractMessage(exception)),
     onError: (error) => {
       console.error(error)
       toast.error('예기치 못한 이유로 상세 옵션 생성에 실패했어요')
