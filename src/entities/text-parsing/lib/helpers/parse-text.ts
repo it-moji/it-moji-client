@@ -1,7 +1,7 @@
 import {
+  type GetAttendanceBadgeListWithConditionsResponseData,
   AttendanceBadgeRangeSchema,
   ATTENDANCE_BADGE_MOCK_DATA,
-  type GetAttendanceBadgeDetailResponse,
 } from '@/entities/attendance-badge/@x/text-parsing'
 import {
   type GetAttendanceOptionsAllResponseData,
@@ -175,15 +175,15 @@ export const generateAttendanceInfo = (
  */
 export const getAttendanceBadgeId = (
   attendanceStatistic: EditableParsingResult['attendanceStatistic'],
-  badgeList: GetAttendanceBadgeDetailResponse['data'][],
+  badgeList: GetAttendanceBadgeListWithConditionsResponseData,
 ): EditableParsingResult['badgeId'] => {
   const badge = badgeList
     .filter((badge) =>
-      badge.options.some((optionGroup) =>
-        optionGroup.every(({ key, count, range }) => {
+      badge.conditionGroups.some(({ conditions }) =>
+        conditions.every(({ key, count, range }) => {
           const stat = attendanceStatistic.find((s) => s.key === key || s.detailId === key)
 
-          if (range === AttendanceBadgeRangeSchema.Enum.more) {
+          if (range === AttendanceBadgeRangeSchema.Enum.MORE) {
             return (stat?.count || 0) >= count
           }
 

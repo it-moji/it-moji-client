@@ -1,13 +1,13 @@
 import { createMockHandler } from '@/shared/api'
-import { PostAttendanceBadgeBodySchema } from '../create-badge'
 import { ATTENDANCE_BADGE_ENDPOINT } from '../endpoint'
+import { PutAttendanceBadgeBodySchema } from '../modify-badge'
 import { ATTENDANCE_BADGE_MOCK_DATA } from './badge-list'
 
 export const modifyBadgeMockHandler = createMockHandler({
   endpoint: ATTENDANCE_BADGE_ENDPOINT.DETAIL(':badgeId'),
   handler: async ({ request, params }) => {
     const body = await request.json()
-    const { data } = PostAttendanceBadgeBodySchema.safeParse(body)
+    const { data } = PutAttendanceBadgeBodySchema.safeParse(body)
 
     if (!data) {
       return { status: 400 }
@@ -25,10 +25,34 @@ export const modifyBadgeMockHandler = createMockHandler({
     }
 
     ATTENDANCE_BADGE_MOCK_DATA[targetIndex] = {
-      ...ATTENDANCE_BADGE_MOCK_DATA[targetIndex],
-      ...data,
+      id: ATTENDANCE_BADGE_MOCK_DATA[targetIndex].id,
+      name: data.name,
+      icon: data.icon,
+      conditionGroups: data.conditionGroups.map((group) => ({
+        groupId:
+          Math.max(
+            0,
+            ...ATTENDANCE_BADGE_MOCK_DATA.flatMap(({ conditionGroups }) => {
+              return conditionGroups.map(({ groupId }) => groupId)
+            }),
+          ) + 1,
+        conditions: group.map((condition) => ({
+          id:
+            Math.max(
+              0,
+              ...ATTENDANCE_BADGE_MOCK_DATA.flatMap((badge) => {
+                return badge.conditionGroups.flatMap(({ conditions }) => {
+                  return conditions.map(({ id }) => id)
+                })
+              }),
+            ) + 1,
+          ...condition,
+        })),
+      })),
     }
 
     return { data: null }
   },
+  method: 'put',
+  delay: 1_200,
 })

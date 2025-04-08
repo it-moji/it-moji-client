@@ -2,14 +2,14 @@
 
 import { Button, Group, Select } from '@mantine/core'
 import { useState } from 'react'
-import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
+import type { GetAttendanceBadgeListWithConditionsResponseData } from '@/entities/attendance-badge'
 import { useParsingResult, useParsingFormSubmitting } from '@/entities/text-parsing'
 import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
 import { TextParsingResultEmpty } from './text-parsing-result-empty'
 import { TextParsingResultForm } from './text-parsing-result-form'
 
 export interface TextParsingResultProps {
-  badgeOptions: GetAttendanceBadgeDetailResponse['data'][]
+  badgeOptions: GetAttendanceBadgeListWithConditionsResponseData
 }
 
 export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
@@ -20,12 +20,12 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
 
   return (
     <AdminContainer className="h-fit w-full">
-      <AdminTitle className="mb-6 flex items-center justify-between">
-        <div className="flex flex-none items-center">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <AdminTitle className="mb-0 flex flex-none items-center">
           <Icon query="fluent-emoji:desktop-computer" className="mr-2" />
           결과 확인
-        </div>
-        <Group gap="xs" justify="flex-end">
+        </AdminTitle>
+        <Group gap="xs" className="flex-1" justify="flex-end" wrap="nowrap">
           <Select
             data={[
               { value: '1', label: '1팀' },
@@ -48,9 +48,9 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
             반영하기
           </Button>
         </Group>
-      </AdminTitle>
+      </div>
 
-      <div className="h-[650px] flex-none overflow-y-auto rounded-lg border border-solid border-gray-300 p-4 dark:border-dark-400">
+      <div className="h-[40rem] flex-none overflow-y-auto rounded-lg border border-solid border-gray-300 p-4 dark:border-dark-400">
         <FallbackRender component={<TextParsingResultEmpty />} render={result.length <= 0}>
           <TextParsingResultForm badgeOptions={badgeOptions} team={team} />
         </FallbackRender>

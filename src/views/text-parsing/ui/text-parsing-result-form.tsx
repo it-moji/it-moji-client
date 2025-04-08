@@ -5,7 +5,7 @@ import { useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { AttendanceOptionSelect } from '@/widgets/attendance-options-select'
-import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
+import type { GetAttendanceBadgeListWithConditionsResponseData } from '@/entities/attendance-badge'
 import {
   ATTENDANCE_OPTIONS_LABEL,
   useAttendanceOptionListSuspenseQuery,
@@ -27,7 +27,7 @@ import { omit } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
 
 export interface TextParsingResultFormProps {
-  badgeOptions: GetAttendanceBadgeDetailResponse['data'][]
+  badgeOptions: GetAttendanceBadgeListWithConditionsResponseData
   team: string | null
 }
 
