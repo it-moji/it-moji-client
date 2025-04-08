@@ -4,7 +4,7 @@ import { Button, Fieldset, Group, InputLabel, Text, TextInput } from '@mantine/c
 import { isNotEmpty, useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useOptionListSuspenseQuery } from '@/entities/attendance-option'
+import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
 import type { DayKey, ParsingOptions } from '@/entities/text-parsing'
 import {
   DAY_OPTIONS_LABEL,
@@ -26,7 +26,7 @@ export interface TextParsingOptionsSettingProps {
 export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps> = ({
   parsingOptions,
 }) => {
-  const { data: attendanceOptions } = useOptionListSuspenseQuery()
+  const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
 
   const text = useParsingText()
   const isSubmitting = useParsingFormSubmitting()
@@ -106,12 +106,12 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
 
   return (
     <AdminContainer>
-      <AdminTitle className="mb-6 flex items-center justify-between">
-        <div className="flex flex-none items-center">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <AdminTitle className="mb-0 flex flex-none items-center">
           <Icon query="fluent-emoji:gear" className="mr-2" />
           분석 옵션 설정
-        </div>
-        <Group gap="xs" justify="flex-end">
+        </AdminTitle>
+        <Group gap="xs" className="flex-1" justify="flex-end" wrap="nowrap">
           <Button
             variant="light"
             onClick={handleApplyOptions}
@@ -123,7 +123,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
             저장하기
           </Button>
         </Group>
-      </AdminTitle>
+      </div>
 
       {Object.keys(form.errors).length > 0 && (
         <Text c="var(--mantine-color-error)" className="mb-4 text-sm font-semibold">

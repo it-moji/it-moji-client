@@ -5,17 +5,21 @@ import type { AttendanceOptionKey } from '../model'
 import { AttendanceOptionKeySchema, AttendanceOptionSchema } from '../model'
 import { ATTENDANCE_OPTION_ENDPOINT } from './endpoint'
 
-export const GetAttendanceOptionsAllSchema = z.object(
+export const GetAttendanceOptionsAllResponseSchema = z.object(
   Object.fromEntries(
     AttendanceOptionKeySchema.options.map((key) => [key, AttendanceOptionSchema]),
   ) as Record<AttendanceOptionKey, typeof AttendanceOptionSchema>,
 )
 
-export type GetAttendanceOptionsAll = z.infer<typeof GetAttendanceOptionsAllSchema>
+export type GetAttendanceOptionsAllResponseData = z.infer<
+  typeof GetAttendanceOptionsAllResponseSchema
+>
 
-export type GetAttendanceOptionsAllResponse = CommonResponse<typeof GetAttendanceOptionsAllSchema>
+export type GetAttendanceOptionsAllResponse = CommonResponse<
+  typeof GetAttendanceOptionsAllResponseSchema
+>
 
 export const getAttendanceOptionsAll = () =>
   server.request(ATTENDANCE_OPTION_ENDPOINT.LIST, {
-    schema: GetAttendanceOptionsAllSchema,
+    schema: GetAttendanceOptionsAllResponseSchema,
   })

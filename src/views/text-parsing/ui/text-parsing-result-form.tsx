@@ -6,7 +6,10 @@ import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { AttendanceOptionSelect } from '@/widgets/attendance-options-select'
 import type { GetAttendanceBadgeDetailResponse } from '@/entities/attendance-badge'
-import { ATTENDANCE_OPTIONS_LABEL, useOptionListSuspenseQuery } from '@/entities/attendance-option'
+import {
+  ATTENDANCE_OPTIONS_LABEL,
+  useAttendanceOptionListSuspenseQuery,
+} from '@/entities/attendance-option'
 import type { DayKey, EditableParsingResult, ParsingResult } from '@/entities/text-parsing'
 import {
   createParsingResult,
@@ -32,7 +35,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
   badgeOptions,
   team,
 }) => {
-  const { data: attendanceOptions } = useOptionListSuspenseQuery()
+  const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
 
   const result = useParsingResult()
   const options = useParsingOptions()
@@ -105,7 +108,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
     >
       {result.map((person, idx) => (
         <div
-          className="rounded-lg border border-solid border-gray-300 p-4 @container/parsingResult dark:border-dark-400"
+          className="rounded-lg border border-solid border-gray-300 p-4 @container/parsing-result dark:border-dark-400"
           key={person.name}
         >
           <Group gap="md">
@@ -136,7 +139,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
               allowDeselect={false}
             />
           </Group>
-          <div className="mt-8 flex flex-col items-start gap-x-4 gap-y-8 @xl/parsingResult:flex-row">
+          <div className="mt-8 flex flex-col items-start gap-x-4 gap-y-8 @xl/parsing-result:flex-row">
             <div className="flex-1">
               <Title order={4} className="mb-2 flex items-center text-base font-semibold">
                 <Icon query="fluent-emoji:spiral-calendar" className="mr-2" />

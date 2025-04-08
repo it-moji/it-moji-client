@@ -1,12 +1,12 @@
 import toast from 'react-hot-toast'
-import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
+import type { GetAttendanceOptionsAllResponseData } from '@/entities/attendance-option'
 import { useTextParsingStore, parseText, type ParsingOptions } from '@/entities/text-parsing'
 import { Exception } from '@/shared/api'
 
 interface parseTextSafelyParams {
   text: string
   parsingOptions: ParsingOptions
-  attendanceOptions: GetAttendanceOptionsAll
+  attendanceOptions: GetAttendanceOptionsAllResponseData
   onSuccess?: () => void
 }
 

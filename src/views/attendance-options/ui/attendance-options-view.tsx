@@ -6,7 +6,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import {
   type AttendanceOptionKey,
   AttendanceOptionKeySchema,
-  useResetOptionDetailQuery,
+  useResetAttendanceOptionDetailQuery,
 } from '@/entities/attendance-option'
 import { CreateDetailOptionFormDialog } from './create-detail-option-form-dialog'
 import { DetailOptionListErrorFallback } from './detail-option-fallback-ui'
@@ -18,7 +18,7 @@ export const AttendanceOptionsView: React.FC = () => {
     return AttendanceOptionKeySchema.Enum.attendance
   })
 
-  const reset = useResetOptionDetailQuery({ optionKey: selected })
+  const reset = useResetAttendanceOptionDetailQuery({ optionKey: selected })
 
   return (
     <>

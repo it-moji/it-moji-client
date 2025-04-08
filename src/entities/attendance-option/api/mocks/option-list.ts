@@ -1,9 +1,8 @@
-import type { GetAttendanceOptionsAllResponse } from '../get-option-list'
-import type { GetAttendanceOptionsAll } from '../get-option-list'
+import type { GetAttendanceOptionsAllResponseData } from '../get-option-list'
 import { createMockHandler } from '@/shared/api'
 import { ATTENDANCE_OPTION_ENDPOINT } from '../endpoint'
 
-export const OPTION_LIST_MOCK_DATA: GetAttendanceOptionsAll = {
+export const OPTION_LIST_MOCK_DATA: GetAttendanceOptionsAllResponseData = {
   attendance: {
     name: '출석',
     detailOptions: [
@@ -40,7 +39,7 @@ export const OPTION_LIST_MOCK_DATA: GetAttendanceOptionsAll = {
   },
 }
 
-export const optionListMockHandler = createMockHandler<GetAttendanceOptionsAllResponse['data']>({
+export const optionListMockHandler = createMockHandler<GetAttendanceOptionsAllResponseData>({
   endpoint: ATTENDANCE_OPTION_ENDPOINT.LIST,
   handler: () =>
     Promise.resolve({

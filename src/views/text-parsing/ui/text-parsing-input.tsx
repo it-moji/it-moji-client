@@ -3,7 +3,7 @@
 import { Button, Textarea } from '@mantine/core'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useOptionListSuspenseQuery } from '@/entities/attendance-option'
+import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
 import {
   useParsingFormSubmitting,
   useParsingOptions,
@@ -14,7 +14,7 @@ import { AdminContainer, AdminTitle, Icon } from '@/shared/ui'
 import { parseTextSafely } from '../lib'
 
 export const TextParsingInput: React.FC = () => {
-  const { data: attendanceOptions } = useOptionListSuspenseQuery()
+  const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
 
   const text = useParsingText()
   const options = useParsingOptions()
@@ -41,15 +41,15 @@ export const TextParsingInput: React.FC = () => {
 
   return (
     <AdminContainer>
-      <AdminTitle className="mb-6 flex items-center justify-between">
-        <div className="flex items-center">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <AdminTitle className="mb-0 flex items-center">
           <Icon query="fluent-emoji:books" className="mr-2" />
           텍스트 분석
-        </div>
+        </AdminTitle>
         <Button onClick={handleParsingText} disabled={!text.trim() || isSubmitting}>
           분석하기
         </Button>
-      </AdminTitle>
+      </div>
       <Textarea
         label="원본 텍스트"
         classNames={{ label: 'mb-2 font-semibold' }}

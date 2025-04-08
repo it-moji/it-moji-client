@@ -2,10 +2,10 @@
 
 import { Select } from '@mantine/core'
 import type { SelectProps } from '@mantine/core'
-import type { GetAttendanceOptionsAll } from '@/entities/attendance-option'
+import type { GetAttendanceOptionsAllResponseData } from '@/entities/attendance-option'
 
 export interface AttendanceOptionSelectProps extends Omit<SelectProps, 'data'> {
-  attendanceOptions: GetAttendanceOptionsAll | null | undefined
+  attendanceOptions: GetAttendanceOptionsAllResponseData | null | undefined
 }
 
 export const AttendanceOptionSelect: React.FC<AttendanceOptionSelectProps> = ({
