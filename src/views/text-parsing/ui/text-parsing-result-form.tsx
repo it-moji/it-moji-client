@@ -72,7 +72,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
             day,
             {
               ...info,
-              detailId: info.detailId && Number(info.detailId),
+              detailKeyId: info.detailKeyId && Number(info.detailKeyId),
             },
           ]),
         ),
@@ -164,7 +164,9 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                             defaultValue={
                               form
                                 .getValues()
-                                .values[idx].attendanceInfo[day as DayKey].detailId?.toString() ||
+                                .values[
+                                  idx
+                                ].attendanceInfo[day as DayKey].detailKeyId?.toString() ||
                               form.getValues().values[idx].attendanceInfo[day as DayKey].key
                             }
                             onChange={(value) => {
@@ -177,7 +179,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                                         Number(value),
                                         attendanceOptions,
                                       )?.toString(),
-                                  detailId: isNaN(Number(value)) ? undefined : value,
+                                  detailKeyId: isNaN(Number(value)) ? undefined : value,
                                 },
                               }
 
@@ -218,11 +220,11 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                 >
                   <Table.Tbody>
                     {form.getValues().values[idx].attendanceStatistic.map((stat) => (
-                      <Table.Tr key={`${stat.key}-${stat.detailId}`}>
+                      <Table.Tr key={`${stat.key}-${stat.detailKeyId}`}>
                         <Table.Th>
-                          {stat.detailId
+                          {stat.detailKeyId
                             ? options?.attendanceDetailOptions.find(
-                                (option) => option.id === stat.detailId,
+                                (option) => option.id === stat.detailKeyId,
                               )?.name
                             : ATTENDANCE_OPTIONS_LABEL[stat.key]}
                         </Table.Th>

@@ -8,7 +8,7 @@ describe('출석 통계를 바탕으로 배지를 계산한다.', () => {
       getAttendanceBadgeId(
         [
           { key: 'attendance', count: 4 },
-          { key: 'attendance', detailId: 1, count: 2 },
+          { key: 'attendance', detailKeyId: 1, count: 2 },
           { key: 'absence', count: 1 },
           { key: 'rest', count: 2 },
         ],
@@ -20,7 +20,7 @@ describe('출석 통계를 바탕으로 배지를 계산한다.', () => {
       getAttendanceBadgeId(
         [
           { key: 'attendance', count: 5 },
-          { key: 'attendance', detailId: 1, count: 2 },
+          { key: 'attendance', detailKeyId: 1, count: 2 },
           { key: 'absence', count: 1 },
           { key: 'rest', count: 1 },
         ],
@@ -32,7 +32,7 @@ describe('출석 통계를 바탕으로 배지를 계산한다.', () => {
       getAttendanceBadgeId(
         [
           { key: 'attendance', count: 7 },
-          { key: 'attendance', detailId: 1, count: 2 },
+          { key: 'attendance', detailKeyId: 1, count: 2 },
         ],
         ATTENDANCE_BADGE_MOCK_DATA,
       ),
@@ -44,7 +44,7 @@ describe('출석 통계를 바탕으로 배지를 계산한다.', () => {
       getAttendanceBadgeId(
         [
           { key: 'attendance', count: 3 },
-          { key: 'attendance', detailId: 1, count: 2 },
+          { key: 'attendance', detailKeyId: 1, count: 2 },
           { key: 'absence', count: 2 },
           { key: 'rest', count: 2 },
         ],

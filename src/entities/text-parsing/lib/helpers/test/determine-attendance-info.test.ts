@@ -27,7 +27,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
 
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'attendance', detailId: 1 })
+    ).toStrictEqual({ key: 'attendance', detailKeyId: 1 })
   })
 
   test(`내용에 "휴식", "휴가" 등 출석 옵션에 있는 값이 포함되어 있으면 해당 옵션을 반환한다.`, () => {

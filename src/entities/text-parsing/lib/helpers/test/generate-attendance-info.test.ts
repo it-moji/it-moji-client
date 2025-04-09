@@ -38,11 +38,11 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
   const expectedResult = {
     monday: {
       key: 'attendance',
-      detailId: 1,
+      detailKeyId: 1,
     },
     tuesday: {
       key: 'attendance',
-      detailId: 1,
+      detailKeyId: 1,
     },
     wednesday: {
       key: 'absence',

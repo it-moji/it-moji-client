@@ -73,7 +73,7 @@ export const determineAttendanceInfo = (
 
     return {
       key: key || AttendanceOptionKeySchema.Enum.attendance,
-      detailId: badge.id,
+      detailKeyId: badge.id,
     }
   }
 
@@ -181,7 +181,7 @@ export const getAttendanceBadgeId = (
     .filter((badge) =>
       badge.conditionGroups.some(({ conditions }) =>
         conditions.every(({ key, count, range }) => {
-          const stat = attendanceStatistic.find((s) => s.key === key || s.detailId === key)
+          const stat = attendanceStatistic.find((s) => s.key === key || s.detailKeyId === key)
 
           if (range === AttendanceBadgeRangeSchema.Enum.MORE) {
             return (stat?.count || 0) >= count

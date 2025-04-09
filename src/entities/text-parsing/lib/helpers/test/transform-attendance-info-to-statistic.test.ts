@@ -67,7 +67,7 @@ describe('요일별 출석 정보를 바탕으로 출석 통계를 계산한다.
 
     const expectedResult = [
       { key: 'attendance', count: 4 },
-      { key: 'attendance', detailId: 1, count: 2 },
+      { key: 'attendance', detailKeyId: 1, count: 2 },
       { key: 'absence', count: 1 },
       { key: 'rest', count: 2 },
     ]
