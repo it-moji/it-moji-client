@@ -11,3 +11,6 @@ export const deleteBadgeDetailOptionInMockData = (targetId: AttendanceDetailOpti
     })
   })
 }
+
+export { attendanceBadgeQueryKeys } from '../api/query-keys'
+export { revalidateAttendanceBadgeListWithConditions } from '../api/get-badge-list-with-conditions.revalidate'

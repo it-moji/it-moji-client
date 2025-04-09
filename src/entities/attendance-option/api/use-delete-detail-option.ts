@@ -1,6 +1,11 @@
 'use client'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  attendanceBadgeQueryKeys,
+  revalidateAttendanceBadgeListWithConditions,
+} from '@/entities/attendance-badge/@x/attendance-option'
+import { modifyTextParsingOptionsWithRevalidate } from '@/entities/text-parsing/@x/attendance-option'
 import { Exception } from '@/shared/api'
 import { type AttendanceOptionKey, type AttendanceDetailOption } from '../model'
 import { deleteAttendanceDetailOption } from './delete-detail-option'
@@ -29,32 +34,25 @@ export const useDeleteDetailOption = ({
     mutationKey: attendanceOptionQueryKeys.all,
     mutationFn: () => deleteAttendanceDetailOption(optionKey, detailOptionId),
     onMutate: () => {
-      try {
-        onMutate?.()
-        queryClient.setQueriesData<AttendanceDetailOption[]>(
-          { queryKey: attendanceOptionQueryKeys.optionDetail(optionKey) },
-          (prev) => {
-            return prev?.filter((detailOption) => {
-              return detailOption.id !== detailOptionId
-            })
-          },
-        )
-
-        return { status: true }
-      } catch {
-        return { status: false }
-      }
+      onMutate?.()
     },
-    onSuccess: (_, __, context) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: attendanceOptionQueryKeys.optionList(),
       })
+      queryClient.invalidateQueries({
+        queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
+      })
 
-      if (!context?.status) {
-        queryClient.invalidateQueries({
-          queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
-        })
-      }
+      queryClient.invalidateQueries({
+        queryKey: attendanceBadgeQueryKeys.badgeListWithConditions(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: attendanceBadgeQueryKeys.badgeDetailAll(),
+      })
+      revalidateAttendanceBadgeListWithConditions()
+
+      modifyTextParsingOptionsWithRevalidate()
 
       onSuccess?.()
     },

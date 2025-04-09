@@ -23,3 +23,5 @@ export const deleteDetailOptionInTextParsingOptionMockData = (id: number) => {
       (detailOption) => detailOption.id !== id,
     )
 }
+
+export { modifyTextParsingOptionsWithRevalidate } from '../api/modify-parsing-options.revalidate'
