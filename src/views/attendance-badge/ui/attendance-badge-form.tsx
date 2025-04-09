@@ -21,8 +21,9 @@ import { AttendanceBadgeIconInput } from './attendance-badge-icon-input'
 
 const defaultCondition: Omit<AttendanceBadgeCondition, 'id'> = {
   key: AttendanceOptionKeySchema.Enum.attendance,
+  detailKeyId: null,
   count: 1,
-  range: AttendanceBadgeRangeSchema.Enum.MORE,
+  range: AttendanceBadgeRangeSchema.Enum.more,
 }
 
 const defaultInitialValues: PostAttendanceBadgeBody = {
@@ -120,7 +121,7 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
             legend={`기준 ${criteriaIndex + 1}`}
             className="space-y-4"
           >
-            {criteria.map((_, conditionIndex, conditionArray) => (
+            {criteria.map((condition, conditionIndex, conditionArray) => (
               <div
                 key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}`)}
                 className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
@@ -128,13 +129,20 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   <div className="flex items-center gap-2 whitespace-nowrap">
                     <AttendanceOptionSelect
-                      key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}.key`)}
                       attendanceOptions={optionList}
-                      disabled={isLoading || isError || isBadgeMutating}
                       className="w-36"
-                      {...form.getInputProps(
-                        `conditionGroups.${criteriaIndex}.${conditionIndex}.key`,
-                      )}
+                      value={condition}
+                      onChange={({ key, detailKeyId }) => {
+                        form.setFieldValue(
+                          `conditionGroups.${criteriaIndex}.${conditionIndex}.key`,
+                          key,
+                        )
+                        form.setFieldValue(
+                          `conditionGroups.${criteriaIndex}.${conditionIndex}.detailKeyId`,
+                          detailKeyId,
+                        )
+                      }}
+                      disabled={isLoading || isError || isBadgeMutating}
                     />
                     이
                   </div>
@@ -158,7 +166,7 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
                         value: rangeOption,
                         label: ATTENDANCE_BADGES_RANGE_LABEL[rangeOption],
                       }))}
-                      defaultValue={AttendanceBadgeRangeSchema.Enum.MORE}
+                      defaultValue={AttendanceBadgeRangeSchema.Enum.more}
                       className="w-20"
                       checkIconPosition="right"
                       allowDeselect={false}

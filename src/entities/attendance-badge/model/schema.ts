@@ -12,13 +12,14 @@ export const AttendanceBadgeSchema = z.object({
 
 export type AttendanceBadge = z.infer<typeof AttendanceBadgeSchema>
 
-export const AttendanceBadgeRangeSchema = z.enum(['MORE', 'LESS'])
+export const AttendanceBadgeRangeSchema = z.enum(['more', 'less'])
 
 export type AttendanceBadgeRange = z.infer<typeof AttendanceBadgeRangeSchema>
 
 export const AttendanceBadgeConditionSchema = z.object({
   id: z.number(),
-  key: z.union([AttendanceOptionKeySchema, AttendanceDetailOptionSchema.shape.id]),
+  key: AttendanceOptionKeySchema,
+  detailKeyId: z.union([z.null(), AttendanceDetailOptionSchema.shape.id]),
   count: z.number(),
   range: AttendanceBadgeRangeSchema,
 })

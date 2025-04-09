@@ -161,14 +161,15 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                             attendanceOptions={attendanceOptions}
                             key={form.key(`values.${idx}.attendanceInfo`)}
                             {...form.getInputProps(`values.${idx}.attendanceInfo`)}
-                            defaultValue={
-                              form
-                                .getValues()
-                                .values[
-                                  idx
-                                ].attendanceInfo[day as DayKey].detailKeyId?.toString() ||
-                              form.getValues().values[idx].attendanceInfo[day as DayKey].key
-                            }
+                            // TODO: API 인터페이스 변경사항 반영 필요
+                            // defaultValue={
+                            //   form
+                            //     .getValues()
+                            //     .values[
+                            //       idx
+                            //     ].attendanceInfo[day as DayKey].detailKeyId?.toString() ||
+                            //   form.getValues().values[idx].attendanceInfo[day as DayKey].key
+                            // }
                             onChange={(value) => {
                               const updatedAttendanceInfo = {
                                 ...form.getValues().values[idx].attendanceInfo,

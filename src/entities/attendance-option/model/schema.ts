@@ -11,7 +11,7 @@ export const AttendanceOptionKeySchema = z.enum([
 export type AttendanceOptionKey = z.infer<typeof AttendanceOptionKeySchema>
 
 export const AttendanceDetailOptionSchema = z.object({
-  id: z.union([z.number(), z.string()]),
+  id: z.number(),
   name: z.string(),
 })
 

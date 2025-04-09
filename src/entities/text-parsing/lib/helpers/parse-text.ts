@@ -180,10 +180,16 @@ export const getAttendanceBadgeId = (
   const badge = badgeList
     .filter((badge) =>
       badge.conditionGroups.some(({ conditions }) =>
-        conditions.every(({ key, count, range }) => {
-          const stat = attendanceStatistic.find((s) => s.key === key || s.detailKeyId === key)
+        conditions.every(({ key, detailKeyId, count, range }) => {
+          const stat = attendanceStatistic.find((s) => {
+            if (detailKeyId) {
+              return s.key === key && s.detailKeyId === detailKeyId
+            }
 
-          if (range === AttendanceBadgeRangeSchema.Enum.MORE) {
+            return s.key === key
+          })
+
+          if (range === AttendanceBadgeRangeSchema.Enum.more) {
             return (stat?.count || 0) >= count
           }
 
