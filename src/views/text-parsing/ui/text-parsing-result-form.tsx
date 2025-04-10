@@ -100,7 +100,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
               {...form.getInputProps(`result.${personIndex}.name`)}
             />
             <Select
-              label="적용 배지"
+              label={`적용 배지${form.isDirty(`result.${personIndex}.badgeId`) ? ' (동기화 해제됨)' : ''}`}
               className="w-40"
               classNames={{ label: 'mb-2 pt-0.5' }}
               data={badgeOptions.map(({ id, name, icon }) => ({
@@ -109,7 +109,29 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
               }))}
               value={person.badgeId?.toString()}
               onChange={(value) => {
-                form.setFieldValue(`result.${personIndex}.badgeId`, Number(value))
+                const updatedBadgeId = Number(value)
+                const targetStatistic = transformAttendanceInfoToStatistic(
+                  person.attendanceInfo,
+                  attendanceOptions,
+                )
+                const computedBadgeId = getAttendanceBadgeId(targetStatistic, badgeOptions)
+
+                if (updatedBadgeId === computedBadgeId) {
+                  setInitialValues({
+                    result: result.map((initialPerson) => {
+                      if (initialPerson.name === person.name) {
+                        return {
+                          ...initialPerson,
+                          badgeId: updatedBadgeId,
+                        }
+                      }
+
+                      return initialPerson
+                    }),
+                  })
+                }
+
+                form.setFieldValue(`result.${personIndex}.badgeId`, updatedBadgeId)
               }}
               checkIconPosition="right"
               allowDeselect={false}
@@ -146,6 +168,10 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                                 updatedAttendanceInfo,
                                 attendanceOptions,
                               )
+                              const updatedBadgeId = getAttendanceBadgeId(
+                                updatedStatistic,
+                                badgeOptions,
+                              )
 
                               form.setFieldValue(
                                 `result.${personIndex}.attendanceStatistic`,
@@ -156,12 +182,10 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                                 updatedDayInfo,
                               )
 
-                              if (!form.isDirty(`result.${personIndex}.badgeId`)) {
-                                const updatedBadgeId = getAttendanceBadgeId(
-                                  updatedStatistic,
-                                  badgeOptions,
-                                )
-
+                              if (
+                                !form.isDirty(`result.${personIndex}.badgeId`) ||
+                                updatedBadgeId === person.badgeId
+                              ) {
                                 setInitialValues({
                                   result: result.map((initialPerson) => {
                                     if (initialPerson.name === person.name) {
