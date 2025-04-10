@@ -50,18 +50,16 @@ export type ParsingOptions = z.infer<typeof ParsingOptionsSchema>
 
 export const AttendanceInfoValueSchema = z.object({
   key: AttendanceOptionKeySchema,
-  detailKeyId: AttendanceDetailOptionSchema.shape.id.optional(),
+  detailKeyId: z.union([z.null(), AttendanceDetailOptionSchema.shape.id]).optional(),
 })
 
 export type AttendanceInfoValue = z.infer<typeof AttendanceInfoValueSchema>
 
-export const AttendanceStatisticValue = z.object({
-  key: AttendanceOptionKeySchema,
-  detailKeyId: AttendanceDetailOptionSchema.shape.id.optional(),
+export const AttendanceStatisticValueSchema = AttendanceInfoValueSchema.extend({
   count: z.number(),
 })
 
-export type AttendanceStatisticValue = z.infer<typeof AttendanceStatisticValue>
+export type AttendanceStatisticValue = z.infer<typeof AttendanceStatisticValueSchema>
 
 export const ParsingResultSchema = z.object({
   name: z.string(),
@@ -71,7 +69,7 @@ export const ParsingResultSchema = z.object({
       DayKeySchema.options.map((key) => [key, AttendanceInfoValueSchema]),
     ) as Record<DayKey, typeof AttendanceInfoValueSchema>,
   ),
-  attendanceStatistic: z.array(AttendanceStatisticValue),
+  attendanceStatistic: z.array(AttendanceStatisticValueSchema),
 })
 
 export type ParsingResult = z.infer<typeof ParsingResultSchema>

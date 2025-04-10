@@ -1,5 +1,5 @@
 import { createMockHandler } from '@/shared/api'
-import { PostParsingResultBodySchema } from '../create-parsing-result'
+import { PostTextParsingResultBodySchema } from '../create-parsing-result'
 import { TEXT_PARSING_ENDPOINT } from '../endpoint'
 
 export const postParsingResultMockHandler = createMockHandler({
@@ -7,7 +7,7 @@ export const postParsingResultMockHandler = createMockHandler({
   handler: async ({ request, params }) => {
     const body = await request.json()
 
-    const { data } = PostParsingResultBodySchema.safeParse(body)
+    const { data } = PostTextParsingResultBodySchema.safeParse(body)
 
     if (!data) {
       return { status: 400 }

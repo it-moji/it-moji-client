@@ -10,21 +10,22 @@ import {
   ATTENDANCE_OPTIONS_LABEL,
   useAttendanceOptionListSuspenseQuery,
 } from '@/entities/attendance-option'
-import type { DayKey, EditableParsingResult, ParsingResult } from '@/entities/text-parsing'
 import {
-  createParsingResult,
+  type DayKey,
+  type EditableParsingResult,
+  type ParsingResult,
   DAY_OPTIONS_LABEL,
   getAttendanceBadgeId,
   findParentKeyById,
   transformAttendanceInfoToStatistic,
   useParsingResult,
   useParsingOptions,
-  useTextParsingActions,
-  useParsingFormSubmitting,
+  useIsTextParsingMutating,
 } from '@/entities/text-parsing'
-import { Exception } from '@/shared/api'
 import { omit } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
+
+export const TEXT_PARSING_RESULT_FORM_ID = 'parsing-result-form'
 
 export interface TextParsingResultFormProps {
   badgeOptions: GetAttendanceBadgeListWithConditionsResponseData
@@ -39,9 +40,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   const result = useParsingResult()
   const options = useParsingOptions()
-  const isSubmitting = useParsingFormSubmitting()
 
-  const { setIsSubmitting } = useTextParsingActions()
+  const isSubmitting = useIsTextParsingMutating()
 
   const { setValues, ...form } = useForm({
     mode: 'uncontrolled',
@@ -78,22 +78,9 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
         ),
       })) as ParsingResult[]
 
-    try {
-      setIsSubmitting(true)
-
-      await createParsingResult(Number(team), body)
-
-      toast.success('출석 정보 저장에 성공했어요')
-    } catch (error: unknown) {
-      if (error instanceof Exception) {
-        toast.error(Exception.extractMessage(error))
-        return
-      }
-
-      toast.error('출석 정보 저장에 실패했어요')
-    } finally {
-      setIsSubmitting(false)
-    }
+    // TODO: 추후 스터디원 관리기능 추가 시 적용
+    console.log(Number(team) + '팀: ', body)
+    toast('준비 중인 기능이에요', { icon: '🙏' })
   }
 
   useEffect(() => {
@@ -102,7 +89,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   return (
     <form
-      id="parsing-result-form"
+      id={TEXT_PARSING_RESULT_FORM_ID}
       onSubmit={form.onSubmit((values) => handleSave(values.values))}
       className="space-y-4"
     >

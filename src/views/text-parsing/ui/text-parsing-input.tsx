@@ -1,11 +1,10 @@
 'use client'
 
 import { Button, Textarea } from '@mantine/core'
-import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
 import {
-  useParsingFormSubmitting,
+  useIsTextParsingMutating,
   useParsingOptions,
   useParsingText,
   useTextParsingActions,
@@ -18,9 +17,9 @@ export const TextParsingInput: React.FC = () => {
 
   const text = useParsingText()
   const options = useParsingOptions()
-  const isSubmitting = useParsingFormSubmitting()
+  const isSubmitting = useIsTextParsingMutating()
 
-  const { resetTextParsingStore, setText } = useTextParsingActions()
+  const { setText } = useTextParsingActions()
 
   const handleParsingText = () => {
     if (options) {
@@ -32,12 +31,6 @@ export const TextParsingInput: React.FC = () => {
       })
     }
   }
-
-  useEffect(() => {
-    return () => {
-      resetTextParsingStore()
-    }
-  }, [resetTextParsingStore])
 
   return (
     <AdminContainer>

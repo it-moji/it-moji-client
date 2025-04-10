@@ -4,22 +4,12 @@ import { Center, Loader } from '@mantine/core'
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
 import React, { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import type { GetAttendanceBadgeListWithConditionsResponseData } from '@/entities/attendance-badge'
-import type { ParsingOptions } from '@/entities/text-parsing'
 import { FallbackError } from '@/shared/ui'
 import { TextParsingInput } from './text-parsing-input'
 import { TextParsingOptionsSetting } from './text-parsing-options-setting'
 import { TextParsingResult } from './text-parsing-result'
 
-export interface TextParsingPageProps {
-  parsingOptions: ParsingOptions
-  badgeOptions: GetAttendanceBadgeListWithConditionsResponseData
-}
-
-export const TextParsingPage: React.FC<TextParsingPageProps> = ({
-  parsingOptions,
-  badgeOptions,
-}) => (
+export const TextParsingPage: React.FC = () => (
   <QueryErrorResetBoundary>
     {({ reset }) => (
       <ErrorBoundary
@@ -39,10 +29,10 @@ export const TextParsingPage: React.FC<TextParsingPageProps> = ({
             <div className="flex flex-col gap-4 @5xl/page:flex-row">
               <div className="flex-col space-y-4">
                 <TextParsingInput />
-                <TextParsingOptionsSetting parsingOptions={parsingOptions} />
+                <TextParsingOptionsSetting />
               </div>
               <div className="flex-1">
-                <TextParsingResult badgeOptions={badgeOptions} />
+                <TextParsingResult />
               </div>
             </div>
           </div>

@@ -5,36 +5,32 @@ import { isNotEmpty, useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
-import type { DayKey, ParsingOptions } from '@/entities/text-parsing'
 import {
   DAY_OPTIONS_LABEL,
-  modifyParsingOptions,
-  modifyTextParsingOptionsWithRevalidate,
-  useParsingFormSubmitting,
+  useTextParsingOptionsSuspenseQuery,
   useParsingText,
   useTextParsingActions,
+  useModifyTextParsingOptions,
+  useIsTextParsingMutating,
 } from '@/entities/text-parsing'
 import { Exception } from '@/shared/api'
 import { cn } from '@/shared/lib'
 import { AdminContainer, AdminTitle, Icon } from '@/shared/ui'
 import { parseTextSafely } from '../lib'
 
-export interface TextParsingOptionsSettingProps {
-  parsingOptions: ParsingOptions
-}
+const TEXT_PARSING_OPTIONS_FORM = 'parsing-options-form'
 
-export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps> = ({
-  parsingOptions,
-}) => {
+export const TextParsingOptionsSetting: React.FC = () => {
+  const { data: parsingOptions } = useTextParsingOptionsSuspenseQuery()
   const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
 
   const text = useParsingText()
-  const isSubmitting = useParsingFormSubmitting()
+  const { setOptions } = useTextParsingActions()
 
-  const { setOptions, setIsSubmitting } = useTextParsingActions()
+  const isSubmitting = useIsTextParsingMutating()
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'controlled',
     initialValues: parsingOptions,
     validate: {
       delimiter: {
@@ -67,38 +63,18 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
     })
   }
 
-  const handleSaveOptions = async () => {
-    try {
-      setIsSubmitting(true)
-
-      await modifyParsingOptions(form.getValues())
-      await modifyTextParsingOptionsWithRevalidate()
-
-      toast.success('분석 옵션 저장에 성공했어요')
-
-      if (!text.trim()) {
-        return
+  const { mutate: modifyTextParsingOptions } = useModifyTextParsingOptions({
+    onSuccess: () => {
+      if (text.trim()) {
+        handleApplyOptions()
       }
 
-      parseTextSafely({
-        text,
-        parsingOptions: form.getValues(),
-        attendanceOptions,
-        onSuccess: () => toast.success('분석 옵션이 적용됐어요'),
-      })
-
-      setOptions(form.getValues())
-    } catch (error: unknown) {
-      if (error instanceof Exception) {
-        toast.error(Exception.extractMessage(error))
-        return
-      }
-
-      toast.error('분석 옵션 저장에 실패했어요')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+      toast.success('분석 옵션이 저장되었어요')
+      form.resetDirty()
+    },
+    onException: (exception) => toast.error(Exception.extractMessage(exception)),
+    onError: () => toast.error('예기치 못한 이유로 분석 옵션을 저장하지 못했어요'),
+  })
 
   useEffect(() => {
     setOptions(parsingOptions)
@@ -115,11 +91,15 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
           <Button
             variant="light"
             onClick={handleApplyOptions}
-            disabled={!text.trim() || isSubmitting}
+            disabled={!form.isDirty() || !text.trim() || isSubmitting}
           >
             적용하기
           </Button>
-          <Button form="parsing-options-form" type="submit" disabled={isSubmitting}>
+          <Button
+            form={TEXT_PARSING_OPTIONS_FORM}
+            type="submit"
+            disabled={!form.isDirty() || isSubmitting}
+          >
             저장하기
           </Button>
         </Group>
@@ -131,9 +111,13 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
         </Text>
       )}
 
-      <form id="parsing-options-form" onSubmit={form.onSubmit(handleSaveOptions)}>
+      <form
+        id={TEXT_PARSING_OPTIONS_FORM}
+        onSubmit={form.onSubmit((body) => modifyTextParsingOptions(body))}
+      >
         <Group gap="md">
           <TextInput
+            type="text"
             label="인원 분리 기준"
             className={cn('w-40')}
             classNames={{ label: 'mb-2 font-semibold' }}
@@ -141,16 +125,20 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
             {...form.getInputProps('delimiter.person')}
           />
           <TextInput
+            type="text"
             label="개행 분리 기준"
             className="w-40"
             classNames={{ label: 'mb-2 font-semibold' }}
-            key={form.key('delimiter.line')}
-            {...form.getInputProps('delimiter.line')}
-            defaultValue={JSON.stringify(form.getValues().delimiter.line)
+            value={JSON.stringify(form.values.delimiter.line)
               .replaceAll('"', '')
               .replaceAll(/\\\\/g, '\\')}
+            onChange={(e) => {
+              form.setFieldValue('delimiter.line', e.currentTarget.value)
+            }}
+            disabled={isSubmitting}
           />
           <TextInput
+            type="text"
             label="키/값 분리 기준"
             className="w-40"
             classNames={{ label: 'mb-2 font-semibold' }}
@@ -172,8 +160,8 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
                 </InputLabel>
                 <TextInput
                   id={`text-input-${key}`}
+                  type="text"
                   className="max-w-40"
-                  defaultValue={parsingOptions.dayMapping[key as DayKey]}
                   key={form.key(`dayMapping.${key}`)}
                   {...form.getInputProps(`dayMapping.${key}`)}
                 />
@@ -184,6 +172,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
           <div className="flex flex-col space-y-8">
             <TextInput
               label="이름 판단 기준"
+              type="text"
               className="w-40"
               classNames={{ label: 'mb-2 font-semibold', input: 'flex-none' }}
               key={form.key('name')}
@@ -195,7 +184,7 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
               classNames={{ legend: 'font-semibold' }}
               disabled={isSubmitting}
             >
-              {parsingOptions.attendanceDetailOptions.map((option, idx) => (
+              {form.values.attendanceDetailOptions.map((option, idx) => (
                 <div className="flex items-center space-x-4" key={option.id}>
                   <InputLabel
                     htmlFor={`detail-option-${option.id}`}
@@ -205,15 +194,10 @@ export const TextParsingOptionsSetting: React.FC<TextParsingOptionsSettingProps>
                   </InputLabel>
                   <TextInput
                     id={`detail-option-${option.id}`}
+                    type="text"
                     className="max-w-40"
-                    key={form.key(`attendanceDetailOptions.${option}`)}
-                    onChange={(e) => {
-                      form.setFieldValue(`attendanceDetailOptions.${idx}`, {
-                        ...option,
-                        identifier: e.target.value,
-                      })
-                    }}
-                    defaultValue={option.identifier}
+                    key={form.key(`attendanceDetailOptions.${idx}.identifier`)}
+                    {...form.getInputProps(`attendanceDetailOptions.${idx}.identifier`)}
                   />
                 </div>
               ))}

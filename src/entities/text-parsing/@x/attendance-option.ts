@@ -24,4 +24,4 @@ export const deleteDetailOptionInTextParsingOptionMockData = (id: number) => {
     )
 }
 
-export { modifyTextParsingOptionsWithRevalidate } from '../api/modify-parsing-options.revalidate'
+export { textParsingQueryKeys } from '../api/query-keys'

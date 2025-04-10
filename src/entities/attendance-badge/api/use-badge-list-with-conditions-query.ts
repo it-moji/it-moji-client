@@ -7,5 +7,5 @@ import { attendanceBadgeQueryKeys } from './query-keys'
 export const useAttendanceBadgeListWithConditionsQuery = () =>
   useSuspenseQuery({
     queryKey: attendanceBadgeQueryKeys.badgeListWithConditions(),
-    queryFn: getAttendanceBadgeListWithConditions,
+    queryFn: () => getAttendanceBadgeListWithConditions().then((res) => res.data),
   })

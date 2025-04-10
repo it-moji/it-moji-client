@@ -1,11 +1,8 @@
 'use client'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  attendanceBadgeQueryKeys,
-  revalidateAttendanceBadgeListWithConditions,
-} from '@/entities/attendance-badge/@x/attendance-option'
-import { modifyTextParsingOptionsWithRevalidate } from '@/entities/text-parsing/@x/attendance-option'
+import { attendanceBadgeQueryKeys } from '@/entities/attendance-badge/@x/attendance-option'
+import { textParsingQueryKeys } from '@/entities/text-parsing/@x/attendance-option'
 import { Exception } from '@/shared/api'
 import { type AttendanceOptionKey, type AttendanceDetailOption } from '../model'
 import { deleteAttendanceDetailOption } from './delete-detail-option'
@@ -50,9 +47,10 @@ export const useDeleteDetailOption = ({
       queryClient.invalidateQueries({
         queryKey: attendanceBadgeQueryKeys.badgeDetailAll(),
       })
-      revalidateAttendanceBadgeListWithConditions()
 
-      modifyTextParsingOptionsWithRevalidate()
+      queryClient.invalidateQueries({
+        queryKey: textParsingQueryKeys.parsingOptions(),
+      })
 
       onSuccess?.()
     },

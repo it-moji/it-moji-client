@@ -2,21 +2,19 @@
 
 import { Button, Group, Select } from '@mantine/core'
 import { useState } from 'react'
-import type { GetAttendanceBadgeListWithConditionsResponseData } from '@/entities/attendance-badge'
-import { useParsingResult, useParsingFormSubmitting } from '@/entities/text-parsing'
+import { useAttendanceBadgeListWithConditionsQuery } from '@/entities/attendance-badge'
+import { useParsingResult, useIsTextParsingMutating } from '@/entities/text-parsing'
 import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
 import { TextParsingResultEmpty } from './text-parsing-result-empty'
-import { TextParsingResultForm } from './text-parsing-result-form'
+import { TEXT_PARSING_RESULT_FORM_ID, TextParsingResultForm } from './text-parsing-result-form'
 
-export interface TextParsingResultProps {
-  badgeOptions: GetAttendanceBadgeListWithConditionsResponseData
-}
+export const TextParsingResult: React.FC = () => {
+  const { data: badgeOptions } = useAttendanceBadgeListWithConditionsQuery()
 
-export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
   const [team, setTeam] = useState<string | null>(null)
 
   const result = useParsingResult()
-  const isSubmitting = useParsingFormSubmitting()
+  const isSubmitting = useIsTextParsingMutating()
 
   return (
     <AdminContainer className="h-fit w-full">
@@ -37,11 +35,11 @@ export const TextParsingResult = ({ badgeOptions }: TextParsingResultProps) => {
             className="w-32 font-normal"
             placeholder="팀 선택"
             checkIconPosition="right"
-            onChange={(_, option) => setTeam(option?.value ?? null)}
+            onChange={(value) => setTeam(value ?? null)}
             disabled={isSubmitting}
           />
           <Button
-            form="parsing-result-form"
+            form={TEXT_PARSING_RESULT_FORM_ID}
             type="submit"
             disabled={result.length <= 0 || !team || isSubmitting}
           >
