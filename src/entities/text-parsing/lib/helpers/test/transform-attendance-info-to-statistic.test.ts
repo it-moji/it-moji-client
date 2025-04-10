@@ -60,7 +60,6 @@ describe('요일별 출석 정보를 바탕으로 출석 통계를 계산한다.
       }),
       PARSING_OPTIONS_MOCK_DATA.dayMapping,
       PARSING_OPTIONS_MOCK_DATA.delimiter.title,
-      PARSING_OPTIONS_MOCK_DATA.delimiter.line,
       attendanceDetailOptions,
       attendanceOptions,
     )
@@ -109,7 +108,6 @@ describe('요일별 출석 정보를 바탕으로 출석 통계를 계산한다.
       }),
       PARSING_OPTIONS_MOCK_DATA.dayMapping,
       PARSING_OPTIONS_MOCK_DATA.delimiter.title,
-      PARSING_OPTIONS_MOCK_DATA.delimiter.line,
       attendanceDetailOptions,
       attendanceOptions,
     )

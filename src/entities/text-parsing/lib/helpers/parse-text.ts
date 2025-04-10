@@ -9,7 +9,7 @@ import {
   AttendanceOptionKeySchema,
 } from '@/entities/attendance-option/@x/text-parsing'
 import { Exception } from '@/shared/api'
-import { TIL_DEFAULT_BADGE } from '../../config'
+import { DEFAULT_LINE_DELIMITER, TIL_DEFAULT_BADGE } from '../../config'
 import {
   DayKeySchema,
   type EditableParsingResult,
@@ -32,9 +32,8 @@ export const extractName = (
   text: string,
   nameIdentifier: ParsingOptions['name'],
   titleDelimiter: ParsingOptions['delimiter']['title'],
-  lineDelimiter: ParsingOptions['delimiter']['line'],
 ) => {
-  const nameLine = text.split(lineDelimiter).find((line) => line.includes(nameIdentifier))
+  const nameLine = text.split(DEFAULT_LINE_DELIMITER).find((line) => line.includes(nameIdentifier))
 
   if (!nameLine) {
     throw new Exception('이름 및 구분자가 올바르게 입력되었는지 확인해주세요')
@@ -116,7 +115,6 @@ export const findDayInLine = (
  * @param text TIL 템플릿 텍스트
  * @param dayMapping 날짜 판단 기준
  * @param titleDelimiter 키/값 분리 기준
- * @param lineDelimiter 개행 분리 기준
  * @param attendanceDetailOptions 출석 상세 옵션 판단 기준
  * @param attendanceOptions 출석 옵션
  * @returns 출석 정보
@@ -125,13 +123,12 @@ export const generateAttendanceInfo = (
   text: string,
   dayMapping: ParsingOptions['dayMapping'],
   titleDelimiter: ParsingOptions['delimiter']['title'],
-  lineDelimiter: ParsingOptions['delimiter']['line'],
   attendanceDetailOptions: ParsingOptions['attendanceDetailOptions'],
   attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): EditableParsingResult['attendanceInfo'] => {
   const attendanceInfo = {} as Record<DayKey, AttendanceInfoValue>
 
-  const lines = text.split(lineDelimiter)
+  const lines = text.split('\n')
 
   lines.forEach((line, idx) => {
     const day = findDayInLine(line, dayMapping, titleDelimiter)
@@ -220,18 +217,12 @@ const generateAttendanceData = (
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAllResponseData,
 ): EditableParsingResult => {
-  const name = extractName(
-    text,
-    parsingOptions.name,
-    parsingOptions.delimiter.title,
-    parsingOptions.delimiter.line,
-  )
+  const name = extractName(text, parsingOptions.name, parsingOptions.delimiter.title)
 
   const attendanceInfo = generateAttendanceInfo(
     text,
     parsingOptions.dayMapping,
     parsingOptions.delimiter.title,
-    parsingOptions.delimiter.line,
     parsingOptions.attendanceDetailOptions,
     attendanceOptions,
   )

@@ -35,7 +35,6 @@ export const TextParsingOptionsSetting: React.FC = () => {
     validate: {
       delimiter: {
         person: isNotEmpty(),
-        line: (value) => !JSON.stringify(value).replaceAll('"', ''),
         title: isNotEmpty(),
       },
       dayMapping: {
@@ -123,19 +122,6 @@ export const TextParsingOptionsSetting: React.FC = () => {
             classNames={{ label: 'mb-2 font-semibold' }}
             key={form.key('delimiter.person')}
             {...form.getInputProps('delimiter.person')}
-          />
-          <TextInput
-            type="text"
-            label="개행 분리 기준"
-            className="w-40"
-            classNames={{ label: 'mb-2 font-semibold' }}
-            value={JSON.stringify(form.values.delimiter.line)
-              .replaceAll('"', '')
-              .replaceAll(/\\\\/g, '\\')}
-            onChange={(e) => {
-              form.setFieldValue('delimiter.line', e.currentTarget.value)
-            }}
-            disabled={isSubmitting}
           />
           <TextInput
             type="text"
