@@ -50,7 +50,7 @@ export type ParsingOptions = z.infer<typeof ParsingOptionsSchema>
 
 export const AttendanceInfoValueSchema = z.object({
   key: AttendanceOptionKeySchema,
-  detailKeyId: z.union([z.null(), AttendanceDetailOptionSchema.shape.id]).optional(),
+  detailKeyId: z.union([z.null(), AttendanceDetailOptionSchema.shape.id]),
 })
 
 export type AttendanceInfoValue = z.infer<typeof AttendanceInfoValueSchema>

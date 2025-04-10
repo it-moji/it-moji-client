@@ -46,18 +46,23 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
     },
     wednesday: {
       key: 'absence',
+      detailKeyId: null,
     },
     thursday: {
       key: 'attendance',
+      detailKeyId: null,
     },
     friday: {
       key: 'rest',
+      detailKeyId: null,
     },
     saturday: {
       key: 'attendance',
+      detailKeyId: null,
     },
     sunday: {
       key: 'rest',
+      detailKeyId: null,
     },
   }
 

@@ -62,6 +62,7 @@ export const determineAttendanceInfo = (
   if (!content.trim() || content.trim() === TIL_DEFAULT_BADGE) {
     return {
       key: isWeekend ? AttendanceOptionKeySchema.Enum.rest : AttendanceOptionKeySchema.Enum.absence,
+      detailKeyId: null,
     }
   }
 
@@ -80,7 +81,7 @@ export const determineAttendanceInfo = (
     content.includes(ATTENDANCE_OPTIONS_LABEL[optionKey]),
   )
 
-  return { key: attendanceKey || AttendanceOptionKeySchema.Enum.attendance }
+  return { key: attendanceKey || AttendanceOptionKeySchema.Enum.attendance, detailKeyId: null }
 }
 
 /**
@@ -128,7 +129,7 @@ export const generateAttendanceInfo = (
 ): EditableParsingResult['attendanceInfo'] => {
   const attendanceInfo = {} as Record<DayKey, AttendanceInfoValue>
 
-  const lines = text.split('\n')
+  const lines = text.split(DEFAULT_LINE_DELIMITER)
 
   lines.forEach((line, idx) => {
     const day = findDayInLine(line, dayMapping, titleDelimiter)
