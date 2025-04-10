@@ -35,17 +35,21 @@ const defaultInitialValues: PostAttendanceBadgeBody = {
 export interface AttendanceBadgeFormProps extends React.PropsWithChildren<PropsWithClassName> {
   controlRef?: React.Ref<{ initialize: () => void }>
   initialValues?: PostAttendanceBadgeBody
+  submitButtonLabel?: string
   onSubmit?: (values: PostAttendanceBadgeBody) => void
 }
 
 export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
   controlRef,
   initialValues = defaultInitialValues,
+  submitButtonLabel,
   onSubmit,
   className,
   children,
 }) => {
   const { data: optionList, isLoading, isError } = useAttendanceOptionListQuery()
+
+  const isBadgeMutating = useIsBadgeMutating()
 
   const form = useForm<PostAttendanceBadgeBody>({
     mode: 'controlled',
@@ -62,6 +66,7 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
       },
       icon: isNotEmpty(),
     },
+    enhanceGetInputProps: () => ({ disabled: isBadgeMutating }),
   })
 
   const criteriaAction = {
@@ -76,16 +81,22 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
       form.removeListItem(`conditionGroups.${criteriaIndex}`, conditionIndex),
   }
 
-  const isBadgeMutating = useIsBadgeMutating()
-
   useImperativeHandle(controlRef, () => ({
-    initialize: () => form.setValues(initialValues),
+    initialize: () => {
+      form.setInitialValues(initialValues)
+      form.setValues(initialValues)
+    },
   }))
 
   return (
     <form className={className} onSubmit={form.onSubmit((values) => onSubmit?.(values))}>
       <Group justify="flex-end" align="center" mb="md" gap="xs">
         {children}
+        {submitButtonLabel && (
+          <Button type="submit" disabled={!form.isDirty() || isBadgeMutating}>
+            {submitButtonLabel}
+          </Button>
+        )}
       </Group>
       <InputLabel mb="xs">배지 아이콘 및 이름</InputLabel>
       <Group align="flex-start" gap="xs">
@@ -99,7 +110,6 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
           key={form.key('name')}
           placeholder="배지 이름을 입력해주세요"
           className="flex-1"
-          disabled={isBadgeMutating}
           {...form.getInputProps('name')}
         />
       </Group>
@@ -170,7 +180,6 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
                       className="w-20"
                       checkIconPosition="right"
                       allowDeselect={false}
-                      disabled={isBadgeMutating}
                       {...form.getInputProps(
                         `conditionGroups.${criteriaIndex}.${conditionIndex}.range`,
                       )}
