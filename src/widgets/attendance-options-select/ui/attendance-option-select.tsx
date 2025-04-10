@@ -49,10 +49,8 @@ export const AttendanceOptionSelect: React.FC<AttendanceOptionSelectProps> = ({
   return (
     <Select
       data={options}
-      value={value ? computeValue(value.key, value.detailKeyId) : value}
-      defaultValue={
-        defaultValue ? computeValue(defaultValue.key, defaultValue.detailKeyId) : defaultValue
-      }
+      value={value && computeValue(value.key, value.detailKeyId)}
+      defaultValue={defaultValue && computeValue(defaultValue.key, defaultValue.detailKeyId)}
       onChange={(value) => {
         if (value) {
           const [key, detailKeyId] = value.split('-')
