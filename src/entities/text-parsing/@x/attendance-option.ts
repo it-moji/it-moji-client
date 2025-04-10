@@ -23,3 +23,5 @@ export const deleteDetailOptionInTextParsingOptionMockData = (id: number) => {
       (detailOption) => detailOption.id !== id,
     )
 }
+
+export { textParsingQueryKeys } from '../api/query-keys'

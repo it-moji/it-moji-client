@@ -13,9 +13,9 @@ export const ATTENDANCE_BADGE_MOCK_DATA: GetAttendanceBadgeListWithConditionsRes
       {
         groupId: 1,
         conditions: [
-          { id: 1, key: 'rest', count: 1, range: 'LESS' },
-          { id: 2, key: 'attendance', count: 6, range: 'MORE' },
-          { id: 3, key: 1, count: 5, range: 'MORE' },
+          { id: 1, key: 'rest', detailKeyId: null, count: 1, range: 'less' },
+          { id: 2, key: 'attendance', detailKeyId: null, count: 6, range: 'more' },
+          { id: 3, key: 'attendance', detailKeyId: 1, count: 5, range: 'more' },
         ],
       },
     ],
@@ -28,9 +28,9 @@ export const ATTENDANCE_BADGE_MOCK_DATA: GetAttendanceBadgeListWithConditionsRes
       {
         groupId: 2,
         conditions: [
-          { id: 4, key: 'rest', count: 1, range: 'LESS' },
-          { id: 5, key: 'attendance', count: 6, range: 'MORE' },
-          { id: 6, key: 1, count: 2, range: 'MORE' },
+          { id: 4, key: 'rest', detailKeyId: null, count: 1, range: 'less' },
+          { id: 5, key: 'attendance', detailKeyId: null, count: 6, range: 'more' },
+          { id: 6, key: 'attendance', detailKeyId: 1, count: 2, range: 'more' },
         ],
       },
     ],
@@ -43,16 +43,16 @@ export const ATTENDANCE_BADGE_MOCK_DATA: GetAttendanceBadgeListWithConditionsRes
       {
         groupId: 3,
         conditions: [
-          { id: 7, key: 'rest', count: 2, range: 'LESS' },
-          { id: 8, key: 'attendance', count: 5, range: 'MORE' },
-          { id: 9, key: 1, count: 2, range: 'MORE' },
+          { id: 7, key: 'rest', detailKeyId: null, count: 2, range: 'less' },
+          { id: 8, key: 'attendance', detailKeyId: null, count: 5, range: 'more' },
+          { id: 9, key: 'attendance', detailKeyId: 1, count: 2, range: 'more' },
         ],
       },
       {
         groupId: 4,
         conditions: [
-          { id: 10, key: 'rest', count: 1, range: 'LESS' },
-          { id: 11, key: 'attendance', count: 6, range: 'MORE' },
+          { id: 10, key: 'rest', detailKeyId: null, count: 1, range: 'less' },
+          { id: 11, key: 'attendance', detailKeyId: null, count: 6, range: 'more' },
         ],
       },
     ],
@@ -65,8 +65,8 @@ export const ATTENDANCE_BADGE_MOCK_DATA: GetAttendanceBadgeListWithConditionsRes
       {
         groupId: 5,
         conditions: [
-          { id: 12, key: 'rest', count: 2, range: 'LESS' },
-          { id: 13, key: 'attendance', count: 5, range: 'MORE' },
+          { id: 12, key: 'rest', detailKeyId: null, count: 2, range: 'less' },
+          { id: 13, key: 'attendance', detailKeyId: null, count: 5, range: 'more' },
         ],
       },
     ],
@@ -79,8 +79,8 @@ export const ATTENDANCE_BADGE_MOCK_DATA: GetAttendanceBadgeListWithConditionsRes
       {
         groupId: 6,
         conditions: [
-          { id: 14, key: 'rest', count: 3, range: 'LESS' },
-          { id: 15, key: 'attendance', count: 4, range: 'MORE' },
+          { id: 14, key: 'rest', detailKeyId: null, count: 3, range: 'less' },
+          { id: 15, key: 'attendance', detailKeyId: null, count: 4, range: 'more' },
         ],
       },
     ],

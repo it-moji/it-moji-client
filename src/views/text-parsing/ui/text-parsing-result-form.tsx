@@ -6,25 +6,22 @@ import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { AttendanceOptionSelect } from '@/widgets/attendance-options-select'
 import type { GetAttendanceBadgeListWithConditionsResponseData } from '@/entities/attendance-badge'
+import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
 import {
-  ATTENDANCE_OPTIONS_LABEL,
-  useAttendanceOptionListSuspenseQuery,
-} from '@/entities/attendance-option'
-import type { DayKey, EditableParsingResult, ParsingResult } from '@/entities/text-parsing'
-import {
-  createParsingResult,
+  type DayKey,
+  type EditableParsingResult,
+  type PostTextParsingResult,
   DAY_OPTIONS_LABEL,
   getAttendanceBadgeId,
-  findParentKeyById,
   transformAttendanceInfoToStatistic,
   useParsingResult,
-  useParsingOptions,
-  useTextParsingActions,
-  useParsingFormSubmitting,
+  useIsTextParsingMutating,
 } from '@/entities/text-parsing'
-import { Exception } from '@/shared/api'
 import { omit } from '@/shared/lib'
 import { Icon } from '@/shared/ui'
+import { TextParsingResultStatistic } from './text-parsing-result-statistic'
+
+export const TEXT_PARSING_RESULT_FORM_ID = 'parsing-result-form'
 
 export interface TextParsingResultFormProps {
   badgeOptions: GetAttendanceBadgeListWithConditionsResponseData
@@ -38,20 +35,18 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
   const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
 
   const result = useParsingResult()
-  const options = useParsingOptions()
-  const isSubmitting = useParsingFormSubmitting()
 
-  const { setIsSubmitting } = useTextParsingActions()
+  const isSubmitting = useIsTextParsingMutating()
 
-  const { setValues, ...form } = useForm({
-    mode: 'uncontrolled',
-    initialValues: { values: result },
+  const { setInitialValues, ...form } = useForm({
+    mode: 'controlled',
+    initialValues: { result },
     enhanceGetInputProps: () => ({ disabled: isSubmitting }),
   })
 
   const handleSave = async (parsingResultList: EditableParsingResult[]) => {
     for (const parsingResult of parsingResultList) {
-      if (!parsingResult.name) {
+      if (!parsingResult.name.trim()) {
         toast.error('이름을 모두 입력해주세요')
         return
       }
@@ -62,51 +57,36 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
       }
     }
 
-    const body = parsingResultList
-      .map((value) => omit(value, ['attendanceStatistic']))
-      .map((value) => ({
-        ...value,
-        badgeId: Number(value.badgeId),
-        attendanceInfo: Object.fromEntries(
-          Object.entries(value.attendanceInfo).map(([day, info]) => [
-            day,
-            {
-              ...info,
-              detailId: info.detailId && Number(info.detailId),
-            },
-          ]),
-        ),
-      })) as ParsingResult[]
+    const body = parsingResultList.map<PostTextParsingResult[number]>((value) => ({
+      ...omit(value, ['attendanceStatistic']),
+      badgeId: Number(value.badgeId),
+      attendanceInfo: Object.fromEntries(
+        Object.entries(value.attendanceInfo).map(([day, info]) => [
+          day,
+          {
+            ...info,
+            detailKeyId: info.detailKeyId && Number(info.detailKeyId),
+          },
+        ]),
+      ) as PostTextParsingResult[number]['attendanceInfo'],
+    }))
 
-    try {
-      setIsSubmitting(true)
-
-      await createParsingResult(Number(team), body)
-
-      toast.success('출석 정보 저장에 성공했어요')
-    } catch (error: unknown) {
-      if (error instanceof Exception) {
-        toast.error(Exception.extractMessage(error))
-        return
-      }
-
-      toast.error('출석 정보 저장에 실패했어요')
-    } finally {
-      setIsSubmitting(false)
-    }
+    // TODO: 추후 스터디원 관리기능 추가 시 적용
+    console.log(Number(team) + '팀: ', body)
+    toast('준비 중인 기능이에요', { icon: '🙏' })
   }
 
   useEffect(() => {
-    setValues({ values: result })
-  }, [result, setValues])
+    setInitialValues({ result })
+  }, [result, setInitialValues])
 
   return (
     <form
-      id="parsing-result-form"
-      onSubmit={form.onSubmit((values) => handleSave(values.values))}
+      id={TEXT_PARSING_RESULT_FORM_ID}
+      onSubmit={form.onSubmit(({ result }) => handleSave(result))}
       className="space-y-4"
     >
-      {result.map((person, idx) => (
+      {form.values.result.map((person, personIndex) => (
         <div
           className="rounded-lg border border-solid border-gray-300 p-4 @container/parsing-result dark:border-dark-400"
           key={person.name}
@@ -116,25 +96,43 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
               label="이름"
               className="w-40"
               classNames={{ label: 'mb-2 font-semibold' }}
-              key={form.key(`values.${idx}.name`)}
-              {...form.getInputProps(`values.${idx}.name`)}
+              key={form.key(`result.${personIndex}.name`)}
+              {...form.getInputProps(`result.${personIndex}.name`)}
             />
             <Select
-              label={
-                <div className="flex items-center font-semibold">
-                  <Icon query="fluent-emoji:trophy" className="mr-1" />
-                  적용 배지
-                </div>
-              }
+              label={`적용 배지${form.isDirty(`result.${personIndex}.badgeId`) ? ' (동기화 해제됨)' : ''}`}
               className="w-40"
               classNames={{ label: 'mb-2 pt-0.5' }}
               data={badgeOptions.map(({ id, name, icon }) => ({
                 value: id.toString(),
                 label: `${icon} ${name}`,
               }))}
-              key={form.key(`values.${idx}.badgeId`)}
-              {...form.getInputProps(`values.${idx}.badgeId`)}
-              defaultValue={form.getValues().values[idx].badgeId?.toString()}
+              value={person.badgeId?.toString()}
+              onChange={(value) => {
+                const updatedBadgeId = Number(value)
+                const targetStatistic = transformAttendanceInfoToStatistic(
+                  person.attendanceInfo,
+                  attendanceOptions,
+                )
+                const computedBadgeId = getAttendanceBadgeId(targetStatistic, badgeOptions)
+
+                if (updatedBadgeId === computedBadgeId) {
+                  setInitialValues({
+                    result: result.map((initialPerson) => {
+                      if (initialPerson.name === person.name) {
+                        return {
+                          ...initialPerson,
+                          badgeId: updatedBadgeId,
+                        }
+                      }
+
+                      return initialPerson
+                    }),
+                  })
+                }
+
+                form.setFieldValue(`result.${personIndex}.badgeId`, updatedBadgeId)
+              }}
               checkIconPosition="right"
               allowDeselect={false}
             />
@@ -152,50 +150,58 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                   classNames={{ th: 'w-20 font-normal', td: 'h-14' }}
                 >
                   <Table.Tbody>
-                    {Object.entries(person.attendanceInfo).map(([day]) => (
+                    {Object.entries(person.attendanceInfo).map(([day, info]) => (
                       <Table.Tr key={day}>
                         <Table.Th>{DAY_OPTIONS_LABEL[day as DayKey]}</Table.Th>
                         <Table.Td>
                           <AttendanceOptionSelect
                             className="w-40"
                             attendanceOptions={attendanceOptions}
-                            key={form.key(`values.${idx}.attendanceInfo`)}
-                            {...form.getInputProps(`values.${idx}.attendanceInfo`)}
-                            defaultValue={
-                              form
-                                .getValues()
-                                .values[idx].attendanceInfo[day as DayKey].detailId?.toString() ||
-                              form.getValues().values[idx].attendanceInfo[day as DayKey].key
-                            }
-                            onChange={(value) => {
+                            value={info}
+                            onChange={(updatedDayInfo) => {
                               const updatedAttendanceInfo = {
-                                ...form.getValues().values[idx].attendanceInfo,
-                                [day]: {
-                                  key: isNaN(Number(value))
-                                    ? value
-                                    : findParentKeyById(
-                                        Number(value),
-                                        attendanceOptions,
-                                      )?.toString(),
-                                  detailId: isNaN(Number(value)) ? undefined : value,
-                                },
+                                ...person.attendanceInfo,
+                                [day]: updatedDayInfo,
                               }
 
-                              const statistic = transformAttendanceInfoToStatistic(
+                              const updatedStatistic = transformAttendanceInfoToStatistic(
                                 updatedAttendanceInfo,
                                 attendanceOptions,
                               )
-
-                              const badgeId = getAttendanceBadgeId(statistic, badgeOptions)
-
-                              form.setFieldValue(
-                                `values.${idx}.attendanceInfo`,
-                                updatedAttendanceInfo,
+                              const updatedBadgeId = getAttendanceBadgeId(
+                                updatedStatistic,
+                                badgeOptions,
                               )
 
-                              form.setFieldValue(`values.${idx}.attendanceStatistic`, statistic)
+                              form.setFieldValue(
+                                `result.${personIndex}.attendanceStatistic`,
+                                updatedStatistic,
+                              )
+                              form.setFieldValue(
+                                `result.${personIndex}.attendanceInfo.${day}`,
+                                updatedDayInfo,
+                              )
 
-                              form.setFieldValue(`values.${idx}.badgeId`, badgeId)
+                              if (
+                                !form.isDirty(`result.${personIndex}.badgeId`) ||
+                                updatedBadgeId === person.badgeId
+                              ) {
+                                setInitialValues({
+                                  result: result.map((initialPerson) => {
+                                    if (initialPerson.name === person.name) {
+                                      return {
+                                        ...initialPerson,
+                                        badgeId: updatedBadgeId,
+                                        attendanceInfo: updatedAttendanceInfo,
+                                        attendanceStatistic: updatedStatistic,
+                                      }
+                                    }
+
+                                    return initialPerson
+                                  }),
+                                })
+                                form.setFieldValue(`result.${personIndex}.badgeId`, updatedBadgeId)
+                              }
                             }}
                           />
                         </Table.Td>
@@ -205,36 +211,10 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
                 </Table>
               </Paper>
             </div>
-            <div className="flex-1">
-              <Title order={4} className="mb-2 flex items-center text-base font-semibold">
-                <Icon query="fluent-emoji:bar-chart" className="mr-2" />
-                출석 통계
-              </Title>
-              <Paper withBorder className="overflow-hidden">
-                <Table
-                  layout="fixed"
-                  withColumnBorders
-                  classNames={{ th: 'w-28 font-normal', td: 'h-14' }}
-                >
-                  <Table.Tbody>
-                    {form.getValues().values[idx].attendanceStatistic.map((stat) => (
-                      <Table.Tr key={`${stat.key}-${stat.detailId}`}>
-                        <Table.Th>
-                          {stat.detailId
-                            ? options?.attendanceDetailOptions.find(
-                                (option) => option.id === stat.detailId,
-                              )?.name
-                            : ATTENDANCE_OPTIONS_LABEL[stat.key]}
-                        </Table.Th>
-                        <Table.Td>
-                          <p>{stat.count}회</p>
-                        </Table.Td>
-                      </Table.Tr>
-                    ))}
-                  </Table.Tbody>
-                </Table>
-              </Paper>
-            </div>
+            <TextParsingResultStatistic
+              attendanceStatistic={person.attendanceStatistic}
+              className="flex-1"
+            />
           </div>
         </div>
       ))}

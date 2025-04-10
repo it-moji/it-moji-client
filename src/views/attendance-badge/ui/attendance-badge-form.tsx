@@ -21,8 +21,9 @@ import { AttendanceBadgeIconInput } from './attendance-badge-icon-input'
 
 const defaultCondition: Omit<AttendanceBadgeCondition, 'id'> = {
   key: AttendanceOptionKeySchema.Enum.attendance,
+  detailKeyId: null,
   count: 1,
-  range: AttendanceBadgeRangeSchema.Enum.MORE,
+  range: AttendanceBadgeRangeSchema.Enum.more,
 }
 
 const defaultInitialValues: PostAttendanceBadgeBody = {
@@ -34,17 +35,21 @@ const defaultInitialValues: PostAttendanceBadgeBody = {
 export interface AttendanceBadgeFormProps extends React.PropsWithChildren<PropsWithClassName> {
   controlRef?: React.Ref<{ initialize: () => void }>
   initialValues?: PostAttendanceBadgeBody
+  submitButtonLabel?: string
   onSubmit?: (values: PostAttendanceBadgeBody) => void
 }
 
 export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
   controlRef,
   initialValues = defaultInitialValues,
+  submitButtonLabel,
   onSubmit,
   className,
   children,
 }) => {
   const { data: optionList, isLoading, isError } = useAttendanceOptionListQuery()
+
+  const isBadgeMutating = useIsBadgeMutating()
 
   const form = useForm<PostAttendanceBadgeBody>({
     mode: 'controlled',
@@ -61,6 +66,7 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
       },
       icon: isNotEmpty(),
     },
+    enhanceGetInputProps: () => ({ disabled: isBadgeMutating }),
   })
 
   const criteriaAction = {
@@ -75,16 +81,22 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
       form.removeListItem(`conditionGroups.${criteriaIndex}`, conditionIndex),
   }
 
-  const isBadgeMutating = useIsBadgeMutating()
-
   useImperativeHandle(controlRef, () => ({
-    initialize: () => form.setValues(initialValues),
+    initialize: () => {
+      form.setInitialValues(initialValues)
+      form.setValues(initialValues)
+    },
   }))
 
   return (
     <form className={className} onSubmit={form.onSubmit((values) => onSubmit?.(values))}>
       <Group justify="flex-end" align="center" mb="md" gap="xs">
         {children}
+        {submitButtonLabel && (
+          <Button type="submit" disabled={!form.isDirty() || isBadgeMutating}>
+            {submitButtonLabel}
+          </Button>
+        )}
       </Group>
       <InputLabel mb="xs">배지 아이콘 및 이름</InputLabel>
       <Group align="flex-start" gap="xs">
@@ -98,7 +110,6 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
           key={form.key('name')}
           placeholder="배지 이름을 입력해주세요"
           className="flex-1"
-          disabled={isBadgeMutating}
           {...form.getInputProps('name')}
         />
       </Group>
@@ -120,7 +131,7 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
             legend={`기준 ${criteriaIndex + 1}`}
             className="space-y-4"
           >
-            {criteria.map((_, conditionIndex, conditionArray) => (
+            {criteria.map((condition, conditionIndex, conditionArray) => (
               <div
                 key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}`)}
                 className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
@@ -128,13 +139,20 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   <div className="flex items-center gap-2 whitespace-nowrap">
                     <AttendanceOptionSelect
-                      key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}.key`)}
                       attendanceOptions={optionList}
-                      disabled={isLoading || isError || isBadgeMutating}
                       className="w-36"
-                      {...form.getInputProps(
-                        `conditionGroups.${criteriaIndex}.${conditionIndex}.key`,
-                      )}
+                      value={condition}
+                      onChange={({ key, detailKeyId }) => {
+                        form.setFieldValue(
+                          `conditionGroups.${criteriaIndex}.${conditionIndex}.key`,
+                          key,
+                        )
+                        form.setFieldValue(
+                          `conditionGroups.${criteriaIndex}.${conditionIndex}.detailKeyId`,
+                          detailKeyId,
+                        )
+                      }}
+                      disabled={isLoading || isError || isBadgeMutating}
                     />
                     이
                   </div>
@@ -158,11 +176,10 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
                         value: rangeOption,
                         label: ATTENDANCE_BADGES_RANGE_LABEL[rangeOption],
                       }))}
-                      defaultValue={AttendanceBadgeRangeSchema.Enum.MORE}
+                      defaultValue={AttendanceBadgeRangeSchema.Enum.more}
                       className="w-20"
                       checkIconPosition="right"
                       allowDeselect={false}
-                      disabled={isBadgeMutating}
                       {...form.getInputProps(
                         `conditionGroups.${criteriaIndex}.${conditionIndex}.range`,
                       )}

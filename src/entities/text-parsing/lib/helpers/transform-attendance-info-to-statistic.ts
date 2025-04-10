@@ -10,23 +10,23 @@ import type { AttendanceStatisticValue, ParsingResult } from '../../model'
  * @returns 출석 통계 Map
  *
  * @example
- * generateAttendanceStatsMap({ monday: { key: attendance }, tuesday: { key: attendance, detailId: 1 }})
- * // Map(2) { 'attendance-1' => { key: 'attendance', detailId: 1, count: 2 }, 'attendance' => { key: 'attendance', detailId: undefined, count: 2 }}
+ * generateAttendanceStatsMap({ monday: { key: attendance }, tuesday: { key: attendance, detailKeyId: 1 }})
+ * // Map(2) { 'attendance-1' => { key: 'attendance', detailKeyId: 1, count: 2 }, 'attendance' => { key: 'attendance', detailKeyId: undefined, count: 2 }}
  */
 const generateAttendanceStatsMap = (
   attendanceInfo: ParsingResult['attendanceInfo'],
 ): Map<string, AttendanceStatisticValue> => {
   const statsMap = new Map<string, AttendanceStatisticValue>()
 
-  Object.values(attendanceInfo).forEach(({ key, detailId }) => {
-    const statKey = detailId ? `${key}-${detailId}` : key
+  Object.values(attendanceInfo).forEach(({ key, detailKeyId }) => {
+    const statKey = detailKeyId ? `${key}-${detailKeyId}` : key
 
     const statValue = statsMap.get(statKey)?.count || 0
-    statsMap.set(statKey, { key, detailId, count: statValue + 1 })
+    statsMap.set(statKey, { key, detailKeyId, count: statValue + 1 })
 
-    if (detailId) {
+    if (detailKeyId) {
       const statValue = statsMap.get(key)?.count || 0
-      statsMap.set(key, { key, detailId, count: statValue + 1 })
+      statsMap.set(key, { key, detailKeyId, count: statValue + 1 })
     }
   })
 
@@ -45,7 +45,7 @@ const generateAttendanceStatsMap = (
  *     detailOptions: [{ id: 1, name: '5시간 이상 출석' }],
  *   },
  * )
- * // [ { key: 'attendance', count: 0 }, { key: 'attendance', detailId: 1, count: 0 }]
+ * // [ { key: 'attendance', count: 0 }, { key: 'attendance', detailKeyId: 1, count: 0 }]
  *
  * @param attendanceOptions 출석 옵션
  * @returns 평탄화된 출석 옵션 (초기 count가 0으로 설정된 출석 통계 항목)
@@ -55,7 +55,9 @@ const flattenAttendanceOptionStructure = (
 ): AttendanceStatisticValue[] =>
   Object.entries(attendanceOptions).flatMap(([key, { detailOptions }]) => [
     { key, count: 0 } as AttendanceStatisticValue,
-    ...detailOptions.map(({ id }) => ({ key, detailId: id, count: 0 }) as AttendanceStatisticValue),
+    ...detailOptions.map(
+      ({ id }) => ({ key, detailKeyId: id, count: 0 }) as AttendanceStatisticValue,
+    ),
   ])
 
 /**
@@ -74,7 +76,7 @@ const mergeStatsToFlattenedAttendanceOptions = (
 ): ParsingResult['attendanceStatistic'] =>
   flattenedAttendanceOptions
     .map((item) => {
-      const statKey = item.detailId ? `${item.key}-${item.detailId}` : item.key
+      const statKey = item.detailKeyId ? `${item.key}-${item.detailKeyId}` : item.key
       const stat = statsMap.get(statKey)
 
       if (stat) {

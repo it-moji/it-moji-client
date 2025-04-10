@@ -21,7 +21,7 @@ import { AttendanceBadgeForm } from './attendance-badge-form'
 
 const CreateAttendanceBadgeForm: React.FC<PropsWithClassName> = ({ className }) => {
   const controlRef = useRef<{ initialize: () => void }>(null)
-  const { mutate: createBadge, isPending } = useCreateAttendanceBadge({
+  const { mutate: createBadge } = useCreateAttendanceBadge({
     onSuccess: () => {
       toast.success('배지 생성에 성공했어요')
       controlRef.current?.initialize()
@@ -38,11 +38,12 @@ const CreateAttendanceBadgeForm: React.FC<PropsWithClassName> = ({ className }) 
   }, [])
 
   return (
-    <AttendanceBadgeForm controlRef={controlRef} onSubmit={createBadge} className={className}>
-      <Button type="submit" disabled={isPending}>
-        배지 추가하기
-      </Button>
-    </AttendanceBadgeForm>
+    <AttendanceBadgeForm
+      controlRef={controlRef}
+      submitButtonLabel="배지 추가하기"
+      onSubmit={createBadge}
+      className={className}
+    />
   )
 }
 
@@ -115,14 +116,12 @@ const ModifyAttendanceBadgeForm: React.FC<ModifyAttendanceBadgeFormProps> = ({ i
           return group.conditions.map((condition) => omit(condition, ['id']))
         }),
       }}
+      submitButtonLabel="변경사항 반영하기"
       onSubmit={modifyBadge}
       className={className}
     >
       <Button color="red" disabled={disabled} onClick={confirmDeleteBadge}>
         배지 삭제하기
-      </Button>
-      <Button type="submit" disabled={disabled}>
-        변경사항 반영하기
       </Button>
     </AttendanceBadgeForm>
   )

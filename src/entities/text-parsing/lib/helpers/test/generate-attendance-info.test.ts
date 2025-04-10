@@ -38,26 +38,31 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
   const expectedResult = {
     monday: {
       key: 'attendance',
-      detailId: 1,
+      detailKeyId: 1,
     },
     tuesday: {
       key: 'attendance',
-      detailId: 1,
+      detailKeyId: 1,
     },
     wednesday: {
       key: 'absence',
+      detailKeyId: null,
     },
     thursday: {
       key: 'attendance',
+      detailKeyId: null,
     },
     friday: {
       key: 'rest',
+      detailKeyId: null,
     },
     saturday: {
       key: 'attendance',
+      detailKeyId: null,
     },
     sunday: {
       key: 'rest',
+      detailKeyId: null,
     },
   }
 
@@ -69,7 +74,6 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         testData,
         dayMapping,
         ':',
-        '\n',
         attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       )
@@ -108,7 +112,6 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         testDataWithEmptyString,
         PARSING_OPTIONS_MOCK_DATA.dayMapping,
         ':',
-        '\n',
         attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
@@ -119,7 +122,6 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         testDataWithWrongString,
         PARSING_OPTIONS_MOCK_DATA.dayMapping,
         ':',
-        '\n',
         attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
@@ -134,7 +136,6 @@ describe('날짜 판단 기준과 키/값 분리 기준을 사용해 요일별 �
         testData,
         PARSING_OPTIONS_MOCK_DATA.dayMapping,
         ':',
-        '\n',
         attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),

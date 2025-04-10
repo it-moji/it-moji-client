@@ -13,7 +13,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'attendance' })
+    ).toStrictEqual({ key: 'attendance', detailKeyId: null })
   })
 
   test('TIL 내용에 출석 상세 옵션 판단 기준과 일치하는 식별자가 있는 경우, 출석 상세 옵션과 출석 상세 옵션의 부모 키를 반환한다.', () => {
@@ -27,7 +27,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
 
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'attendance', detailId: 1 })
+    ).toStrictEqual({ key: 'attendance', detailKeyId: 1 })
   })
 
   test(`내용에 "휴식", "휴가" 등 출석 옵션에 있는 값이 포함되어 있으면 해당 옵션을 반환한다.`, () => {
@@ -38,7 +38,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'rest' })
+    ).toStrictEqual({ key: 'rest', detailKeyId: null })
 
     expect(
       determineAttendanceInfo(
@@ -47,7 +47,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'vacation' })
+    ).toStrictEqual({ key: 'vacation', detailKeyId: null })
   })
 
   test(`주말이 아니며, 작성된 내용 없이 ${TIL_DEFAULT_BADGE} 배지만 있는 경우 "결석" 키를 반환한다.`, () => {
@@ -58,7 +58,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'absence' })
+    ).toStrictEqual({ key: 'absence', detailKeyId: null })
 
     expect(
       determineAttendanceInfo(
@@ -67,7 +67,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'absence' })
+    ).toStrictEqual({ key: 'absence', detailKeyId: null })
   })
 
   test(`주말이며, 작성된 내용 없이 ${TIL_DEFAULT_BADGE} 배지만 있는 경우 "휴식" 키를 반환한다.`, () => {
@@ -78,7 +78,7 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'rest' })
+    ).toStrictEqual({ key: 'rest', detailKeyId: null })
 
     expect(
       determineAttendanceInfo(
@@ -87,6 +87,6 @@ describe('TIL 작성 내용과 출석 상세 옵션 판단 기준을 기반으�
         PARSING_OPTIONS_MOCK_DATA.attendanceDetailOptions,
         OPTION_LIST_MOCK_DATA,
       ),
-    ).toStrictEqual({ key: 'rest' })
+    ).toStrictEqual({ key: 'rest', detailKeyId: null })
   })
 })

@@ -1,8 +1,9 @@
 'use client'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { attendanceBadgeQueryKeys } from '@/entities/attendance-badge/@x/attendance-option'
+import { textParsingQueryKeys } from '@/entities/text-parsing/@x/attendance-option'
 import { Exception } from '@/shared/api'
-import { type AttendanceDetailOption } from '../model'
 import {
   type PutAttendanceOptionParams,
   type PutAttendanceOptionsBody,
@@ -32,37 +33,27 @@ export const useModifyDetailOption = ({
     mutationKey: attendanceOptionQueryKeys.all,
     mutationFn: (body: PutAttendanceOptionsBody) =>
       modifyAttendanceDetailOption({ optionKey, detailOptionId, body }),
-    onMutate: ({ name }) => {
-      try {
-        onMutate?.()
-        queryClient.setQueriesData<AttendanceDetailOption[]>(
-          { queryKey: attendanceOptionQueryKeys.optionDetail(optionKey) },
-          (prev) => {
-            return prev?.map((detailOption) => {
-              if (detailOption.id === detailOptionId) {
-                return { ...detailOption, name }
-              }
-
-              return detailOption
-            })
-          },
-        )
-
-        return { status: true }
-      } catch {
-        return { status: false }
-      }
+    onMutate: () => {
+      onMutate?.()
     },
-    onSuccess: (_, __, context) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: attendanceOptionQueryKeys.optionList(),
       })
+      queryClient.invalidateQueries({
+        queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
+      })
 
-      if (!context?.status) {
-        queryClient.invalidateQueries({
-          queryKey: attendanceOptionQueryKeys.optionDetail(optionKey),
-        })
-      }
+      queryClient.invalidateQueries({
+        queryKey: attendanceBadgeQueryKeys.badgeListWithConditions(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: attendanceBadgeQueryKeys.badgeDetailAll(),
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: textParsingQueryKeys.parsingOptions(),
+      })
 
       onSuccess?.()
     },
