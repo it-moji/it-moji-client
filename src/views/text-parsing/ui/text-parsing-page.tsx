@@ -4,7 +4,7 @@ import { Center, Loader } from '@mantine/core'
 import { QueryErrorResetBoundary } from '@tanstack/react-query'
 import React, { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { FallbackError } from '@/shared/ui'
+import { AdminContainer, FallbackError } from '@/shared/ui'
 import { TextParsingInput } from './text-parsing-input'
 import { TextParsingOptionsSetting } from './text-parsing-options-setting'
 import { TextParsingResult } from './text-parsing-result'
@@ -15,7 +15,9 @@ export const TextParsingPage: React.FC = () => (
       <ErrorBoundary
         onReset={reset}
         FallbackComponent={({ error, resetErrorBoundary }) => (
-          <FallbackError error={error} reset={resetErrorBoundary} />
+          <AdminContainer>
+            <FallbackError error={error} reset={resetErrorBoundary} />
+          </AdminContainer>
         )}
       >
         <Suspense

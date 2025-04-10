@@ -50,6 +50,7 @@ export const TextParsingInput: React.FC = () => {
         maxRows={10}
         autosize
         placeholder="분석할 원본 텍스트를 입력해주세요"
+        value={text}
         onChange={(e) => setText(e.target.value)}
       />
     </AdminContainer>
