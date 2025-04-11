@@ -1,6 +1,15 @@
 'use client'
 
-import { Group, Paper, Select, Table, TextInput, Title } from '@mantine/core'
+import {
+  ActionIcon,
+  CopyButton,
+  Group,
+  Paper,
+  Select,
+  Table,
+  TextInput,
+  Title,
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -38,7 +47,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   const isSubmitting = useIsTextParsingMutating()
 
-  const { setInitialValues, ...form } = useForm({
+  const { setInitialValues, reset, ...form } = useForm({
     mode: 'controlled',
     initialValues: { result },
     enhanceGetInputProps: () => ({ disabled: isSubmitting }),
@@ -78,7 +87,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   useEffect(() => {
     setInitialValues({ result })
-  }, [result, setInitialValues])
+    reset()
+  }, [result, setInitialValues, reset])
 
   return (
     <form
@@ -99,43 +109,60 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
               key={form.key(`result.${personIndex}.name`)}
               {...form.getInputProps(`result.${personIndex}.name`)}
             />
-            <Select
-              label={`적용 배지${form.isDirty(`result.${personIndex}.badgeId`) ? ' (동기화 해제됨)' : ''}`}
-              className="w-40"
-              classNames={{ label: 'mb-2 pt-0.5' }}
-              data={badgeOptions.map(({ id, name, icon }) => ({
-                value: id.toString(),
-                label: `${icon} ${name}`,
-              }))}
-              value={person.badgeId?.toString()}
-              onChange={(value) => {
-                const updatedBadgeId = Number(value)
-                const targetStatistic = transformAttendanceInfoToStatistic(
-                  person.attendanceInfo,
-                  attendanceOptions,
-                )
-                const computedBadgeId = getAttendanceBadgeId(targetStatistic, badgeOptions)
+            <Group gap="0.325rem" wrap="nowrap" align="flex-end">
+              <Select
+                label={`적용 배지${form.isDirty(`result.${personIndex}.badgeId`) ? ' (동기화 해제됨)' : ''}`}
+                className="w-40"
+                classNames={{ label: 'mb-2 pt-0.5' }}
+                data={badgeOptions.map(({ id, name, icon }) => ({
+                  value: id.toString(),
+                  label: `${icon} ${name}`,
+                }))}
+                value={person.badgeId?.toString()}
+                onChange={(value) => {
+                  const updatedBadgeId = Number(value)
+                  const targetStatistic = transformAttendanceInfoToStatistic(
+                    person.attendanceInfo,
+                    attendanceOptions,
+                  )
+                  const computedBadgeId = getAttendanceBadgeId(targetStatistic, badgeOptions)
 
-                if (updatedBadgeId === computedBadgeId) {
-                  setInitialValues({
-                    result: result.map((initialPerson) => {
-                      if (initialPerson.name === person.name) {
-                        return {
-                          ...initialPerson,
-                          badgeId: updatedBadgeId,
+                  if (updatedBadgeId === computedBadgeId) {
+                    setInitialValues({
+                      result: result.map((initialPerson) => {
+                        if (initialPerson.name === person.name) {
+                          return {
+                            ...initialPerson,
+                            badgeId: updatedBadgeId,
+                          }
                         }
-                      }
 
-                      return initialPerson
-                    }),
-                  })
-                }
+                        return initialPerson
+                      }),
+                    })
+                  }
 
-                form.setFieldValue(`result.${personIndex}.badgeId`, updatedBadgeId)
-              }}
-              checkIconPosition="right"
-              allowDeselect={false}
-            />
+                  form.setFieldValue(`result.${personIndex}.badgeId`, updatedBadgeId)
+                }}
+                checkIconPosition="right"
+                allowDeselect={false}
+              />
+              <CopyButton value={badgeOptions.find(({ id }) => id === person.badgeId)?.icon || ''}>
+                {({ copied, copy }) => (
+                  <ActionIcon
+                    title="배지 아이콘 복사하기"
+                    variant="default"
+                    size="input-sm"
+                    onClick={copy}
+                  >
+                    <Icon
+                      query={copied ? 'fluent:checkmark-16-regular' : 'fluent:copy-16-regular'}
+                      className="text-[var(--mantine-color-text)]"
+                    />
+                  </ActionIcon>
+                )}
+              </CopyButton>
+            </Group>
           </Group>
           <div className="mt-8 flex flex-col items-start gap-x-4 gap-y-8 @xl/parsing-result:flex-row">
             <div className="flex-1">

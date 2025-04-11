@@ -53,6 +53,7 @@ export const TextParsingOptionsSetting: React.FC = () => {
 
   const handleApplyOptions = () => {
     setOptions(form.getValues())
+    form.resetTouched()
 
     parseTextSafely({
       text,
@@ -90,7 +91,7 @@ export const TextParsingOptionsSetting: React.FC = () => {
           <Button
             variant="light"
             onClick={handleApplyOptions}
-            disabled={!form.isDirty() || !text.trim() || isSubmitting}
+            disabled={!form.isTouched() || !text.trim() || isSubmitting}
           >
             적용하기
           </Button>
