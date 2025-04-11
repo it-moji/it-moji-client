@@ -38,7 +38,7 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   const isSubmitting = useIsTextParsingMutating()
 
-  const { setInitialValues, ...form } = useForm({
+  const { setInitialValues, reset, ...form } = useForm({
     mode: 'controlled',
     initialValues: { result },
     enhanceGetInputProps: () => ({ disabled: isSubmitting }),
@@ -78,7 +78,8 @@ export const TextParsingResultForm: React.FC<TextParsingResultFormProps> = ({
 
   useEffect(() => {
     setInitialValues({ result })
-  }, [result, setInitialValues])
+    reset()
+  }, [result, setInitialValues, reset])
 
   return (
     <form
