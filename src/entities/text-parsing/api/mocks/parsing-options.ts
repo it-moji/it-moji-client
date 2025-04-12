@@ -22,15 +22,20 @@ export const PARSING_OPTIONS_MOCK_DATA: GetParsingOptionsResponse['data'] = {
     {
       id: 1,
       name: '5시간 이상 출석',
-      identifier: '5시간 이상 출석',
+      identifier: '🎖️',
     },
     {
       id: 2,
+      name: '오늘 합류',
+      identifier: '오늘 합류',
+    },
+    {
+      id: 3,
       name: '운영진 휴가',
       identifier: '운영진 휴가',
     },
     {
-      id: 3,
+      id: 4,
       name: '열정멤버 휴가',
       identifier: '열정멤버 휴가',
     },

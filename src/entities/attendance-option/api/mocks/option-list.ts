@@ -10,6 +10,10 @@ export const OPTION_LIST_MOCK_DATA: GetAttendanceOptionsAllResponseData = {
         id: 1,
         name: '5시간 이상 출석',
       },
+      {
+        id: 2,
+        name: '오늘 합류',
+      },
     ],
   },
   absence: {
@@ -28,11 +32,11 @@ export const OPTION_LIST_MOCK_DATA: GetAttendanceOptionsAllResponseData = {
     name: '휴가',
     detailOptions: [
       {
-        id: 2,
+        id: 3,
         name: '운영진 휴가',
       },
       {
-        id: 3,
+        id: 4,
         name: '열정멤버 휴가',
       },
     ],
