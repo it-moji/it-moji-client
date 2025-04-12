@@ -4,6 +4,7 @@ import { Button, Fieldset, Group, InputLabel, Text, TextInput } from '@mantine/c
 import { isNotEmpty, useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
+import { useAttendanceBadgeListWithConditionsQuery } from '@/entities/attendance-badge'
 import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
 import {
   DAY_OPTIONS_LABEL,
@@ -23,6 +24,7 @@ const TEXT_PARSING_OPTIONS_FORM = 'parsing-options-form'
 export const TextParsingOptionsSetting: React.FC = () => {
   const { data: parsingOptions } = useTextParsingOptionsSuspenseQuery()
   const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
+  const { data: badgeList } = useAttendanceBadgeListWithConditionsQuery()
 
   const text = useParsingText()
   const { setOptions } = useTextParsingActions()
@@ -59,6 +61,7 @@ export const TextParsingOptionsSetting: React.FC = () => {
       text,
       parsingOptions: form.getValues(),
       attendanceOptions,
+      badgeList,
       onSuccess: () => toast.success('분석 옵션이 적용됐어요'),
     })
   }

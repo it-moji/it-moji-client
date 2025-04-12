@@ -1,7 +1,6 @@
 import {
   type GetAttendanceBadgeListWithConditionsResponseData,
   AttendanceBadgeRangeSchema,
-  ATTENDANCE_BADGE_MOCK_DATA,
 } from '@/entities/attendance-badge/@x/text-parsing'
 import {
   type GetAttendanceOptionsAllResponseData,
@@ -211,12 +210,14 @@ export const getAttendanceBadgeId = (
  * @param text TIL 템플릿 텍스트
  * @param parsingOptions 텍스트 분석 옵션
  * @param attendanceOptions 출석 옵션
+ * @param badgeList 배지 정보
  * @returns 텍스트 분석 결과 (출석 데이터)
  */
 const generateAttendanceData = (
   text: string,
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAllResponseData,
+  badgeList: GetAttendanceBadgeListWithConditionsResponseData,
 ): EditableParsingResult => {
   const name = extractName(text, parsingOptions.name, parsingOptions.delimiter.title)
 
@@ -230,7 +231,7 @@ const generateAttendanceData = (
 
   const attendanceStatistic = transformAttendanceInfoToStatistic(attendanceInfo, attendanceOptions)
 
-  const badgeId = getAttendanceBadgeId(attendanceStatistic, ATTENDANCE_BADGE_MOCK_DATA)
+  const badgeId = getAttendanceBadgeId(attendanceStatistic, badgeList)
 
   return { name, attendanceInfo, badgeId, attendanceStatistic }
 }
@@ -258,12 +259,14 @@ export const separatePeople = (
  * @param text 분석할 원본 텍스트
  * @param parsingOptions 텍스트 분석 옵션
  * @param attendanceOptions 출석 옵션
+ * @param badgeList 배지 정보
  * @returns 텍스트 분석 결과 (출석 데이터 배열)
  */
 export const parseText = (
   text: string,
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAllResponseData,
+  badgeList: GetAttendanceBadgeListWithConditionsResponseData,
 ): EditableParsingResult[] => {
   if (!text.trim()) {
     throw new Exception('분석할 텍스트를 입력해주세요')
@@ -271,5 +274,7 @@ export const parseText = (
 
   const persons = separatePeople(text, parsingOptions.delimiter.person)
 
-  return persons.map((person) => generateAttendanceData(person, parsingOptions, attendanceOptions))
+  return persons.map((person) => {
+    return generateAttendanceData(person, parsingOptions, attendanceOptions, badgeList)
+  })
 }

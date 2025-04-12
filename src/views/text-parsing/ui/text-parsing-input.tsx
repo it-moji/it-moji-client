@@ -2,6 +2,7 @@
 
 import { Button, Textarea } from '@mantine/core'
 import toast from 'react-hot-toast'
+import { useAttendanceBadgeListWithConditionsQuery } from '@/entities/attendance-badge'
 import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
 import {
   useIsTextParsingMutating,
@@ -14,6 +15,7 @@ import { parseTextSafely } from '../lib'
 
 export const TextParsingInput: React.FC = () => {
   const { data: attendanceOptions } = useAttendanceOptionListSuspenseQuery()
+  const { data: badgeList } = useAttendanceBadgeListWithConditionsQuery()
 
   const text = useParsingText()
   const options = useParsingOptions()
@@ -27,6 +29,7 @@ export const TextParsingInput: React.FC = () => {
         text,
         parsingOptions: options,
         attendanceOptions,
+        badgeList,
         onSuccess: () => toast.success('분석이 완료됐어요'),
       })
     }
