@@ -2,7 +2,8 @@
 
 import { Button, Fieldset, Group, InputLabel, NumberInput, Select, TextInput } from '@mantine/core'
 import { isNotEmpty, useForm } from '@mantine/form'
-import { useImperativeHandle } from 'react'
+import { josa } from 'es-hangul'
+import { useImperativeHandle, useMemo } from 'react'
 import { z } from 'zod'
 import { AttendanceOptionSelect } from '@/widgets/attendance-options-select'
 import {
@@ -13,6 +14,7 @@ import {
   useIsBadgeMutating,
 } from '@/entities/attendance-badge'
 import {
+  ATTENDANCE_OPTIONS_LABEL,
   AttendanceOptionKeySchema,
   useAttendanceOptionListQuery,
 } from '@/entities/attendance-option'
@@ -48,6 +50,18 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
   children,
 }) => {
   const { data: optionList, isLoading, isError } = useAttendanceOptionListQuery()
+  const detailOptionNameMap = useMemo(
+    () =>
+      optionList &&
+      Object.entries(optionList).reduce((map, [, { detailOptions }]) => {
+        detailOptions.forEach(({ id, name }) => {
+          map.set(id, name)
+        })
+
+        return map
+      }, new Map<number, string>()),
+    [optionList],
+  )
 
   const isBadgeMutating = useIsBadgeMutating()
 
@@ -131,81 +145,88 @@ export const AttendanceBadgeForm: React.FC<AttendanceBadgeFormProps> = ({
             legend={`기준 ${criteriaIndex + 1}`}
             className="space-y-4"
           >
-            {criteria.map((condition, conditionIndex, conditionArray) => (
-              <div
-                key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}`)}
-                className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
-              >
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                  <div className="flex items-center gap-2 whitespace-nowrap">
-                    <AttendanceOptionSelect
-                      attendanceOptions={optionList}
-                      className="w-36"
-                      value={condition}
-                      onChange={({ key, detailKeyId }) => {
-                        form.setFieldValue(
-                          `conditionGroups.${criteriaIndex}.${conditionIndex}.key`,
-                          key,
-                        )
-                        form.setFieldValue(
-                          `conditionGroups.${criteriaIndex}.${conditionIndex}.detailKeyId`,
-                          detailKeyId,
-                        )
-                      }}
-                      disabled={isLoading || isError || isBadgeMutating}
-                    />
-                    이
-                  </div>
-                  <div className="flex items-center gap-2 whitespace-nowrap">
-                    <NumberInput
-                      key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}.count`)}
-                      className="w-20"
-                      min={1}
-                      max={7}
-                      disabled={isBadgeMutating}
-                      {...form.getInputProps(
-                        `conditionGroups.${criteriaIndex}.${conditionIndex}.count`,
-                      )}
-                    />
-                    회
-                  </div>
-                  <div className="flex items-center gap-2 whitespace-nowrap">
-                    <Select
-                      key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}.range`)}
-                      data={AttendanceBadgeRangeSchema.options.map((rangeOption) => ({
-                        value: rangeOption,
-                        label: ATTENDANCE_BADGES_RANGE_LABEL[rangeOption],
-                      }))}
-                      defaultValue={AttendanceBadgeRangeSchema.Enum.more}
-                      className="w-20"
-                      checkIconPosition="right"
-                      allowDeselect={false}
-                      {...form.getInputProps(
-                        `conditionGroups.${criteriaIndex}.${conditionIndex}.range`,
-                      )}
-                    />
-                    {conditionArray.length - 1 === conditionIndex ? '인 경우' : '이며,'}
-                  </div>
-                </div>
-                <div className="flex flex-1 items-center justify-end">
-                  <Button
-                    variant="light"
-                    color="red"
-                    onClick={() => {
-                      if (conditionArray.length <= 1) {
-                        criteriaAction.remove(criteriaIndex)
-                        return
-                      }
+            {criteria.map((condition, conditionIndex, conditionArray) => {
+              const selectedOptionName =
+                (condition.detailKeyId
+                  ? detailOptionNameMap?.get(condition.detailKeyId)
+                  : ATTENDANCE_OPTIONS_LABEL[condition.key]) || ''
 
-                      conditionAction.remove(criteriaIndex, conditionIndex)
-                    }}
-                    disabled={isBadgeMutating}
-                  >
-                    조건 삭제
-                  </Button>
+              return (
+                <div
+                  key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}`)}
+                  className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
+                >
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                      <AttendanceOptionSelect
+                        attendanceOptions={optionList}
+                        className="w-36"
+                        value={condition}
+                        onChange={({ key, detailKeyId }) => {
+                          form.setFieldValue(
+                            `conditionGroups.${criteriaIndex}.${conditionIndex}.key`,
+                            key,
+                          )
+                          form.setFieldValue(
+                            `conditionGroups.${criteriaIndex}.${conditionIndex}.detailKeyId`,
+                            detailKeyId,
+                          )
+                        }}
+                        disabled={isLoading || isError || isBadgeMutating}
+                      />
+                      {josa(selectedOptionName, '이/가').replace(selectedOptionName, '')}
+                    </div>
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                      <NumberInput
+                        key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}.count`)}
+                        className="w-20"
+                        min={0}
+                        max={7}
+                        disabled={isBadgeMutating}
+                        {...form.getInputProps(
+                          `conditionGroups.${criteriaIndex}.${conditionIndex}.count`,
+                        )}
+                      />
+                      회
+                    </div>
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                      <Select
+                        key={form.key(`conditionGroups.${criteriaIndex}.${conditionIndex}.range`)}
+                        data={AttendanceBadgeRangeSchema.options.map((rangeOption) => ({
+                          value: rangeOption,
+                          label: ATTENDANCE_BADGES_RANGE_LABEL[rangeOption],
+                        }))}
+                        defaultValue={AttendanceBadgeRangeSchema.Enum.more}
+                        className="w-20"
+                        checkIconPosition="right"
+                        allowDeselect={false}
+                        {...form.getInputProps(
+                          `conditionGroups.${criteriaIndex}.${conditionIndex}.range`,
+                        )}
+                      />
+                      {conditionArray.length - 1 === conditionIndex ? '인 경우' : '이며,'}
+                    </div>
+                  </div>
+                  <div className="flex flex-1 items-center justify-end">
+                    <Button
+                      variant="light"
+                      color="red"
+                      onClick={() => {
+                        if (conditionArray.length <= 1) {
+                          criteriaAction.remove(criteriaIndex)
+                          return
+                        }
+
+                        conditionAction.remove(criteriaIndex, conditionIndex)
+                      }}
+                      disabled={isBadgeMutating}
+                    >
+                      조건 삭제
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
             <Group justify="flex-end" mt="xl" gap="xs">
               <Button
                 variant="light"
