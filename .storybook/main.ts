@@ -9,6 +9,7 @@ const config: StorybookConfig = {
     '@storybook/addon-interactions',
     '@storybook/addon-styling-webpack',
     '@storybook/addon-themes',
+    '@storybook/addon-viewport',
   ],
   framework: {
     name: '@storybook/nextjs',
@@ -17,6 +18,9 @@ const config: StorybookConfig = {
         useSWC: true, // Enables SWC support
       },
     },
+  },
+  features: {
+    experimentalRSC: true,
   },
   staticDirs: ['../public'],
 }

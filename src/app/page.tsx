@@ -1,8 +1,13 @@
-const Home: React.FC = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_DOMAIN_ADDRESS}/api/mock-test`)
-  const data = await res.json()
+import { FallbackRouteButtonGroup, UnderConstruction } from '@/shared/ui'
 
-  return <div>{JSON.stringify(data)}</div>
+const Home: React.FC = () => {
+  return (
+    <main className="flex flex-1 flex-col items-center justify-center pb-16">
+      <UnderConstruction>
+        <FallbackRouteButtonGroup admin />
+      </UnderConstruction>
+    </main>
+  )
 }
 
 export default Home

@@ -1,0 +1,7 @@
+:root[data-mantine-color-scheme='light'] {
+  --mantine-color-gray-light-color: var(--mantine-color-gray-7);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

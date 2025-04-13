@@ -1,0 +1,45 @@
+name: Service Build Test on CI
+
+on:
+  push:
+    branches: ['main', 'dev']
+  pull_request:
+    branches: ['main', 'dev']
+    types: [opened, synchronize, reopened]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        command: ['build:service', 'build:storybook', 'test']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: '9'
+          run_install: false
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Run ${{ matrix.command }}
+        run: pnpm ${{ matrix.command }}
+        env:
+          MOCK_ENABLED: ${{ secrets.MOCK_ENABLED }}
+          NEXT_PUBLIC_DOMAIN_ADDRESS: ${{ secrets.NEXT_PUBLIC_DOMAIN_ADDRESS }}
+          NEXT_PUBLIC_SERVER_DOMAIN_ADDRESS: ${{ secrets.NEXT_PUBLIC_SERVER_DOMAIN_ADDRESS }}
+          STORYBOOK_DOMAIN_ADDRESS: ${{ secrets.STORYBOOK_DOMAIN_ADDRESS }}
+          SWAGGER_DOMAIN_ADDRESS: ${{ secrets.SWAGGER_DOMAIN_ADDRESS }}

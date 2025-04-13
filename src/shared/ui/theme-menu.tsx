@@ -20,7 +20,12 @@ export const ThemeMenu: React.FC = () => {
   useIsomorphicEffect(() => setHydrated(true), [])
 
   return (
-    <Menu radius="md" shadow="md" width={200}>
+    <Menu
+      radius="md"
+      shadow="md"
+      width={200}
+      transitionProps={{ transition: 'pop', duration: 200 }}
+    >
       <Menu.Target>
         <ActionIcon variant="default" size="lg" radius="md" title="테마 변경">
           {!isHydrated && <Loader size="xs" />}

@@ -620,6 +620,6 @@ export const MainLogo: React.FC<MainLogoProps> = ({ className, ...props }) => (
     {...props}
   >
     <MainLogoIcon style={{ fontSize: '1.2em' }} />
-    <span>ITMOJI</span>
+    <span>IT-MOJI</span>
   </span>
 )
