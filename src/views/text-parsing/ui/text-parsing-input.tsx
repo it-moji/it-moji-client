@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Textarea } from '@mantine/core'
+import { Button, Group, Textarea } from '@mantine/core'
 import toast from 'react-hot-toast'
 import { useAttendanceBadgeListWithConditionsQuery } from '@/entities/attendance-badge'
 import { useAttendanceOptionListSuspenseQuery } from '@/entities/attendance-option'
@@ -21,7 +21,12 @@ export const TextParsingInput: React.FC = () => {
   const options = useParsingOptions()
   const isSubmitting = useIsTextParsingMutating()
 
-  const { setText } = useTextParsingActions()
+  const { setText, setResult } = useTextParsingActions()
+
+  const handleResetText = () => {
+    setText('')
+    setResult([])
+  }
 
   const handleParsingText = () => {
     if (options) {
@@ -42,9 +47,14 @@ export const TextParsingInput: React.FC = () => {
           <Icon query="fluent-emoji:books" className="mr-2" />
           텍스트 분석
         </AdminTitle>
-        <Button onClick={handleParsingText} disabled={!text.trim() || isSubmitting}>
-          분석하기
-        </Button>
+        <Group gap="xs" className="flex-1" justify="flex-end" wrap="nowrap">
+          <Button onClick={handleResetText} variant="light" disabled={!text.trim() || isSubmitting}>
+            초기화
+          </Button>
+          <Button onClick={handleParsingText} disabled={!text.trim() || isSubmitting}>
+            분석하기
+          </Button>
+        </Group>
       </div>
       <Textarea
         label="원본 텍스트"
