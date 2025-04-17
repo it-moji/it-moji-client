@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { TextParsingException } from './text-parsing-exception'
 import { AttendanceBadgeSchema } from '@/entities/attendance-badge/@x/text-parsing'
 import {
   AttendanceDetailOptionSchema,
@@ -75,3 +76,7 @@ export const ParsingResultSchema = z.object({
 export type ParsingResult = z.infer<typeof ParsingResultSchema>
 
 export type EditableParsingResult = Omit<ParsingResult, 'badgeId'> & { badgeId: number | null }
+
+export type EditableParsingResultWithError =
+  | { data: EditableParsingResult; error: null }
+  | { data: null; error: TextParsingException[] }

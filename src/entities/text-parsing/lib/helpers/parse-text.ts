@@ -9,13 +9,14 @@ import {
 } from '@/entities/attendance-option/@x/text-parsing'
 import { Exception } from '@/shared/api'
 import { DEFAULT_LINE_DELIMITER, TIL_DEFAULT_BADGE } from '../../config'
-import {
-  DayKeySchema,
-  type EditableParsingResult,
-  type AttendanceInfoValue,
-  type DayKey,
-  type ParsingOptions,
+import type {
+  EditableParsingResultWithError,
+  EditableParsingResult,
+  AttendanceInfoValue,
+  DayKey,
+  ParsingOptions,
 } from '../../model'
+import { DayKeySchema, TextParsingException } from '../../model'
 import { findParentKeyById } from './find-parent-key-by-id'
 import { transformAttendanceInfoToStatistic } from './transform-attendance-info-to-statistic'
 
@@ -32,13 +33,23 @@ export const extractName = (
   nameIdentifier: ParsingOptions['name'],
   titleDelimiter: ParsingOptions['delimiter']['title'],
 ) => {
-  const nameLine = text.split(DEFAULT_LINE_DELIMITER).find((line) => line.includes(nameIdentifier))
+  const lines = text.split(DEFAULT_LINE_DELIMITER)
 
-  if (!nameLine) {
-    throw new Exception('이름 및 구분자가 올바르게 입력되었는지 확인해주세요')
+  const nameLineIndex = lines.findIndex((line) => line.includes(nameIdentifier))
+
+  if (nameLineIndex === -1) {
+    throw new TextParsingException('이름 판단 기준이 누락되었어요', text, [1])
   }
 
-  return nameLine.split(titleDelimiter)[1].trim()
+  const nameLine = lines[nameLineIndex]
+
+  if (nameLine.split(titleDelimiter).length === 1) {
+    throw new TextParsingException('이름 키/값 분리 기준이 누락되었어요', text, [nameLineIndex])
+  }
+
+  const name = nameLine.split(titleDelimiter)[1].trim()
+
+  return name
 }
 
 /**
@@ -153,7 +164,21 @@ export const generateAttendanceInfo = (
   })
 
   if (Object.keys(attendanceInfo).length !== 7) {
-    throw new Exception('요일 및 구분자가 올바르게 입력되었는지 확인해주세요')
+    const missingDays: string[] = Object.entries(dayMapping)
+      .filter(([key]) => !Object.keys(attendanceInfo).includes(key))
+      .map(([, value]) => value)
+
+    const errorLineIndexArray = lines
+      .map((line, idx) => (missingDays.some((day) => line.includes(day)) ? idx : null))
+      .filter((idx) => idx !== null)
+
+    throw new TextParsingException(
+      errorLineIndexArray.length > 0
+        ? '날짜 키/값 분리 기준이 누락되었을 수 있어요'
+        : '날짜 판단 기준과 키/값 분리 기준이 올바르게 입력되었는지 확인해주세요',
+      text,
+      errorLineIndexArray,
+    )
   }
 
   return attendanceInfo
@@ -211,29 +236,66 @@ export const getAttendanceBadgeId = (
  * @param parsingOptions 텍스트 분석 옵션
  * @param attendanceOptions 출석 옵션
  * @param badgeList 배지 정보
- * @returns 텍스트 분석 결과 (출석 데이터)
+ * @returns 추출된 분석 데이터와 분석 도중 발생한 예외 리스트를 포함한 텍스트 분석 결과 객체
  */
 const generateAttendanceData = (
   text: string,
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAllResponseData,
   badgeList: GetAttendanceBadgeListWithConditionsResponseData,
-): EditableParsingResult => {
-  const name = extractName(text, parsingOptions.name, parsingOptions.delimiter.title)
+): EditableParsingResultWithError => {
+  const exceptionList: TextParsingException[] = []
 
-  const attendanceInfo = generateAttendanceInfo(
-    text,
-    parsingOptions.dayMapping,
-    parsingOptions.delimiter.title,
-    parsingOptions.attendanceDetailOptions,
-    attendanceOptions,
-  )
+  const result: Partial<EditableParsingResult> = {}
 
-  const attendanceStatistic = transformAttendanceInfoToStatistic(attendanceInfo, attendanceOptions)
+  try {
+    result.name = extractName(text, parsingOptions.name, parsingOptions.delimiter.title)
+  } catch (error: unknown) {
+    if (error instanceof TextParsingException) {
+      exceptionList.push(error)
+    } else {
+      throw error
+    }
+  }
 
-  const badgeId = getAttendanceBadgeId(attendanceStatistic, badgeList)
+  try {
+    const attendanceInfo = generateAttendanceInfo(
+      text,
+      parsingOptions.dayMapping,
+      parsingOptions.delimiter.title,
+      parsingOptions.attendanceDetailOptions,
+      attendanceOptions,
+    )
 
-  return { name, attendanceInfo, badgeId, attendanceStatistic }
+    const attendanceStatistic = transformAttendanceInfoToStatistic(
+      attendanceInfo,
+      attendanceOptions,
+    )
+
+    const badgeId = getAttendanceBadgeId(attendanceStatistic, badgeList)
+
+    result.attendanceInfo = attendanceInfo
+    result.attendanceStatistic = attendanceStatistic
+    result.badgeId = badgeId
+  } catch (error: unknown) {
+    if (error instanceof TextParsingException) {
+      exceptionList.push(error)
+    } else {
+      throw error
+    }
+  }
+
+  if (
+    exceptionList.length > 0 ||
+    result.name === null ||
+    !result.attendanceInfo ||
+    !result.attendanceStatistic ||
+    !result.badgeId
+  ) {
+    return { data: null, error: exceptionList }
+  }
+
+  return { data: result as EditableParsingResult, error: null }
 }
 
 /**
@@ -267,12 +329,12 @@ export const parseText = (
   parsingOptions: ParsingOptions,
   attendanceOptions: GetAttendanceOptionsAllResponseData,
   badgeList: GetAttendanceBadgeListWithConditionsResponseData,
-): EditableParsingResult[] => {
-  if (!text.trim()) {
-    throw new Exception('분석할 텍스트를 입력해주세요')
-  }
-
+): EditableParsingResultWithError[] => {
   const persons = separatePeople(text, parsingOptions.delimiter.person)
+
+  if (persons.length === 0) {
+    throw new Exception('인원 분리 기준이 누락되었어요')
+  }
 
   return persons.map((person) => {
     return generateAttendanceData(person, parsingOptions, attendanceOptions, badgeList)

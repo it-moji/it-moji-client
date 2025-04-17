@@ -16,7 +16,7 @@ export const TextParsingResultStatistic: React.FC<TextParsingResultStatisticProp
 
   return (
     <div {...props}>
-      <Title order={4} className="mb-2 flex items-center text-base font-semibold">
+      <Title order={4} className="mb-2 flex items-center text-sm font-semibold">
         <Icon query="fluent-emoji:bar-chart" className="mr-2" />
         출석 통계
       </Title>

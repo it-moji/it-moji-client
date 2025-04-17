@@ -1,10 +1,10 @@
 import { create } from 'zustand'
-import type { EditableParsingResult, ParsingOptions } from './schema'
+import type { EditableParsingResultWithError, ParsingOptions } from './schema'
 
 export interface TextParsingState {
   text: string
   options: ParsingOptions | null
-  result: EditableParsingResult[]
+  result: EditableParsingResultWithError[]
 }
 
 export interface TextParsingStore extends TextParsingState {
@@ -12,7 +12,7 @@ export interface TextParsingStore extends TextParsingState {
     resetTextParsingStore: () => void
     setText: (text: string) => void
     setOptions: (options: ParsingOptions | null) => void
-    setResult: (result: EditableParsingResult[]) => void
+    setResult: (result: EditableParsingResultWithError[]) => void
   }
 }
 
@@ -29,7 +29,7 @@ export const useTextParsingStore = create<TextParsingStore>()((set) => ({
     resetTextParsingStore: () => set(initialState),
     setText: (text: string) => set({ text }),
     setOptions: (options: ParsingOptions | null) => set({ options }),
-    setResult: (result: EditableParsingResult[]) => set({ result }),
+    setResult: (result: EditableParsingResultWithError[]) => set({ result }),
   },
 }))
 
