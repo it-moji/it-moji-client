@@ -22,10 +22,6 @@ export const parseTextSafely = ({
   try {
     const result = parseText(text, parsingOptions, attendanceOptions, badgeList)
 
-    if (result.length < 1) {
-      throw new Exception('입력된 원본 텍스트의 형식을 확인해주세요')
-    }
-
     useTextParsingStore.setState((state) => ({ ...state, result: result }))
 
     onSuccess?.()
