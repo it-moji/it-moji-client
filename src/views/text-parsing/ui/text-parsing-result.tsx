@@ -41,7 +41,12 @@ export const TextParsingResult: React.FC = () => {
           <Button
             form={TEXT_PARSING_RESULT_FORM_ID}
             type="submit"
-            disabled={result.length <= 0 || !team || isSubmitting}
+            disabled={
+              result.length <= 0 ||
+              result.filter((res) => res.error).length > 0 ||
+              !team ||
+              isSubmitting
+            }
           >
             반영하기
           </Button>
