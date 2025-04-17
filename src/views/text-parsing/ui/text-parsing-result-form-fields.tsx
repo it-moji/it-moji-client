@@ -120,7 +120,7 @@ export const TextParsingResultFormFields: React.FC<TextParsingResultFormFieldsPr
       </Group>
       <div className="mt-8 flex flex-col items-start gap-x-4 gap-y-8 @xl/parsing-result:flex-row">
         <div className="flex-1">
-          <Title order={4} className="mb-2 flex items-center text-base font-semibold">
+          <Title order={4} className="mb-2 flex items-center text-sm font-semibold">
             <Icon query="fluent-emoji:spiral-calendar" className="mr-2" />
             출석 정보
           </Title>
