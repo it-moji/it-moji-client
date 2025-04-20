@@ -164,9 +164,11 @@ export const generateAttendanceInfo = (
   })
 
   if (Object.keys(attendanceInfo).length !== 7) {
+    const parsedDays = new Set(Object.keys(attendanceInfo))
+
     const missingDays: string[] = Object.entries(dayMapping)
-      .filter(([key]) => !Object.keys(attendanceInfo).includes(key))
-      .map(([, value]) => value)
+      .filter(([dayKey]) => !parsedDays.has(dayKey))
+      .map(([, mappedValue]) => mappedValue)
 
     const errorLineIndexArray = lines
       .map((line, idx) => (missingDays.some((day) => line.includes(day)) ? idx : null))
