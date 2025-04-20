@@ -33,7 +33,8 @@ export const TextParsingResultErrorFallback: React.FC<TextParsingResultErrorFall
             component="li"
           >
             {TextParsingException.extractMessage(error)}
-            {error.errorLineNumberArray && ` (${error.errorLineNumberArray.join(', ')}행)`}
+            {error.errorLineIndexArray &&
+              ` (${error.errorLineIndexArray.map((index) => index + 1).join(', ')}행)`}
           </List.Item>
         ))}
       </List>
