@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { postHandlers } from '@/entities/announcement'
+import { postHandlers, postTestHandlers } from '@/entities/announcement'
 import { badgeHandlers } from '@/entities/attendance-badge'
 import { attendanceHandlers } from '@/entities/attendance-option'
 import { textParsingHandlers } from '@/entities/text-parsing'
@@ -13,3 +13,5 @@ export const handlers = [
   ...badgeHandlers,
   ...textParsingHandlers,
 ]
+
+export const testHandlers = [...postTestHandlers]

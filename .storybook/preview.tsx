@@ -2,7 +2,7 @@ import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import type { Preview } from '@storybook/react'
-import { handlers } from '@/mocks/handlers'
+import { testHandlers } from '@/mocks/handlers'
 import { QueryProvider } from '@/shared/api'
 import { DesignSystemProvider } from '@/shared/lib'
 
@@ -19,7 +19,7 @@ initialize({
 
 const preview: Preview = {
   parameters: {
-    msw: { handlers },
+    msw: testHandlers,
     controls: {
       matchers: {
         color: /(background|color)$/i,
