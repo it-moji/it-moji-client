@@ -40,11 +40,7 @@ const AnnouncementModifyPage: React.FC<AnnouncementModifyPageProps> = async ({ p
     notFound()
   }
 
-  const post = await getPostDetail(id, ({ status }) => {
-    if (status === 404) notFound()
-  })
-
-  return <ModifyAnnouncementFormPage id={id} initialBody={post.data} />
+  return <ModifyAnnouncementFormPage id={id} />
 }
 
 export default AnnouncementModifyPage

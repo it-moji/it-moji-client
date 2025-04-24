@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import type { Metadata } from 'next'
-import { AnnouncementManagementSearchPage } from '@/views/announcement'
-import { searchPost, SearchPostParamsSchema, SearchPostTypeSchema } from '@/entities/announcement'
+import { AnnouncementManagementSearchPageView } from '@/views/announcement'
+import { SearchPostParamsSchema, SearchPostTypeSchema } from '@/entities/announcement'
 import { type SearchParams } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
+import { AdminContainer, AdminTitle, Icon } from '@/shared/ui'
 
 export const metadata: Metadata = {
   title: '공지사항 검색',
@@ -27,10 +28,13 @@ const AnnouncementSearchPage: React.FC<AnnouncementSearchPageProps> = async ({ s
   }
 
   return (
-    <AnnouncementManagementSearchPage
-      defaultQuery={query}
-      searchPost={() => searchPost({ query, type, params })}
-    />
+    <AdminContainer>
+      <AdminTitle>
+        <Icon query="fluent-emoji:magnifying-glass-tilted-left" className="mr-2 size-5" />
+        공지사항 검색
+      </AdminTitle>
+      <AnnouncementManagementSearchPageView defaultQuery={query} defaultType={type} />
+    </AdminContainer>
   )
 }
 

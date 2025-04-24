@@ -5,27 +5,28 @@ import { useForm } from '@mantine/form'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
+import type { PostDetail } from '@/entities/announcement'
 import {
   type PostBody,
   POST_CATEGORY_LABEL,
   PostCategorySchema,
-  createPost,
-  createPostWithRevalidate,
+  useCreatePost,
+  useModifyPost,
 } from '@/entities/announcement'
-import type { ExceptionInterceptor } from '@/shared/api'
+import { Exception } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
 import { useRouter } from '@/shared/lib'
 import { AdminContainer, AdminTitle, Icon, TextEditor } from '@/shared/ui'
 
 export interface CreateAnnouncementFormPageProps {
-  fetcher?: (body: PostBody, onException?: ExceptionInterceptor) => Promise<unknown>
-  revalidate?: (body: PostBody) => Promise<unknown>
   onSuccess?: (message: string) => void
-  onFailed?: (message: string) => void
+  onFailed?: (message: string | null) => void
   onCancel?: () => void
   label?: string
   extraButton?: React.FC<{ isPending: boolean; setIsPending: (state: boolean) => void }>
   initialBody?: Partial<PostBody>
+  id?: PostDetail['id']
+  type?: 'CREATE' | 'MODIFY'
 }
 
 const initialValues: PostBody = {
@@ -36,17 +37,46 @@ const initialValues: PostBody = {
 }
 
 export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProps> = ({
-  fetcher = createPost,
-  revalidate = createPostWithRevalidate,
   onSuccess = toast.success,
   onFailed = toast.error,
   onCancel,
   label = '작성',
   extraButton: ExtraButton,
-  initialBody = {},
+  initialBody,
+  id,
+  type = 'CREATE',
 }) => {
   const { back, push, on, off } = useRouter()
+
   const [isPending, setIsPending] = useState(false)
+
+  const mutationParams = {
+    onSuccess: () => {
+      if (location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
+        push(ROUTES.ADMIN.ANNOUNCEMENT())
+      }
+
+      form.setFieldValue('title', initialValues.title)
+      form.setFieldValue('isPinned', initialValues.isPinned)
+      form.setFieldValue('content', initialValues.content)
+      form.setFieldValue('postCategory', initialValues.postCategory)
+
+      onSuccess(`공지사항 ${label}에 성공했어요`)
+    },
+    onException: (exception: Exception) => {
+      off()
+      setIsPending(false)
+      onFailed(Exception.extractMessage(exception))
+    },
+    onError: () => {
+      off()
+      setIsPending(false)
+      onFailed(`예기치 못한 이유로 공지사항 ${label}에 실패했어요`)
+    },
+  }
+
+  const { mutate: createPost } = useCreatePost(mutationParams)
+  const { mutate: modifyPost } = useModifyPost(mutationParams)
 
   const form = useForm<PostBody>({
     mode: 'uncontrolled',
@@ -71,29 +101,15 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
       onSubmit={form.onSubmit(async (body) => {
         setIsPending(true)
         on()
-        await fetcher(body, ({ status }) => {
-          if (400 <= status && status < 500) {
-            onFailed('지정된 고정된 공지사항 수를 초과했어요')
-          }
-        })
-          .then(() => revalidate(body))
-          .then(() => {
-            if (location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
-              push(ROUTES.ADMIN.ANNOUNCEMENT())
-            }
 
-            form.setFieldValue('title', initialValues.title)
-            form.setFieldValue('isPinned', initialValues.isPinned)
-            form.setFieldValue('content', initialValues.content)
-            form.setFieldValue('postCategory', initialValues.postCategory)
+        if (type === 'CREATE') {
+          createPost(body)
+          return
+        }
 
-            onSuccess(`공지사항 ${label}에 성공했어요`)
-          })
-          .catch(() => {
-            off()
-            setIsPending(false)
-            onFailed(`공지사항 ${label}에 실패했어요`)
-          })
+        if (id) {
+          modifyPost({ id, body })
+        }
       })}
     >
       <AdminContainer>

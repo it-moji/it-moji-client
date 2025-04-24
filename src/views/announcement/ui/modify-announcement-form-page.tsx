@@ -2,7 +2,7 @@
 
 import toast from 'react-hot-toast'
 import { DeleteButton } from '@/widgets/announcement-list'
-import { modifyPost, modifyPostWithRevalidate } from '@/entities/announcement'
+import { usePostDetailSuspenseQuery } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
 import { useRouter } from '@/shared/lib'
 import {
@@ -20,11 +20,12 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
 }) => {
   const { replace } = useRouter()
 
+  const { data: initialBody } = usePostDetailSuspenseQuery(id)
+
   return (
     <CreateAnnouncementFormPage
+      type="MODIFY"
       label="수정"
-      fetcher={(body, onException) => modifyPost({ id, body, onException })}
-      revalidate={(body) => modifyPostWithRevalidate(id, body)}
       extraButton={({ isPending, setIsPending }) => (
         <DeleteButton
           id={id}
@@ -44,6 +45,8 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
         replace(ROUTES.ADMIN.ANNOUNCEMENT.DETAIL(id))
         toast.success(message)
       }}
+      initialBody={initialBody}
+      id={id}
       {...props}
     />
   )

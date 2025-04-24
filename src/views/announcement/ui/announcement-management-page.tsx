@@ -1,4 +1,7 @@
+'use client'
+
 import { Button } from '@mantine/core'
+import { useSearchParams } from 'next/navigation'
 import {
   AnnouncementList,
   AnnouncementTable,
@@ -7,65 +10,60 @@ import {
   PageController,
   SearchInput,
 } from '@/widgets/announcement-list'
-import type { GetPinnedPostListResponse, GetPostListResponse } from '@/entities/announcement'
-import { GetPostListParamsSchema } from '@/entities/announcement'
+import {
+  GetPostListParamsSchema,
+  usePostListSuspenseQuery,
+  usePinnedPostListSuspenseQuery,
+} from '@/entities/announcement'
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
 import { createSearchParamsFilter } from '@/shared/lib'
-import { AdminContainer, AdminTitle, FallbackRender, Icon, LinkWithLoader } from '@/shared/ui'
+import { FallbackRender, LinkWithLoader } from '@/shared/ui'
 
-export interface AnnouncementManagementPageProps {
-  getPostList: () => Promise<GetPostListResponse>
-  getPinnedPostList: () => Promise<GetPinnedPostListResponse>
-}
+export const AnnouncementManagementPage: React.FC = () => {
+  const searchParams = useSearchParams()
+  const params = Object.fromEntries(searchParams.entries())
 
-export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProps> = async ({
-  getPostList,
-  getPinnedPostList,
-}) => {
-  const [{ data }, pinned] = await Promise.all([getPostList(), getPinnedPostList()])
+  const { data: post } = usePostListSuspenseQuery(params)
+  const { data: pinnedPost } = usePinnedPostListSuspenseQuery()
 
-  const isEmpty = data.content.length < 1 && pinned.data.length < 1
+  const isEmpty = post.content.length < 1 && pinnedPost.length < 1
 
   const href = createSearchParamsFilter({
     params: [
-      [GetPostListParamsSchema.Enum.page, data.number, DEFAULT_PAGE],
-      [GetPostListParamsSchema.Enum.size, data.size, DEFAULT_PAGE_SIZE],
-      [GetPostListParamsSchema.Enum.category, data.category],
+      [GetPostListParamsSchema.Enum.page, post.number, DEFAULT_PAGE],
+      [GetPostListParamsSchema.Enum.size, post.size, DEFAULT_PAGE_SIZE],
+      [GetPostListParamsSchema.Enum.category, post.category],
     ],
     pathname: ROUTES.ADMIN.ANNOUNCEMENT(),
   })
 
   return (
-    <AdminContainer className="overflow-hidden">
-      <AdminTitle>
-        <Icon query="fluent-emoji:pushpin" className="mr-2" />
-        공지사항 관리
-      </AdminTitle>
+    <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <CategoryTabs
           baseURL={href([GetPostListParamsSchema.Enum.page, GetPostListParamsSchema.Enum.category])}
-          current={data.category}
+          current={post.category}
         />
         <SearchInput />
       </div>
       <div className="overflow-x-auto pb-3">
         <AnnouncementTable className="min-w-[48rem]">
           <FallbackRender render={isEmpty} component={<EmptyList />}>
-            <AnnouncementList contents={pinned.data} pinned />
-            <AnnouncementList contents={data.content} />
+            <AnnouncementList contents={pinnedPost} pinned />
+            <AnnouncementList contents={post.content} />
           </FallbackRender>
         </AnnouncementTable>
       </div>
       <div className="mt-2 flex flex-col items-center justify-center md:flex-row md:justify-between">
         <p className="mb-2 px-1 py-2 text-sm md:mb-0">
-          총 {data.totalElements + pinned.data.length}개의 공지가 있어요
+          총 {post.totalElements + pinnedPost.length}개의 공지가 있어요
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-8">
           {!isEmpty && (
             <PageController
-              page={data.number}
-              total={data.totalPages}
+              page={post.number}
+              total={post.totalPages}
               baseURL={href([GetPostListParamsSchema.Enum.page])}
             />
           )}
@@ -78,6 +76,6 @@ export const AnnouncementManagementPage: React.FC<AnnouncementManagementPageProp
           </Button>
         </div>
       </div>
-    </AdminContainer>
+    </>
   )
 }
