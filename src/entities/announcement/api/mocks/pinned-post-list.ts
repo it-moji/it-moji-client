@@ -1,5 +1,4 @@
-import type { GetPinnedPostListResponse } from '../get-pinned-post-list'
-import { createMockHandler, MOCK_COMMON_RESPONSE } from '@/shared/api'
+import { createMockHandler } from '@/shared/api'
 import { POST_ENDPOINT } from '../endpoint'
 import { POST_LIST_MOCK_DATA } from './post-list'
 
@@ -14,8 +13,11 @@ export const pinnedPostListMockHandler = createMockHandler({
   delay: 300,
 })
 
-export const getPinnedPostListEmptyMock = () =>
-  Promise.resolve({
-    ...MOCK_COMMON_RESPONSE.SUCCESS,
-    data: [],
-  } as GetPinnedPostListResponse)
+export const pinnedPostListEmptyMockHandler = createMockHandler({
+  endpoint: POST_ENDPOINT.PINNED_LIST,
+  handler: () =>
+    Promise.resolve({
+      data: [],
+    }),
+  storybook: true,
+})

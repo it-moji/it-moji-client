@@ -35,3 +35,10 @@ export const createPostMockHandler = createMockHandler({
   method: 'post',
   delay: 1_200,
 })
+
+export const createPostTestMockHandler = createMockHandler({
+  endpoint: POST_ENDPOINT.LIST,
+  handler: async () => Promise.resolve({ data: {} }),
+  method: 'post',
+  storybook: true,
+})

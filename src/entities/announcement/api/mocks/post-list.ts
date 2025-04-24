@@ -1,10 +1,4 @@
-import type { SearchParams } from '@/shared/api'
-import {
-  createMockHandler,
-  DEFAULT_PAGE,
-  DEFAULT_PAGE_SIZE,
-  MOCK_COMMON_RESPONSE,
-} from '@/shared/api'
+import { createMockHandler, DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
 import { POST_ENDPOINT } from '../endpoint'
 import { type GetPostListResponse, GetPostListParamsSchema } from '../../api'
 import type { PostCategory, PostDetail } from '../../model'
@@ -189,17 +183,26 @@ export const postListMockHandler = createMockHandler<GetPostListResponse['data']
   delay: 1200,
 })
 
-export const getPostListEmptyMock = (searchParams: SearchParams) =>
-  Promise.resolve({
-    ...MOCK_COMMON_RESPONSE.SUCCESS,
-    data: {
-      number: 1,
-      size: 10,
-      totalElements: 0,
-      totalPages: 1,
-      first: true,
-      last: true,
-      content: [],
-      category: searchParams[GetPostListParamsSchema.Enum.category] || null,
-    },
-  } as GetPostListResponse)
+export const postListEmptyMockHandler = createMockHandler<GetPostListResponse['data']>({
+  endpoint: POST_ENDPOINT.LIST,
+  handler: ({ request }) => {
+    const url = new URL(request.url)
+    const searchParams = new URLSearchParams(url.search)
+
+    const category = searchParams.get(GetPostListParamsSchema.Enum.category) as PostCategory | null
+
+    return Promise.resolve({
+      data: {
+        number: 1,
+        size: 10,
+        totalElements: 0,
+        totalPages: 1,
+        first: true,
+        last: true,
+        content: [],
+        category,
+      },
+    })
+  },
+  storybook: true,
+})

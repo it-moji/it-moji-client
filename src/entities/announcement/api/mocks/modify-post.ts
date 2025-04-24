@@ -44,3 +44,10 @@ export const modifyPostMockHandler = createMockHandler({
   method: 'patch',
   delay: 1_200,
 })
+
+export const modifyPostTestMockHandler = createMockHandler({
+  endpoint: POST_ENDPOINT.DETAIL(':id'),
+  handler: async () => Promise.resolve({ data: {} }),
+  method: 'patch',
+  storybook: true,
+})
