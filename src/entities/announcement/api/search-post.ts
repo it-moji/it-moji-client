@@ -2,7 +2,7 @@ import { z } from 'zod'
 import type { CommonResponse, SearchParams } from '@/shared/api'
 import { createPaginationResponseSchema, createPaginationParamsSchema, server } from '@/shared/api'
 import { PostItemSchema } from '../model'
-import { POST_ENDPOINT, POST_TAG } from './endpoint'
+import { POST_ENDPOINT } from './endpoint'
 
 export const SearchPostParamsSchema = createPaginationParamsSchema(['query', 'type'])
 
@@ -31,8 +31,5 @@ export const searchPost = ({ query, type, params }: SearchPostParams) =>
       ...params,
       [SearchPostParamsSchema.Enum.query]: query,
       [SearchPostParamsSchema.Enum.type]: type,
-    },
-    next: {
-      tags: [POST_TAG.ALL, POST_TAG.SEARCH],
     },
   })
