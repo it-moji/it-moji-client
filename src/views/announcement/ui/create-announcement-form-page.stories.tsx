@@ -20,8 +20,6 @@ type Story = StoryObj<typeof CreateAnnouncementFormPage>
 export const 초기값_없음: Story = {
   render: (args) => <CreateAnnouncementFormPage {...args} />,
   args: {
-    fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
-    revalidate: fn(() => Promise.resolve()),
     onSuccess: fn(),
     onFailed: fn(),
   },
@@ -74,10 +72,8 @@ export const 초기값_없음: Story = {
       await userEvent.click(buttonEl)
       await userEvent.click(buttonEl)
 
-      await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
-      await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
-      expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onFailed).not.toHaveBeenCalledOnce()
+      await waitFor(() => expect(args.onSuccess).toHaveBeenCalledOnce())
+      await waitFor(() => expect(args.onFailed).not.toHaveBeenCalledOnce())
     })
   },
 }
@@ -94,10 +90,10 @@ export const 초기값_있음: Story = {
       content: filledContent,
       postCategory: PostCategorySchema.Enum.MAINTENANCE,
     },
-    fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
-    revalidate: fn(() => Promise.resolve()),
     onSuccess: fn(),
     onFailed: fn(),
+    type: 'MODIFY',
+    id: 1,
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -150,10 +146,8 @@ export const 초기값_있음: Story = {
       await userEvent.click(buttonEl)
       await userEvent.click(buttonEl)
 
-      await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
-      await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
-      expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onFailed).not.toHaveBeenCalledOnce()
+      await waitFor(() => expect(args.onSuccess).toHaveBeenCalledOnce())
+      await waitFor(() => expect(args.onFailed).not.toHaveBeenCalledOnce())
     })
   },
 }
