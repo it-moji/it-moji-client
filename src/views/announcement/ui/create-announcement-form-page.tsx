@@ -2,7 +2,6 @@
 
 import { Button, Checkbox, InputLabel, Select, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
 import type { PostDetail } from '@/entities/announcement'
@@ -11,6 +10,7 @@ import {
   POST_CATEGORY_LABEL,
   PostCategorySchema,
   useCreatePost,
+  useIsPostMutating,
   useModifyPost,
 } from '@/entities/announcement'
 import { Exception } from '@/shared/api'
@@ -23,7 +23,7 @@ export interface CreateAnnouncementFormPageProps {
   onFailed?: (message: string | null) => void
   onCancel?: () => void
   label?: string
-  extraButton?: React.FC<{ isPending: boolean; setIsPending: (state: boolean) => void }>
+  extraButton?: React.FC
   initialBody?: Partial<PostBody>
   id?: PostDetail['id']
   type?: 'CREATE' | 'MODIFY'
@@ -48,7 +48,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
 }) => {
   const { back, push, on, off } = useRouter()
 
-  const [isPending, setIsPending] = useState(false)
+  const isPending = useIsPostMutating()
 
   const mutationParams = {
     onSuccess: () => {
@@ -65,12 +65,10 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
     },
     onException: (exception: Exception) => {
       off()
-      setIsPending(false)
       onFailed(Exception.extractMessage(exception))
     },
     onError: () => {
       off()
-      setIsPending(false)
       onFailed(`예기치 못한 이유로 공지사항 ${label}에 실패했어요`)
     },
   }
@@ -99,7 +97,6 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
   return (
     <form
       onSubmit={form.onSubmit(async (body) => {
-        setIsPending(true)
         on()
 
         if (type === 'CREATE') {
@@ -159,7 +156,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
           <Button variant="light" color="gray" onClick={onCancel ?? back} disabled={isPending}>
             취소
           </Button>
-          {ExtraButton && <ExtraButton isPending={isPending} setIsPending={setIsPending} />}
+          {ExtraButton && <ExtraButton />}
           <Button type="submit" disabled={isPending}>
             저장
           </Button>

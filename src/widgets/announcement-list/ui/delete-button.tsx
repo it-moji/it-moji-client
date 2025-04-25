@@ -2,48 +2,36 @@
 
 import { type ButtonProps, Button, Loader, Text } from '@mantine/core'
 import { modals } from '@mantine/modals'
-import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDeletePost } from '@/entities/announcement'
 import { Exception } from '@/shared/api'
 
 export interface DeleteButtonProps extends ButtonProps {
   id: number
-  fetcher?: (id: number) => Promise<unknown>
-  revalidate?: (id: number) => Promise<unknown>
-  onStart?: () => void
   onSuccess?: (message: string) => void
   onFailed?: (message: string | null) => void
 }
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({
   id,
-  onStart,
   onSuccess = toast.success,
   onFailed = toast.error,
   ...props
 }) => {
-  const [isPending, setIsPending] = useState(false)
-
-  const { mutate: deletePost } = useDeletePost({
+  const { mutate: deletePost, isPending } = useDeletePost({
     id,
     onSuccess: () => {
-      setIsPending(false)
       onSuccess('공지사항 삭제에 성공했어요')
     },
     onException: (exception: Exception) => {
-      setIsPending(false)
       onFailed(Exception.extractMessage(exception))
     },
     onError: () => {
-      setIsPending(false)
       onFailed('예기치 못한 이유로 공지사항 삭제에 실패했어요')
     },
   })
 
   const onConfirm = () => {
-    setIsPending(true)
-    onStart?.()
     deletePost()
   }
 

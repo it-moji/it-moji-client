@@ -26,19 +26,16 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
     <CreateAnnouncementFormPage
       type="MODIFY"
       label="수정"
-      extraButton={({ isPending, setIsPending }) => (
+      extraButton={() => (
         <DeleteButton
           id={id}
-          onStart={() => setIsPending(true)}
           onSuccess={(message) => {
             replace(ROUTES.ADMIN.ANNOUNCEMENT())
             toast.success(message)
           }}
           onFailed={(message) => {
-            setIsPending(false)
             toast.error(message)
           }}
-          disabled={isPending}
         />
       )}
       onSuccess={(message) => {
