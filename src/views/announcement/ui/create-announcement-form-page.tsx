@@ -56,11 +56,7 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
         push(ROUTES.ADMIN.ANNOUNCEMENT())
       }
 
-      form.setFieldValue('title', initialValues.title)
-      form.setFieldValue('isPinned', initialValues.isPinned)
-      form.setFieldValue('content', initialValues.content)
-      form.setFieldValue('postCategory', initialValues.postCategory)
-
+      form.setValues(initialValues)
       onSuccess(`공지사항 ${label}에 성공했어요`)
     },
     onException: (exception: Exception) => {
