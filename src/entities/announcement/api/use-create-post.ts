@@ -26,11 +26,9 @@ export const useCreatePost = ({
     onMutate: () => {
       onMutate?.()
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: variables.isPinned
-          ? announcementPostQueryKeys.pinnedPostList()
-          : announcementPostQueryKeys.postList({ postCategory: variables.postCategory }),
+        queryKey: announcementPostQueryKeys.postListAll(),
       })
 
       queryClient.invalidateQueries({
