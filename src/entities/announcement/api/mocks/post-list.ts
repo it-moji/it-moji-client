@@ -182,27 +182,3 @@ export const postListMockHandler = createMockHandler<GetPostListResponse['data']
   },
   delay: 1200,
 })
-
-export const postListEmptyMockHandler = createMockHandler<GetPostListResponse['data']>({
-  endpoint: POST_ENDPOINT.LIST,
-  handler: ({ request }) => {
-    const url = new URL(request.url)
-    const searchParams = new URLSearchParams(url.search)
-
-    const category = searchParams.get(GetPostListParamsSchema.Enum.category) as PostCategory | null
-
-    return Promise.resolve({
-      data: {
-        number: 1,
-        size: 10,
-        totalElements: 0,
-        totalPages: 1,
-        first: true,
-        last: true,
-        content: [],
-        category,
-      },
-    })
-  },
-  storybook: true,
-})

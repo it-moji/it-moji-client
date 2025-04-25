@@ -53,27 +53,3 @@ export const searchPostMockHandler = createMockHandler<SearchPostResponse['data'
   },
   delay: 600,
 })
-
-export const searchPostEmptyMockHandler = createMockHandler<SearchPostResponse['data']>({
-  endpoint: POST_ENDPOINT.SEARCH,
-  handler: ({ request }) => {
-    const url = new URL(request.url)
-    const searchParams = new URLSearchParams(url.search)
-
-    const type = searchParams.get(SearchPostParamsSchema.Enum.type)
-
-    return Promise.resolve({
-      data: {
-        number: 1,
-        size: 10,
-        totalElements: 0,
-        totalPages: 1,
-        first: true,
-        last: true,
-        content: [],
-        type,
-      },
-    })
-  },
-  storybook: true,
-})

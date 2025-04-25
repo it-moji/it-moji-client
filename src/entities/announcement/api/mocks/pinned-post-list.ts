@@ -12,12 +12,3 @@ export const pinnedPostListMockHandler = createMockHandler({
     }),
   delay: 300,
 })
-
-export const pinnedPostListEmptyMockHandler = createMockHandler({
-  endpoint: POST_ENDPOINT.PINNED_LIST,
-  handler: () =>
-    Promise.resolve({
-      data: [],
-    }),
-  storybook: true,
-})
