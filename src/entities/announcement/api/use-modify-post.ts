@@ -23,8 +23,7 @@ export const useModifyPost = ({
 
   return useMutation({
     mutationKey: announcementPostQueryKeys.all,
-    mutationFn: ({ id, body }: { id: ModifyPostParams['id']; body: ModifyPostParams['body'] }) =>
-      modifyPost({ id, body }),
+    mutationFn: ({ id, body }: ModifyPostParams) => modifyPost({ id, body }),
     onMutate: () => {
       onMutate?.()
     },
