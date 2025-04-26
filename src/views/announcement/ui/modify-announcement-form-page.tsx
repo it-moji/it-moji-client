@@ -1,16 +1,15 @@
 'use client'
 
 import toast from 'react-hot-toast'
+import type { CreateAnnouncementFormPageProps } from './create-announcement-form-page'
 import { DeleteButton } from '@/widgets/announcement-list'
-import { usePostDetailSuspenseQuery } from '@/entities/announcement'
+import { useModifyPost, usePostDetailSuspenseQuery } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
 import { useRouter } from '@/shared/lib'
-import {
-  type CreateAnnouncementFormPageProps,
-  CreateAnnouncementFormPage,
-} from './create-announcement-form-page'
+import { CreateAnnouncementFormPage } from './create-announcement-form-page'
 
-export interface ModifyAnnouncementFormPageProps extends CreateAnnouncementFormPageProps {
+export interface ModifyAnnouncementFormPageProps
+  extends Omit<CreateAnnouncementFormPageProps, 'mutation'> {
   id: number
 }
 
@@ -22,9 +21,11 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
 
   const { data: initialBody } = usePostDetailSuspenseQuery(id)
 
+  const mutation = useModifyPost({ id })
+
   return (
     <CreateAnnouncementFormPage
-      type="MODIFY"
+      mutation={mutation}
       label="수정"
       extraButton={() => (
         <DeleteButton
@@ -43,7 +44,6 @@ export const ModifyAnnouncementFormPage: React.FC<ModifyAnnouncementFormPageProp
         toast.success(message)
       }}
       initialBody={initialBody}
-      id={id}
       {...props}
     />
   )
