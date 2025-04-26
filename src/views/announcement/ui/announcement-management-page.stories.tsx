@@ -29,4 +29,17 @@ export const 공지사항_없음: Story = {
       <AnnouncementManagementPageView {...args} />
     </AdminContainer>
   ),
+  args: {
+    postList: {
+      number: 1,
+      size: 10,
+      totalElements: 0,
+      totalPages: 1,
+      first: true,
+      last: true,
+      content: [],
+      category: null,
+    },
+    pinnedPostList: [],
+  },
 }
