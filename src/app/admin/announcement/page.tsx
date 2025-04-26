@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { AnnouncementManagementPageView } from '@/views/announcement'
+import { AnnouncementManagementPageContainer } from '@/views/announcement'
 import { AdminContainer, AdminTitle, Icon } from '@/shared/ui'
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ const AnnouncementPage: React.FC = async () => {
         <Icon query="fluent-emoji:pushpin" className="mr-2" />
         공지사항 관리
       </AdminTitle>
-      <AnnouncementManagementPageView />
+      <AnnouncementManagementPageContainer />
     </AdminContainer>
   )
 }

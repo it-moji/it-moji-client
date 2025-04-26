@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { AnnouncementManagementDetailPageView } from '@/views/announcement'
+import { AnnouncementManagementDetailPageContainer } from '@/views/announcement'
 import { getPostDetail } from '@/entities/announcement'
 import { AdminContainer } from '@/shared/ui'
 
@@ -43,7 +43,7 @@ const AnnouncementDetailPage: React.FC<AnnouncementDetailPageProps> = async ({ p
 
   return (
     <AdminContainer>
-      <AnnouncementManagementDetailPageView id={id} />
+      <AnnouncementManagementDetailPageContainer id={id} />
     </AdminContainer>
   )
 }

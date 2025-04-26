@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import type { Metadata } from 'next'
-import { AnnouncementManagementSearchPageView } from '@/views/announcement'
+import { AnnouncementManagementSearchPageContainer } from '@/views/announcement'
 import { SearchPostParamsSchema, SearchPostTypeSchema } from '@/entities/announcement'
 import { type SearchParams } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
@@ -33,7 +33,7 @@ const AnnouncementSearchPage: React.FC<AnnouncementSearchPageProps> = async ({ s
         <Icon query="fluent-emoji:magnifying-glass-tilted-left" className="mr-2 size-5" />
         공지사항 검색
       </AdminTitle>
-      <AnnouncementManagementSearchPageView defaultQuery={query} defaultType={type} />
+      <AnnouncementManagementSearchPageContainer defaultQuery={query} defaultType={type} />
     </AdminContainer>
   )
 }
