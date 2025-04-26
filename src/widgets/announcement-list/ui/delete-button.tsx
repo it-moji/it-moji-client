@@ -3,7 +3,7 @@
 import { type ButtonProps, Button, Loader, Text } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import toast from 'react-hot-toast'
-import { useDeletePost } from '@/entities/announcement'
+import { useDeletePost, useIsPostDetailMutating } from '@/entities/announcement'
 import { Exception } from '@/shared/api'
 
 export interface DeleteButtonProps extends ButtonProps {
@@ -18,6 +18,8 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   onFailed = toast.error,
   ...props
 }) => {
+  const isPostDetailMutating = useIsPostDetailMutating(id)
+
   const { mutate: deletePost, isPending } = useDeletePost({
     id,
     onSuccess: () => {
@@ -52,7 +54,13 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     })
 
   return (
-    <Button onClick={handleClick} color="red" variant="light" disabled={isPending} {...props}>
+    <Button
+      onClick={handleClick}
+      color="red"
+      variant="light"
+      disabled={isPostDetailMutating}
+      {...props}
+    >
       {isPending ? <Loader size="xs" color="gray" /> : '삭제'}
     </Button>
   )

@@ -24,7 +24,7 @@ export const useDeletePost = ({
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: announcementPostQueryKeys.all,
+    mutationKey: announcementPostQueryKeys.postDetail(id),
     mutationFn: () => deletePost(id),
     onMutate: () => {
       onMutate?.()
