@@ -1,8 +1,7 @@
 'use client'
 
-import { Center, Loader } from '@mantine/core'
 import { useSearchParams } from 'next/navigation'
-import AdminErrorPage from '@/app/admin/error'
+import { AnnouncementSearchErrorFallback } from '@/widgets/announcement-list'
 import type { SearchPostType } from '@/entities/announcement'
 import { useSearchPostSuspenseQuery } from '@/entities/announcement'
 import { QueryFallbackBoundary } from '@/shared/api'
@@ -17,14 +16,9 @@ export const AnnouncementManagementSearchPageContainer: React.FC<
   AnnouncementManagementSearchPageContainerProps
 > = ({ defaultQuery, defaultType }) => (
   <QueryFallbackBoundary
-    errorFallback={({ error, resetErrorBoundary }) => (
-      <AdminErrorPage error={error} reset={resetErrorBoundary} />
+    errorFallback={({ resetErrorBoundary }) => (
+      <AnnouncementSearchErrorFallback onReset={resetErrorBoundary} />
     )}
-    loadingFallback={
-      <Center>
-        <Loader className="mb-48 mt-40" color="var(--mantine-color-placeholder)" />
-      </Center>
-    }
   >
     <AnnouncementManagementSearchPage defaultQuery={defaultQuery} defaultType={defaultType} />
   </QueryFallbackBoundary>

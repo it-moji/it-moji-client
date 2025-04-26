@@ -1,7 +1,7 @@
 'use client'
 
 import { Center, Loader } from '@mantine/core'
-import AdminErrorPage from '@/app/admin/error'
+import { AnnouncementDetailErrorFallback } from '@/widgets/announcement-detail'
 import { usePostDetailSuspenseQuery, type PostDetail } from '@/entities/announcement'
 import { QueryFallbackBoundary } from '@/shared/api'
 import { AnnouncementManagementDetailPageView } from './announcement-management-detail-page-view'
@@ -14,12 +14,12 @@ export const AnnouncementManagementDetailPageContainer: React.FC<
   AnnouncementManagementDetailPageContainerProps
 > = ({ id }) => (
   <QueryFallbackBoundary
-    errorFallback={({ error, resetErrorBoundary }) => (
-      <AdminErrorPage error={error} reset={resetErrorBoundary} />
+    errorFallback={({ resetErrorBoundary }) => (
+      <AnnouncementDetailErrorFallback onReset={resetErrorBoundary} />
     )}
     loadingFallback={
       <Center>
-        <Loader className="mb-48 mt-40" color="var(--mantine-color-placeholder)" />
+        <Loader className="pb-48 pt-36" color="var(--mantine-color-placeholder)" />
       </Center>
     }
   >
