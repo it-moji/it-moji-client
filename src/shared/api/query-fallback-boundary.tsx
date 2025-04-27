@@ -6,17 +6,17 @@ import React, { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import type { FallbackProps } from 'react-error-boundary'
 
+export const DefaultLoadingFallback: React.FC = () => (
+  <Center>
+    <Loader className="pb-48 pt-28" color="var(--mantine-color-placeholder)" />
+  </Center>
+)
+
 export interface QueryFallbackBoundaryProps {
   errorFallback: React.ComponentType<FallbackProps>
   loadingFallback?: React.ReactNode
   children: React.ReactNode
 }
-
-export const DefaultLoadingFallback = () => (
-  <Center>
-    <Loader className="pb-48 pt-28" color="var(--mantine-color-placeholder)" />
-  </Center>
-)
 
 export const QueryFallbackBoundary: React.FC<QueryFallbackBoundaryProps> = ({
   errorFallback,
