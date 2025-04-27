@@ -5,22 +5,24 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { DetailView } from '@/widgets/announcement-detail'
 import { DeleteButton } from '@/widgets/announcement-list'
-import type { PostDetail } from '@/entities/announcement'
+import { useIsPostMutating, type PostDetail } from '@/entities/announcement'
 import { ROUTES } from '@/shared/config'
 import { useRouter } from '@/shared/lib'
-import { AdminContainer, LinkWithLoader } from '@/shared/ui'
+import { LinkWithLoader } from '@/shared/ui'
 import { ModifyAnnouncementFormPage } from './modify-announcement-form-page'
 
-export interface AnnouncementManagementDetailPageProps {
+export interface AnnouncementManagementDetailPageViewProps {
   post: PostDetail
 }
 
-export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDetailPageProps> = ({
-  post,
-}) => {
+export const AnnouncementManagementDetailPageView: React.FC<
+  AnnouncementManagementDetailPageViewProps
+> = ({ post }) => {
   const { replace, off } = useRouter()
+
+  const isPostMutating = useIsPostMutating()
+
   const [isModifyMode, setIsModifyMode] = useState(false)
-  const [isPending, setIsPending] = useState(false)
 
   if (isModifyMode) {
     return (
@@ -38,26 +40,24 @@ export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDe
   }
 
   return (
-    <AdminContainer>
+    <>
       <DetailView post={post} />
       <div className="mt-8 flex items-center justify-end space-x-2">
         <Button
           variant="light"
           color="gray"
-          disabled={isPending}
+          disabled={isPostMutating}
           onClick={() => setIsModifyMode(true)}
         >
           수정
         </Button>
         <DeleteButton
           id={post.id}
-          onStart={() => setIsPending(true)}
           onSuccess={(message) => {
             replace(ROUTES.ADMIN.ANNOUNCEMENT())
             toast.success(message)
           }}
           onFailed={(message) => {
-            setIsPending(false)
             toast.error(message)
           }}
         />
@@ -65,11 +65,11 @@ export const AnnouncementManagementDetailPage: React.FC<AnnouncementManagementDe
           href={ROUTES.ADMIN.ANNOUNCEMENT()}
           title="목록 페이지 이동"
           component={LinkWithLoader}
-          disabled={isPending}
+          disabled={isPostMutating}
         >
           목록
         </Button>
       </div>
-    </AdminContainer>
+    </>
   )
 }

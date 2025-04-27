@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { AnnouncementManagementDetailPage } from '@/views/announcement'
+import { AnnouncementManagementDetailPageContainer } from '@/views/announcement'
 import { getPostDetail } from '@/entities/announcement'
+import { AdminContainer } from '@/shared/ui'
 
 interface AnnouncementDetailPageParams {
   postId: string
@@ -40,11 +41,11 @@ const AnnouncementDetailPage: React.FC<AnnouncementDetailPageProps> = async ({ p
     notFound()
   }
 
-  const post = await getPostDetail(id, ({ status }) => {
-    if (status === 404) notFound()
-  })
-
-  return <AnnouncementManagementDetailPage post={post.data} />
+  return (
+    <AdminContainer>
+      <AnnouncementManagementDetailPageContainer id={id} />
+    </AdminContainer>
+  )
 }
 
 export default AnnouncementDetailPage

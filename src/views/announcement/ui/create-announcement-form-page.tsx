@@ -2,29 +2,22 @@
 
 import { Button, Checkbox, InputLabel, Select, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
-import {
-  type PostBody,
-  POST_CATEGORY_LABEL,
-  PostCategorySchema,
-  createPost,
-  createPostWithRevalidate,
-} from '@/entities/announcement'
-import type { ExceptionInterceptor } from '@/shared/api'
+import type { UseMutationResult } from '@tanstack/react-query'
+import { type PostBody, POST_CATEGORY_LABEL, PostCategorySchema } from '@/entities/announcement'
+import { Exception } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
 import { useRouter } from '@/shared/lib'
 import { AdminContainer, AdminTitle, Icon, TextEditor } from '@/shared/ui'
 
 export interface CreateAnnouncementFormPageProps {
-  fetcher?: (body: PostBody, onException?: ExceptionInterceptor) => Promise<unknown>
-  revalidate?: (body: PostBody) => Promise<unknown>
+  mutation: UseMutationResult<unknown, unknown, PostBody>
   onSuccess?: (message: string) => void
-  onFailed?: (message: string) => void
+  onFailed?: (message: string | null) => void
   onCancel?: () => void
   label?: string
-  extraButton?: React.FC<{ isPending: boolean; setIsPending: (state: boolean) => void }>
+  extraButton?: React.FC
   initialBody?: Partial<PostBody>
 }
 
@@ -36,17 +29,15 @@ const initialValues: PostBody = {
 }
 
 export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProps> = ({
-  fetcher = createPost,
-  revalidate = createPostWithRevalidate,
+  mutation,
   onSuccess = toast.success,
   onFailed = toast.error,
   onCancel,
   label = '작성',
   extraButton: ExtraButton,
-  initialBody = {},
+  initialBody,
 }) => {
   const { back, push, on, off } = useRouter()
-  const [isPending, setIsPending] = useState(false)
 
   const form = useForm<PostBody>({
     mode: 'uncontrolled',
@@ -66,34 +57,32 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
 
   const inputProps = form.getInputProps('isPinned')
 
+  const mutationParams = {
+    onSuccess: () => {
+      if (location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
+        push(ROUTES.ADMIN.ANNOUNCEMENT())
+      }
+
+      form.setValues(initialValues)
+      onSuccess(`공지사항 ${label}에 성공했어요`)
+    },
+    onError: (error: unknown) => {
+      off()
+
+      if (error instanceof Exception) {
+        onFailed(Exception.extractMessage(error))
+        return
+      }
+
+      onFailed(`예기치 못한 이유로 공지사항 ${label}에 실패했어요`)
+    },
+  }
+
   return (
     <form
       onSubmit={form.onSubmit(async (body) => {
-        setIsPending(true)
         on()
-        await fetcher(body, ({ status }) => {
-          if (400 <= status && status < 500) {
-            onFailed('지정된 고정된 공지사항 수를 초과했어요')
-          }
-        })
-          .then(() => revalidate(body))
-          .then(() => {
-            if (location.pathname === ROUTES.ADMIN.ANNOUNCEMENT.CREATE()) {
-              push(ROUTES.ADMIN.ANNOUNCEMENT())
-            }
-
-            form.setFieldValue('title', initialValues.title)
-            form.setFieldValue('isPinned', initialValues.isPinned)
-            form.setFieldValue('content', initialValues.content)
-            form.setFieldValue('postCategory', initialValues.postCategory)
-
-            onSuccess(`공지사항 ${label}에 성공했어요`)
-          })
-          .catch(() => {
-            off()
-            setIsPending(false)
-            onFailed(`공지사항 ${label}에 실패했어요`)
-          })
+        mutation.mutate(body, mutationParams)
       })}
     >
       <AdminContainer>
@@ -140,11 +129,16 @@ export const CreateAnnouncementFormPage: React.FC<CreateAnnouncementFormPageProp
           {...form.getInputProps('content')}
         />
         <div className="mt-8 flex items-center justify-end space-x-2">
-          <Button variant="light" color="gray" onClick={onCancel ?? back} disabled={isPending}>
+          <Button
+            variant="light"
+            color="gray"
+            onClick={onCancel ?? back}
+            disabled={mutation.isPending}
+          >
             취소
           </Button>
-          {ExtraButton && <ExtraButton isPending={isPending} setIsPending={setIsPending} />}
-          <Button type="submit" disabled={isPending}>
+          {ExtraButton && <ExtraButton />}
+          <Button type="submit" disabled={mutation.isPending}>
             저장
           </Button>
         </div>

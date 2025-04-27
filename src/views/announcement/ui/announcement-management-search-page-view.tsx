@@ -1,3 +1,5 @@
+'use client'
+
 import {
   AnnouncementList,
   AnnouncementTable,
@@ -5,24 +7,25 @@ import {
   PageController,
   SearchInput,
 } from '@/widgets/announcement-list'
-import type { SearchPostResponse, SearchPostType } from '@/entities/announcement'
-import { SearchPostParamsSchema } from '@/entities/announcement'
+import {
+  SearchPostParamsSchema,
+  type SearchPostResponse,
+  type SearchPostType,
+} from '@/entities/announcement'
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
 import { ROUTES } from '@/shared/config'
 import { createSearchParamsFilter } from '@/shared/lib'
-import { AdminContainer, AdminTitle, FallbackRender, Icon } from '@/shared/ui'
+import { FallbackRender } from '@/shared/ui'
 
-export interface AnnouncementManagementSearchPageProps {
-  searchPost: () => Promise<SearchPostResponse>
-  defaultQuery?: string
-  defaultType?: SearchPostType
+export interface AnnouncementManagementSearchPageViewProps {
+  defaultQuery: string
+  defaultType: SearchPostType
+  data: SearchPostResponse['data']
 }
 
-export const AnnouncementManagementSearchPage: React.FC<
-  AnnouncementManagementSearchPageProps
-> = async ({ searchPost, defaultQuery, defaultType }) => {
-  const { data } = await searchPost()
-
+export const AnnouncementManagementSearchPageView: React.FC<
+  AnnouncementManagementSearchPageViewProps
+> = ({ defaultQuery, defaultType, data }) => {
   const isEmpty = data.content.length < 1
 
   const href = createSearchParamsFilter({
@@ -36,11 +39,7 @@ export const AnnouncementManagementSearchPage: React.FC<
   })
 
   return (
-    <AdminContainer>
-      <AdminTitle>
-        <Icon query="fluent-emoji:magnifying-glass-tilted-left" className="mr-2 size-5" />
-        공지사항 검색
-      </AdminTitle>
+    <>
       <div className="mb-6 flex items-center justify-end">
         <SearchInput defaultQuery={defaultQuery} defaultType={defaultType} />
       </div>
@@ -66,6 +65,6 @@ export const AnnouncementManagementSearchPage: React.FC<
           />
         </div>
       )}
-    </AdminContainer>
+    </>
   )
 }

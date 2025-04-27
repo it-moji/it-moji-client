@@ -5,7 +5,7 @@ import { POST_ENDPOINT } from './endpoint'
 
 export interface ModifyPostParams {
   id: number
-  body: Partial<PostBody>
+  body: PostBody
   onException?: ExceptionInterceptor
 }
 

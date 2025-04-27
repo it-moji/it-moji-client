@@ -1,5 +1,7 @@
 import { expect, fn, userEvent, waitFor, within } from '@storybook/test'
 import type { Meta, StoryObj } from '@storybook/react'
+import type { UseMutationResult } from '@tanstack/react-query'
+import type { PostBody } from '@/entities/announcement'
 import { PostCategorySchema } from '@/entities/announcement'
 import { CreateAnnouncementFormPage } from './create-announcement-form-page'
 
@@ -17,11 +19,28 @@ const meta: Meta<typeof CreateAnnouncementFormPage> = {
 export default meta
 type Story = StoryObj<typeof CreateAnnouncementFormPage>
 
+const mutationMock = {
+  mutate: fn((_, { onSuccess, onError }) => {
+    mutationMock.isPending = true
+
+    new Promise((resolve) => setTimeout(resolve, 800))
+      .then(() => {
+        onSuccess()
+      })
+      .catch(() => {
+        onError()
+      })
+      .finally(() => {
+        mutationMock.isPending = false
+      })
+  }),
+  isPending: false,
+} as unknown as UseMutationResult<unknown, unknown, PostBody>
+
 export const 초기값_없음: Story = {
   render: (args) => <CreateAnnouncementFormPage {...args} />,
   args: {
-    fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
-    revalidate: fn(() => Promise.resolve()),
+    mutation: mutationMock,
     onSuccess: fn(),
     onFailed: fn(),
   },
@@ -74,10 +93,10 @@ export const 초기값_없음: Story = {
       await userEvent.click(buttonEl)
       await userEvent.click(buttonEl)
 
-      await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
-      await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
-      expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onFailed).not.toHaveBeenCalledOnce()
+      await waitFor(() => expect(args.mutation.mutate).toHaveBeenCalled())
+
+      await waitFor(() => expect(args.onSuccess).toHaveBeenCalledOnce())
+      await waitFor(() => expect(args.onFailed).not.toHaveBeenCalledOnce())
     })
   },
 }
@@ -94,8 +113,7 @@ export const 초기값_있음: Story = {
       content: filledContent,
       postCategory: PostCategorySchema.Enum.MAINTENANCE,
     },
-    fetcher: fn(() => new Promise((resolve) => setTimeout(resolve, 100))),
-    revalidate: fn(() => Promise.resolve()),
+    mutation: mutationMock,
     onSuccess: fn(),
     onFailed: fn(),
   },
@@ -150,10 +168,10 @@ export const 초기값_있음: Story = {
       await userEvent.click(buttonEl)
       await userEvent.click(buttonEl)
 
-      await waitFor(() => expect(args.fetcher).toHaveBeenCalled())
-      await waitFor(() => expect(args.revalidate).toHaveBeenCalledOnce())
-      expect(args.onSuccess).toHaveBeenCalledOnce()
-      expect(args.onFailed).not.toHaveBeenCalledOnce()
+      await waitFor(() => expect(args.mutation.mutate).toHaveBeenCalled())
+
+      await waitFor(() => expect(args.onSuccess).toHaveBeenCalledOnce())
+      await waitFor(() => expect(args.onFailed).not.toHaveBeenCalledOnce())
     })
   },
 }

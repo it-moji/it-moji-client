@@ -1,10 +1,4 @@
-import type { SearchParams } from '@/shared/api'
-import {
-  createMockHandler,
-  DEFAULT_PAGE,
-  DEFAULT_PAGE_SIZE,
-  MOCK_COMMON_RESPONSE,
-} from '@/shared/api'
+import { createMockHandler, DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/shared/api'
 import { POST_ENDPOINT } from '../endpoint'
 import {
   type SearchPostResponse,
@@ -59,18 +53,3 @@ export const searchPostMockHandler = createMockHandler<SearchPostResponse['data'
   },
   delay: 600,
 })
-
-export const searchPostEmptyMock = (searchParams: SearchParams) =>
-  Promise.resolve({
-    ...MOCK_COMMON_RESPONSE.SUCCESS,
-    data: {
-      number: 1,
-      size: 10,
-      totalElements: 0,
-      totalPages: 1,
-      first: true,
-      last: true,
-      content: [],
-      type: searchParams[SearchPostParamsSchema.Enum.type] || null,
-    },
-  } as SearchPostResponse)

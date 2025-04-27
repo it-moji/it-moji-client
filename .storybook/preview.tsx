@@ -19,7 +19,7 @@ initialize({
 
 const preview: Preview = {
   parameters: {
-    msw: { handlers },
+    msw: handlers,
     controls: {
       matchers: {
         color: /(background|color)$/i,

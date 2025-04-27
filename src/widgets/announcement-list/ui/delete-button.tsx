@@ -2,42 +2,39 @@
 
 import { type ButtonProps, Button, Loader, Text } from '@mantine/core'
 import { modals } from '@mantine/modals'
-import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { deletePost, deletePostWithRevalidate } from '@/entities/announcement'
+import { useDeletePost, useIsPostDetailMutating } from '@/entities/announcement'
+import { Exception } from '@/shared/api'
 
 export interface DeleteButtonProps extends ButtonProps {
   id: number
-  fetcher?: (id: number) => Promise<unknown>
-  revalidate?: (id: number) => Promise<unknown>
-  onStart?: () => void
   onSuccess?: (message: string) => void
-  onFailed?: (message: string) => void
+  onFailed?: (message: string | null) => void
 }
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({
   id,
-  fetcher = deletePost,
-  revalidate = deletePostWithRevalidate,
-  onStart,
   onSuccess = toast.success,
   onFailed = toast.error,
   ...props
 }) => {
-  const [isPending, setIsPending] = useState(false)
+  const isPostDetailMutating = useIsPostDetailMutating(id)
 
-  const onConfirm = async () => {
-    setIsPending(true)
-    onStart?.()
-    await fetcher(id)
-      .then(() => revalidate(id))
-      .then(() => {
-        onSuccess('공지사항 삭제에 성공했어요')
-      })
-      .catch(() => {
-        setIsPending(false)
-        onFailed('공지사항 삭제에 실패했어요')
-      })
+  const { mutate: deletePost, isPending } = useDeletePost({
+    id,
+    onSuccess: () => {
+      onSuccess('공지사항 삭제에 성공했어요')
+    },
+    onException: (exception: Exception) => {
+      onFailed(Exception.extractMessage(exception))
+    },
+    onError: () => {
+      onFailed('예기치 못한 이유로 공지사항 삭제에 실패했어요')
+    },
+  })
+
+  const onConfirm = () => {
+    deletePost()
   }
 
   const handleClick = () =>
@@ -57,7 +54,13 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     })
 
   return (
-    <Button onClick={handleClick} color="red" variant="light" disabled={isPending} {...props}>
+    <Button
+      onClick={handleClick}
+      color="red"
+      variant="light"
+      disabled={isPostDetailMutating}
+      {...props}
+    >
       {isPending ? <Loader size="xs" color="gray" /> : '삭제'}
     </Button>
   )

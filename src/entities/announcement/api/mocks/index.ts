@@ -15,7 +15,3 @@ export const postHandlers = [
   deletePostMockHandler,
   modifyPostMockHandler,
 ]
-
-export { getPostListEmptyMock } from './post-list'
-export { getPinnedPostListEmptyMock } from './pinned-post-list'
-export { searchPostEmptyMock } from './search-post'
